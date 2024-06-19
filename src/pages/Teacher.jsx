@@ -1,9 +1,8 @@
-import styled from "styled-components"
-import Anchor from "../components/atoms/Anchor"
+import Header from "../components/molecules/Header";
 
 function Teacher() {
     return <>
-        <Anchor text="hola" to=""></Anchor>
+        <Header></Header>
     </>
 }
 

@@ -1,17 +1,11 @@
 import Anchor from "../atoms/Anchor";
-import styled from "styled-components";
-
-const DivStyled = styled.div`
-    height: 20vh;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-`;
+import AnchorHome from "../atoms/AnchorHome";
 
 function Header() {
-    return <Header>
-
-    </Header>
+    return <header className="bg-slate-900 w-full h-[20vh] flex items-center">
+        <AnchorHome></AnchorHome>
+        <Anchor text="hola" to=""></Anchor>
+    </header>
 }
 
 export default Header;

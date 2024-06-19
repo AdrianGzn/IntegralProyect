@@ -1,27 +1,11 @@
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const PStyled = styled.p`
-    color: gray;
-    &:hover{
-        text-decoration: underline #8fff25;
-    }
-`;
-
-const DivStyled = styled.div`
-    text-decoration: none;
-    margin: 10px;
-    width: 10%;
-    display: flex;
-    justify-content: center;
-`;
-
 function Anchor(props) {
-    return <DivStyled>
+    return <div>
         <Link to={props.to}>
-            <PStyled>{props.text}</PStyled>
+            <p class="text-white m-5 hover:underline decoration-lime-500">{props.text}</p>
         </Link>
-    </DivStyled>
+    </div>
 }
 
 export default Anchor;
