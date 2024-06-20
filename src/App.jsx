@@ -1,9 +1,9 @@
-import Teacher from './pages/Teacher'
+import Login from './pages/Login'
 
 function App() {
 
   return (<>
-      <Teacher></Teacher>
+      <Login></Login>
     </>)
 }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import Teacher from './pages/Teacher.jsx'
 import './index.css'
 import {
   createBrowserRouter,
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/teacher",
+    element: <Teacher />,
   },
 ]);
 
