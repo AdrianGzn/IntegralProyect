@@ -12,11 +12,7 @@ function Header() {
 
         {
             options.map(item => (
-                <Anchor
-                    key={item.text+item.link}
-                    text={item.text}
-                    to={item.link}
-                />
+                <Anchor key={item.text+item.link} text={item.text} to={item.link} />
             ))
         }
     </header>
