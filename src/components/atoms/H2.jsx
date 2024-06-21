@@ -1,5 +1,5 @@
 function H2(props) {
-    return <h2 className={`text-base text-white m-5 ${props.className || ''}`}>
+    return <h2 className={`text-base text-white ${props.className || ''}`}>
             {props.text}
         </h2>
 }

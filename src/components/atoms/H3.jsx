@@ -1,7 +1,7 @@
 function H3(props) {
-    return <h1 className="text-sm text-white m-5">
+    return <h3 className={`text-sm text-white ${props.className || ''}`}>
             {props.text}
-        </h1>
+        </h3>
 }
 
 export default H3;
