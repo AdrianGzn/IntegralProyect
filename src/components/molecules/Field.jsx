@@ -1,11 +1,11 @@
 import H3 from "../atoms/H3";
 import Input from "../atoms/Input";
 
-function Field(props) {
+function Field({ text, type, placeholder, val, fnVal, className }) {
     return (
-        <div className="m-2 flex flex-col items-center w-3/5">
-            <H3 className="m-0 mb-1" text={props.text} />
-            <Input className="m-0" type={props.type} placeholder={props.placeholder} val={props.val} fnVal={props.fnVal}/>
+        <div className={`m-2 flex flex-col w-3/5 ${className}`}>
+            <H3 className="m-0 mb-1" text={text} />
+            <Input className="mx-0" type={type} placeholder={placeholder} value={val} onChange={(e) => fnVal(e.target.value)} />
         </div>
     );
 }

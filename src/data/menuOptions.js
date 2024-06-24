@@ -23,7 +23,7 @@ const options = {
     ],
     escolarControl: [
         {
-            text: "Calificaciones",
+            text: "Boletas",
             link: "/"
         },
         {

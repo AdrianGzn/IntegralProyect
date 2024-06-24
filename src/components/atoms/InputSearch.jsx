@@ -10,7 +10,7 @@ function InputSearch(props) {
             
         </div>
 
-        <input className="ml-2 flex-grow bg-transparent outline-none" type={props.type} placeholder={props.placeholder}/>
+        <input className="ml-2 flex-grow bg-transparent outline-none placeholder-slate-900" type={props.type} placeholder={props.placeholder}></input>
     
     </div>
 }
