@@ -2,7 +2,8 @@ import Header from "../../components/organisms/Header";
 import Field from "../../components/molecules/Field";
 import InputSearch from "../../components/atoms/InputSearch";
 import Button from "../../components/atoms/Button"
-import { useState } from "react";
+import { useState } from "react"
+import { useEffect } from "react";
 
 function EscolarControlBallots() {
 
@@ -16,8 +17,6 @@ function EscolarControlBallots() {
     const [rating3, setRating3] = useState("");
     const [subject4, setSubject4] = useState("");
     const [rating4, setRating4] = useState("");
-
-    const handleSave = async (event) => {}
 
     return (
         <div className="h-full w-full bg-slate-900">

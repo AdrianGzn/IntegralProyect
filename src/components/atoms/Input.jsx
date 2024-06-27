@@ -1,8 +1,11 @@
+import { useCallback } from "react";
 function Input(props) {
-
-    const handlerOnChange = (event) => {
-        props.fnVal(event.target.value)
+    const handlerOnChange = useCallback (
+    (event) => {
+       props.fnVal(event.target.value)
     }
+    )
+       
 
     return (
         <input

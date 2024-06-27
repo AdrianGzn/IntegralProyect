@@ -2,54 +2,73 @@ const options = {
     teacher: [
         {
             text: "Asistencias",
-            link: "/"
+            link: "/teacher/asistance"
+        },
+        {
+            text: "Reuniones",
+            link: "/teacher/meetings"
         },
         {
             text: "Boletas",
-            link: "/"
+            link: "/teacher/ballots"
         },
         {
             text: "Calificaciones",
-            link: "/"
+            link: "/teacher/qualifications"
         },
         {
             text: "Horario",
-            link: "/"
+            link: "/teacher/schedules"
         },
         {
             text: "Reportes",
-            link: "/"
+            link: "/teacher/reports"
+        },
+        {
+            text: "Home",
+            link: "/teacher/home"
         },
     ],
     escolarControl: [
         {
             text: "Boletas",
-            link: "/"
+            link: "/escolarControl/ballots"
         },
         {
             text: "Horarios",
-            link: "/"
+            link: "/escolarControl/schedules"
         },
         {
             text: "Reuniones",
-            link: "/"
+            link: "/escolarControl/meetings"
         },
-
+        {
+            text: "Home",
+            link: "/escolarControl/home"
+        },
     ],
     resourses : [
         {
             text: "Recursos",
-            link: "/"
+            link: "/resourses/administration"
+        },
+        {
+            text: "Home",
+            link: "/resourses/home"
         },
     ],
     management: [
         {
             text: "Reportes",
-            link: "/"
+            link: "/management/reports"
         },
         {
             text: "Recursos",
-            link: "/"
+            link: "/management/resourses"
+        },
+        {
+            text: "Home",
+            link: "/management/home"
         },
     ]
 }
