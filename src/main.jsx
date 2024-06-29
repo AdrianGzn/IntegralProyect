@@ -20,9 +20,6 @@ import EscolarControlMeetings from './pages/escolarControl/EscolarControlMeeting
 import EscolarControlSchedules from './pages/escolarControl/EscolarControlSchedules.jsx'
 import EscolarControlBallots from './pages/escolarControl/EscolarControlBallots.jsx'
 
-import ResoursesHome from './pages/resourses/ResoursesHome.jsx'
-import ResoursesAdministration from './pages/resourses/ResoursesAdministration.jsx'
-
 import './index.css'
 import {
   createBrowserRouter,
@@ -89,14 +86,6 @@ const router = createBrowserRouter([
   {
     path: "/escolarControl/meetings",
     element: <EscolarControlMeetings />,
-  },  
-  {
-    path: "/resourses/home",
-    element: <ResoursesHome />,
-  },
-  {
-    path: "/resourses/administration",
-    element: <ResoursesAdministration />,
   },
 ]);
 
