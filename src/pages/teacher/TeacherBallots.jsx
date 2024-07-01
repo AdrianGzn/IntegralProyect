@@ -13,7 +13,7 @@ function TeacherBallots() {
 
     const fetchAlumns = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/alumns`);
+            const response = await fetch(`${import.meta.env.VITE_URL}/alumns`);  //aquí va el endpoint de alumnos
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -25,11 +25,11 @@ function TeacherBallots() {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { //Obtiene alumnos
         fetchAlumns();
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { //Filtra alumno buscado
         if (matricleSearch) {
             const alumn = alumns.find(alumn => alumn.matricle === parseInt(matricleSearch, 10));
             setFilteredAlumn(alumn);
@@ -40,14 +40,12 @@ function TeacherBallots() {
 
     const handleDownload = async (event) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/pdfs`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
+            const response = await fetch(`${import.meta.env.VITE_URL}/pdfs`, {  //también aquí va enpoint de alumnos
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -56,7 +54,8 @@ function TeacherBallots() {
             const data = await response.json();
             setPdfBytes(data);
 
-            const blob = new Blob([data], { type: 'application/pdf' });
+            // Descargar el PDF creado desde la API
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -66,7 +65,7 @@ function TeacherBallots() {
             link.remove();
             window.URL.revokeObjectURL(url);
         } catch (error) {
-            console.log("Error: ", error);
+            console.error("Error al descargar el PDF:", error);
         }
     };
 
