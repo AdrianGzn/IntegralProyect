@@ -1,9 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../../components/organisms/Header";
 import ButtonPDF from "../../components/molecules/ButtonPDF";
+import InputSearch from '../../components/atoms/InputSearch';
+import H2 from "../../components/atoms/H2";
 
 function TeacherBallots() {
     const [pdfBytes, setPdfBytes] = useState(null);
+    const [matricleSearch, setMatricleSearch] = useState(0);
+    const [alumns, setAlumns] = useState([]);
+    const [filteredAlumn, setFilteredAlumn] = useState(null);
+    const [error, setError] = useState(null);
+
+    const fetchAlumns = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_URL}/alumns`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setAlumns(data);
+        } catch (error) {
+            setError(error.message);
+            console.error('Error fetching alumns:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAlumns();
+    }, []);
+
+    useEffect(() => {
+        if (matricleSearch) {
+            const alumn = alumns.find(alumn => alumn.matricle === parseInt(matricleSearch, 10));
+            setFilteredAlumn(alumn);
+        } else {
+            setFilteredAlumn(null);
+        }
+    }, [matricleSearch, alumns]);
 
     const handleDownload = async (event) => {
         try {
@@ -42,7 +75,23 @@ function TeacherBallots() {
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 flex flex-col items-center border-2 border-white">
-                    <ButtonPDF text="Hola mundo" onClick={handleDownload}></ButtonPDF>
+                    <div className='h-[20%] w-full p-5 inline-flex border-red-600 border-2'>
+                        <H2 text="Buscar por matrícula" className="!m-0 !mx-5"></H2>
+                        <InputSearch type="text" placeholder="Buscar" val={matricleSearch} fnVal={setMatricleSearch}></InputSearch>
+                    </div>
+                    <div className='h-[80%] w-full border-lime-600 border-2'>
+                        {filteredAlumn ? (
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                {filteredAlumn.name}
+                            </button>
+                        ) : (
+                            alumns.map((alumn) => (
+                                <button key={alumn.id} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-1">
+                                    {alumn.name}
+                                </button>
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

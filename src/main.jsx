@@ -5,19 +5,14 @@ import App from './App.jsx'
 
 import ManagementHome from './pages/management/ManagementHome.jsx'
 import ManagementReports from './pages/management/ManagementReports.jsx'
-import ManagementResourses from './pages/management/ManagementResourses.jsx'
 
 import TeacherHome from './pages/teacher/TeacherHome.jsx'
 import TeacherReports from './pages/teacher/TeacherReports.jsx'
 import TeacherQualifications from './pages/teacher/TeacherQualifications.jsx'
 import TeacherAsistance from './pages/teacher/TeacherAsistance.jsx'
-import TeacherSchedules from './pages/teacher/TeacherSchedules.jsx'
 import TeacherBallots from './pages/teacher/TeacherBallots.jsx'
-import TeacherMeetings from './pages/teacher/TeacherMeetings.jsx'
 
 import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
-import EscolarControlMeetings from './pages/escolarControl/EscolarControlMeetings.jsx'
-import EscolarControlSchedules from './pages/escolarControl/EscolarControlSchedules.jsx'
 import EscolarControlBallots from './pages/escolarControl/EscolarControlBallots.jsx'
 
 import './index.css'
@@ -40,10 +35,6 @@ const router = createBrowserRouter([
     element: <ManagementReports />,
   },
   {
-    path: "/management/resourses",
-    element: <ManagementResourses />,
-  },
-  {
     path: "/teacher/home",
     element: <TeacherHome />,
   },
@@ -64,28 +55,12 @@ const router = createBrowserRouter([
     element: <TeacherQualifications />,
   },
   {
-    path: "/teacher/schedules",
-    element: <TeacherSchedules />,
-  },
-  {
-    path: "/teacher/meetings",
-    element: <TeacherMeetings />,
-  },
-  {
     path: "/escolarControl/home",
     element: <EscolarControlHome />,
   },
   {
     path: "/escolarControl/ballots",
     element: <EscolarControlBallots />,
-  },
-  {
-    path: "/escolarControl/schedules",
-    element: <EscolarControlSchedules />,
-  },
-  {
-    path: "/escolarControl/meetings",
-    element: <EscolarControlMeetings />,
   },
 ]);
 
