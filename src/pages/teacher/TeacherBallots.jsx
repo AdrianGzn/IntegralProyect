@@ -13,7 +13,7 @@ function TeacherBallots() {
 
     const fetchAlumns = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/alumns`);  //aquí va el endpoint de alumnos
+            const response = await fetch(`${import.meta.env.VITE_URL}/alumns`); //aquí va el endpoint de alumnos
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -73,21 +73,17 @@ function TeacherBallots() {
         <div className="h-full w-full bg-slate-900">
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
-                <div className="h-4/5 w-4/6 flex flex-col items-center border-2 border-white">
-                    <div className='h-[20%] w-full p-5 inline-flex border-red-600 border-2'>
+                <div className="h-4/5 w-4/6 flex flex-col items-center">
+                    <div className='h-[20%] w-full p-5 inline-flex'>
                         <H2 text="Buscar por matrícula" className="!m-0 !mx-5"></H2>
                         <InputSearch type="text" placeholder="Buscar" val={matricleSearch} fnVal={setMatricleSearch}></InputSearch>
                     </div>
-                    <div className='h-[80%] w-full border-lime-600 border-2'>
+                    <div className='h-[80%] w-full'>
                         {filteredAlumn ? (
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                {filteredAlumn.name}
-                            </button>
+                            <ButtonPDF text={filteredAlumn.name}></ButtonPDF>
                         ) : (
                             alumns.map((alumn) => (
-                                <button key={alumn.id} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-1">
-                                    {alumn.name}
-                                </button>
+                                <ButtonPDF key={alumn.id} text={alumn.name}></ButtonPDF>
                             ))
                         )}
                     </div>
