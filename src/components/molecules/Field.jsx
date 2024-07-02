@@ -23,10 +23,11 @@ function Field({ text, type, placeholder, val, fnVal, className }) {
     })
 
     return (
-        <div className={`m-2 flex flex-col w-3/5 ${className}`}>
+        <div className={`m-2 flex flex-col w-3/5 ${className} items-center`}>
             <H3 className="m-0 mb-1" text={text} />
             <Input className="mx-0" type={type} placeholder={placeholder} value={val} onChange={(e) => fnVal(e.target.value)} />
         </div>
+
     );
 }
 

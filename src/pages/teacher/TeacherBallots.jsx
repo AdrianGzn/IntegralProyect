@@ -6,7 +6,7 @@ import H2 from "../../components/atoms/H2";
 
 function TeacherBallots() {
     const [pdfBytes, setPdfBytes] = useState(null);
-    const [matricleSearch, setMatricleSearch] = useState(0);
+    const [matricleSearch, setMatricleSearch] = useState();
     const [alumns, setAlumns] = useState([]);
     const [filteredAlumn, setFilteredAlumn] = useState(null);
     const [error, setError] = useState(null);
