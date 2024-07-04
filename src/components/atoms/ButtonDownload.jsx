@@ -1,9 +1,13 @@
 
-
-function ButtonDownload({onClick}) {
+function ButtonDownload(props) {
 
     return(
-        <button onClick={onClick}></button>
+        <button 
+            onClick={props.onClick} 
+            className={`h-8 w-3/5 m-5 rounded-md bg-lime-500 text-white flex items-center justify-center max-w-52 ${props.className || ''}`}
+        >
+            {props.text}
+        </button>
     )
 }
 
