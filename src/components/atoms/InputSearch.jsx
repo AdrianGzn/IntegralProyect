@@ -3,7 +3,7 @@ function InputSearch(props) {
         props.fnVal(event.target.value)
     }
 
-    return <div className="rounded-full h-6 w-30 bg-lime-500 flex max-w-56">
+    return <div className={`rounded-full h-6 w-30 my-0 bg-lime-500 flex max-w-56 ${props.className || ''}`}>
 
         <div className="my-1 mx-2">
 

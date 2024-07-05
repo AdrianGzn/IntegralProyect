@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-function AnchorHome() {
+function AnchorHome(props) {
     return <Link to="/">
-            <p className="text-lime-500 m-5">Home</p>
+            <p className={`text-lime-500 mx-5 ${props.className || ''}`}>Home</p>
         </Link>
 }
 

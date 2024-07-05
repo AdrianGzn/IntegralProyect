@@ -3,6 +3,7 @@ import Header from "../../components/organisms/Header";
 import ButtonPDF from "../../components/molecules/ButtonPDF";
 import InputSearch from '../../components/atoms/InputSearch';
 import H2 from "../../components/atoms/H2";
+import SearchBallotSection from '../../components/molecules/SearchBallotSection';
 
 function TeacherBallots() {
     const [pdfBytes, setPdfBytes] = useState(null);
@@ -70,15 +71,12 @@ function TeacherBallots() {
     };
 
     return (
-        <div className="h-full w-full bg-slate-900">
+        <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
-                <div className="h-4/5 w-4/6 flex flex-col items-center">
-                    <div className='h-[20%] w-full p-5 inline-flex'>
-                        <H2 text="Buscar por matrícula" className="!m-0 !mx-5"></H2>
-                        <InputSearch type="text" placeholder="Buscar" val={matricleSearch} fnVal={setMatricleSearch}></InputSearch>
-                    </div>
-                    <div className='h-[80%] w-full'>
+                <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col items-center border-2 border-white">
+                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch}></SearchBallotSection>
+                    <div className='h-[80%] w-full overflow-x-hidden'>
                         {filteredAlumn ? (
                             <ButtonPDF text={filteredAlumn.name}></ButtonPDF>
                         ) : (

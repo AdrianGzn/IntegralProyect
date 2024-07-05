@@ -7,7 +7,7 @@ function Header({ role }) {
     let options = getOptions()[role];
 
     return (
-        <header className="bg-slate-900 w-full h-[20vh] flex items-center">
+        <header className="bg-slate-900 w-full min-h-[20vh] mb-5 flex items-center flex-wrap">
             <AnchorHome />
             <InputSearch />
             {options.map(item => (

@@ -31,7 +31,7 @@ function FormLogin() {
             default:
                 console.log("Error");
         }
-    };
+    }
 
     return (
         <div className="rounded bg-slate-900 h-3/5 w-2/5 shadow-md shadow-slate-500/40 flex justify-center">
