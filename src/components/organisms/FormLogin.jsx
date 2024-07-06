@@ -10,6 +10,23 @@ function FormLogin() {
     const [password, setPassword] = useState("");
     const [to, setTo] = useState("");
 
+    useState(() => {
+        fetch(`${import.meta.env.URL}`, {
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json',
+                'Acces-control-Allow-Origin': '*',
+            }
+        })
+
+        .then(response => {
+            if(response.ok) {
+                return response.jSON()
+            }
+        })
+    })
+
     const handleLogin = async (event) => {
         let type = "teacher";
 
