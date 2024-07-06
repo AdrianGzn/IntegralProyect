@@ -20,6 +20,7 @@ function TeacherBallots() {
             }
             const data = await response.json();
             setAlumns(data);
+
         } catch (error) {
             setError(error.message);
             console.error('Error fetching alumns:', error);

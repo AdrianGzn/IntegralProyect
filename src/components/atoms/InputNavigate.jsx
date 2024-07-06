@@ -7,7 +7,7 @@ function InputNavigate(props) {
     }
 
     return(
-        <div className="rounded-full h-5 w-30 bg-lime-500 flex max-w-40">
+        <div className="rounded-full h-6 w-30 bg-lime-500 flex max-w-40">
 
         <div className="my-1 mx-2">
 
