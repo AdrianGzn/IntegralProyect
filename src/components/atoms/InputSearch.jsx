@@ -1,6 +1,6 @@
 function InputSearch(props) {
     const handlerOnChange = (event) => {
-        props.fnVal(event.target.value)
+        props.fnval(event.target.value)
     }
 
     return <div className={`rounded-full h-6 w-30 my-0 bg-lime-500 flex max-w-56 ${props.className || ''}`}>
