@@ -1,5 +1,4 @@
 
-
 function InputNavigate(props) {
 
     const handlerOnChange = (event) => {
