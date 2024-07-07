@@ -1,6 +1,6 @@
-function InputSearch({ type, placeholder, val, fnVal, className }) {
-    const handleOnChange = (event) => {
-        fnVal(event.target.value);
+function InputSearch({type, placeholder, val, fnVal, className}) {
+    const handlerOnChange = (event) => {
+        props.fnVal(event.target.value)
     }
 
     return (

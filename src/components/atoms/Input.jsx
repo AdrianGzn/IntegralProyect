@@ -5,8 +5,10 @@ function Input(props) {
             type={props.type}
             ref={props.val}
             placeholder={props.placeholder}
+            value={props.val}
         />
     );
 }
+
 
 export default Input;
