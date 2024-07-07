@@ -15,7 +15,7 @@ function InputSearch({type, placeholder, val, fnVal, className}) {
                 type={type} 
                 placeholder={placeholder} 
                 value={val} 
-                onChange={handleOnChange} 
+                onChange={handlerOnChange} 
             />
         </div>
     );

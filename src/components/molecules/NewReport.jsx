@@ -5,16 +5,16 @@ import Input from "../../components/atoms/Input";
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 
-
 function NewReport() {
-    const [report, setReport] = useState("")
+    const [report, setReport] = useState("");
+    const [reports, setReports] = useState([]);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Acces-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*'
             }
         })
             .then(response => {
@@ -23,7 +23,7 @@ function NewReport() {
                 }
                 throw new Error('Network response was not ok.');
             })
-            .then(data => setReport(data))
+            .then(data => setReports(data))
             .catch(error => console.error("Error fetching data: ", error));
     }, []);
 
@@ -42,9 +42,14 @@ function NewReport() {
             });
         }
     }
+
     return (
         <div>
-            <H1 text="Crear nuevo reporte" className="underline decoration-lime-500"></H1>
+            <H1 text="Crear nuevo reporte" className="underline decoration-lime-500">
+                {reports.map((data, index) => (
+                    <p key={index}>{data}</p>
+                ))}
+            </H1>
             <div className="grid grid-cols-2 gap-4 w-full">
                 <div className="flex flex-col gap-2">
                     <H2 text="Descripción" className="!m-0"></H2>
@@ -57,6 +62,5 @@ function NewReport() {
         </div>
     );
 }
-
 
 export default NewReport;
