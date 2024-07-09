@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Header from "../../components/organisms/Header";
-import ButtonPDF from "../../components/molecules/ButtonPDF";
-import InputSearch from '../../components/atoms/InputSearch';
-import H2 from "../../components/atoms/H2";
-import SearchBallotSection from '../../components/molecules/SearchBallotSection';
+import ButtonPDFSection from '../../components/organisms/ButtonPDFSection';
+import SearchBallotSection from '../../components/organisms/SearchBallotSection';
 
 function TeacherBallots() {
     const [pdfBytes, setPdfBytes] = useState(null);
     const [matricleSearch, setMatricleSearch] = useState();
     const [alumns, setAlumns] = useState([]);
     const [filteredAlumn, setFilteredAlumn] = useState(null);
+    const [statusPDF, setStatus] = useState(false)
     const [error, setError] = useState(null);
 
     const fetchAlumns = async () => {
@@ -29,12 +28,15 @@ function TeacherBallots() {
 
     useEffect(() => { //Obtiene alumnos
         fetchAlumns();
+        return () => { }
     }, []);
 
     useEffect(() => { //Filtra alumno buscado
         if (matricleSearch) {
             const alumn = alumns.find(alumn => alumn.matricle === parseInt(matricleSearch, 10));
             setFilteredAlumn(alumn);
+            setStatus(true)//cambiando el status
+            console.log(statusPDF);
         } else {
             setFilteredAlumn(null);
         }
@@ -78,11 +80,11 @@ function TeacherBallots() {
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col items-center border-2 border-white">
                     <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch}></SearchBallotSection>
                     <div className='h-[80%] w-full overflow-x-hidden'>
-                        {filteredAlumn ? (
-                            <ButtonPDF text={filteredAlumn.name}></ButtonPDF>
+                        {statusPDF ? ( //acortador para el PDF
+                            <ButtonPDFSection text={filteredAlumn.name}></ButtonPDFSection>
                         ) : (
                             alumns.map((alumn) => (
-                                <ButtonPDF key={alumn.id} text={alumn.name}></ButtonPDF>
+                                <ButtonPDFSection key={alumn.id} text={alumn.name}></ButtonPDFSection>
                             ))
                         )}
                     </div>
