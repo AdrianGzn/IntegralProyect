@@ -1483,10 +1483,6 @@ packages:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-<<<<<<< HEAD
-  mousetrap@1.6.5:
-    resolution: {integrity: sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==}
-=======
   minizlib@2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
@@ -1495,7 +1491,9 @@ packages:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
     hasBin: true
->>>>>>> bc07c63d5d02cbd15ca0b4966f33f87f450710eb
+
+  mousetrap@1.6.5:
+    resolution: {integrity: sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==}
 
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
@@ -2126,16 +2124,14 @@ packages:
       terser:
         optional: true
 
-<<<<<<< HEAD
   warning@4.0.3:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
-=======
+
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
   whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
->>>>>>> bc07c63d5d02cbd15ca0b4966f33f87f450710eb
 
   which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
@@ -3728,9 +3724,6 @@ snapshots:
 
   minipass@7.1.2: {}
 
-<<<<<<< HEAD
-  mousetrap@1.6.5: {}
-=======
   minizlib@2.1.2:
     dependencies:
       minipass: 3.3.6
@@ -3739,7 +3732,8 @@ snapshots:
 
   mkdirp@1.0.4:
     optional: true
->>>>>>> bc07c63d5d02cbd15ca0b4966f33f87f450710eb
+
+  mousetrap@1.6.5: {}
 
   ms@2.0.0: {}
 
@@ -4456,11 +4450,10 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-<<<<<<< HEAD
   warning@4.0.3:
     dependencies:
       loose-envify: 1.4.0
-=======
+
   webidl-conversions@3.0.1:
     optional: true
 
@@ -4469,7 +4462,6 @@ snapshots:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
     optional: true
->>>>>>> bc07c63d5d02cbd15ca0b4966f33f87f450710eb
 
   which-boxed-primitive@1.0.2:
     dependencies:
