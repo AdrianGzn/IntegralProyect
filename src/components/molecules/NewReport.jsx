@@ -10,26 +10,29 @@ function NewReport() {
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, { //set report
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'credentials': 'include'
-            }
-        })
-            .then(response => {
+        const fetchReports = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_URL}/alumn`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
                 if (response.ok) {
-                    return response.json();
+                    const data = await response.json();
+                    setReports(data);
+                } else {
+                    throw new Error('Network response was not ok.');
                 }
-                throw new Error('Network response was not ok.');
-            })
-            .then(data => setReports(data))
-            .catch(error => console.error("Error fetching data: ", error))
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+            }
+        };
 
-        return () => { `cleanning the useEffect` }
+        fetchReports();
 
-    }, [setReport]);
+        return () => {
+            console.log('Cleaning up the useEffect');
+        };
+    }, []);
 
     const addReport = () => {
         if (!report) {
@@ -44,20 +47,20 @@ function NewReport() {
                 text: "Se logró añadir reporte",
                 icon: "success"
             });
+            setReport(""); 
         }
-    }
+    };
 
     return (
         <div>
-            <H1 text="Crear nuevo reporte">
-            </H1>
-            <div className=" grid grid-cols-2  w-[5%]">
-                <H2 text="Descripción"></H2>
+            <H1 text="Crear nuevo reporte" />
+            <div className="grid grid-cols-2 w-[5%]">
+                <H2 text="Descripción" />
             </div>
             <div>
                 <div className="flex gap-2">
-                    <Input className="p-5 h-14 w-[20%] h-[5%]" value={report} fnval={setReport}></Input>
-                    <Button onClick={addReport} text="Crear" className="!my-2"></Button>
+                    <Input className="p-5 h-14 w-[20%] h-[5%]" value={report} onChange={(e) => setReport(e.target.value)} />
+                    <Button onClick={addReport} text="Crear" className="!my-2" />
                 </div>
             </div>
         </div>

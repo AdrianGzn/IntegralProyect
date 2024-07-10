@@ -26,7 +26,7 @@ function TeacherBallots() {
         }
     };
 
-    useEffect(() => { //Obtiene alumnos
+    useEffect(() => {
         fetchAlumns();
         return () => { }
     }, []);
