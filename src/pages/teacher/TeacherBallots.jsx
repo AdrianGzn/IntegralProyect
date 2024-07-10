@@ -13,7 +13,7 @@ function TeacherBallots() {
 
     const fetchAlumns = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/alumns`); //aquí va el endpoint de alumnos
+            const response = await fetch(`${import.meta.env.VITE_URL}/alumn`); //aquí va el endpoint de alumnos
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
