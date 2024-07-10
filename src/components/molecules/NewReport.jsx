@@ -10,11 +10,12 @@ function NewReport() {
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, { //set report
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'credentials': 'include'
             }
         })
             .then(response => {
@@ -24,8 +25,11 @@ function NewReport() {
                 throw new Error('Network response was not ok.');
             })
             .then(data => setReports(data))
-            .catch(error => console.error("Error fetching data: ", error));
-    }, []);
+            .catch(error => console.error("Error fetching data: ", error))
+
+        return () => { `cleanning the useEffect` }
+
+    }, [setReport]);
 
     const addReport = () => {
         if (!report) {
@@ -45,17 +49,14 @@ function NewReport() {
 
     return (
         <div>
-            <H1 text="Crear nuevo reporte" className="underline decoration-lime-500">
-                {reports.map((data, index) => (
-                    <p key={index}>{data}</p>
-                ))}
+            <H1 text="Crear nuevo reporte">
             </H1>
-            <div className="grid grid-cols-2 gap-4 w-full">
-                <div className="flex flex-col gap-2">
-                    <H2 text="Descripción" className="!m-0"></H2>
-                    <Input className="h-16 w-full" value={report} fnval={setReport}></Input>
-                </div>
-                <div className="flex flex-col gap-2 justify-center">
+            <div className=" grid grid-cols-2  w-[5%]">
+                <H2 text="Descripción"></H2>
+            </div>
+            <div>
+                <div className="flex gap-2">
+                    <Input className="p-5 h-14 w-[20%] h-[5%]" value={report} fnval={setReport}></Input>
                     <Button onClick={addReport} text="Crear" className="!my-2"></Button>
                 </div>
             </div>
