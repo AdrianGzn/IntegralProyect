@@ -18,6 +18,7 @@ function NewReport() {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("logrado");
                     setReports(data);
                 } else {
                     throw new Error('Network response was not ok.');
@@ -39,7 +40,7 @@ function NewReport() {
             Swal.fire({
                 title: "Añadir reporte",
                 text: "Reporte no añadido",
-                icon: "error"
+                icon: "warning"
             });
         } else {
             Swal.fire({
@@ -59,7 +60,7 @@ function NewReport() {
             </div>
             <div>
                 <div className="flex gap-2">
-                    <Input className="p-5 h-14 w-[20%] h-[5%]" value={report} onChange={(e) => setReport(e.target.value)} />
+                    <Input className="p-5 h-14 w-[20%] h-[5%]" value={report} fnval={setReport} onChange={(e) => setReport(e.target.value)} />
                     <Button onClick={addReport} text="Crear" className="!my-2" />
                 </div>
             </div>
