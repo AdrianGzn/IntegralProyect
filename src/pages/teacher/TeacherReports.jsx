@@ -5,7 +5,7 @@ import H1 from "../../components/atoms/H1";
 import { useEffect, useState } from "react";
 
 function TeacherReports() {
-    const [report, setReport] = useState([])
+    const [report, setReport] = useState([]);
 
     return (
         <div className="min-h-screen w-full bg-slate-900 flex flex-col">
