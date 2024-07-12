@@ -1,26 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "../../components/organisms/Header";
 import NewReport from "../../components/molecules/NewReport";
 import ReportCard from "../../components/molecules/ReportCard";
-import H1 from "../../components/atoms/H1";
-import { useRef } from "react";
+import Text from "../../components/atoms/Text";
 import Swal from "sweetalert2";
-import '@sweetalert2/theme-bulma'
+import '@sweetalert2/theme-bulma';
 import { useContext } from "react";
 import personalUseContext from "../../context/reportContext";
 
+
+//Tmbn quioté lo de setPersonal pq era lo q m mandaba errores
+
 function TeacherReports() {
     const [reports, setReports] = useState([]);
-    const value = useContext(personalUseContext)
-    const topic = useRef('')
-
-    value.setPersonal({topic: topic})
+    const value = useContext(personalUseContext);
+    const topic = useRef('');
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/report`)
             .then(response => {
                 if (response.ok) {
-                    console.log("lo");
+                    console.log("Response is ok");
                     return response.json();
                 }
                 throw new Error('Failed to fetch reports');
@@ -37,20 +37,24 @@ function TeacherReports() {
     const addReport = () => {
         fetch(`${import.meta.env.VITE_URL}/report`, {
             method: 'POST',
-
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-
             body: JSON.stringify({
                 "topic": topic.current.value,
             })
         })
-        .then(data => {console.log(data);})
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setReports(prevReports => [...prevReports, data]); //Este es el spread q nos enseñó el profe
+        })
         .finally(final => {`the final ${final}`})
-        .catch(err => {console.log(err);})
-    }
+        .catch(error => {
+            console.error('Error adding report:', error);
+        });
+    };
 
     return (
         <div className="min-h-screen w-full bg-slate-900 flex flex-col">
@@ -59,7 +63,7 @@ function TeacherReports() {
                 <div className="min-h-[80%] w-4/6 p-4 rounded-s">
                     <NewReport onClick={addReport} />
                     <div>
-                        <H1 text="Reportes anteriores" className="" />
+                        <Text text="Reportes anteriores" className="!text-4xl" />
                         <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                             {reports.map((report, key) => (
                                 <ReportCard

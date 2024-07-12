@@ -1,5 +1,4 @@
-import H2 from "../atoms/H2";
-import H3 from "../atoms/H3";
+import Text from "../atoms/Text";
 
 function ReportCard({id, status, description}) {
 
@@ -7,15 +6,15 @@ function ReportCard({id, status, description}) {
 
         <>
             <div className="flex items-center">
-                <H2 text="Id:" className="!m-0 "></H2>
-                <H3 text={id} className="!mx-2"></H3>
+                <Text text="Id:" className="!m-0 !text-base"></Text>
+                <Text text={id} className="!mx-2 !text-xs"></Text>
             </div>
             <div className="flex items-center">
-                <H2 text="Estatus:" className="!m-0 "></H2>
-                <H3 text={status} className="!mx-2"></H3>
+                <Text text="Estatus:" className="!m-0 !text-base"></Text>
+                <Text text={status} className="!mx-2 !text-xs"></Text>
             </div>
-            <H2 text="Descripción:" className="!m-0"></H2>
-            <H3 text={description} className="!m-0"></H3>
+            <Text text="Descripción:" className="!m-0 !text-base"></Text>
+            <Text text={description} className="!m-0 !text-xs"></Text>
         </>
 
     </div>
