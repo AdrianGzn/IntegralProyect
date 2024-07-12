@@ -4,14 +4,21 @@ import H1 from "../atoms/H1";
 import H3 from "../atoms/H3";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
+import Swal from "sweetalert2";
+import '@sweetalert2/theme-bulma'
+import { useContext } from "react";
+import personalUseContext from "../../context/reportContext";
 
 function FormLogin() {
     const nameRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
 
+    const value = useContext(personalUseContext)
+
     const handleLogin = async (event) => {
         event.preventDefault();
+        value.setPersonal({name: nameRef.current.value, passwor: passwordRef.current.value})
 
         fetch(`${import.meta.env.VITE_URL}/personal/login`, {
             method: 'POST',
@@ -24,20 +31,26 @@ function FormLogin() {
                 password: passwordRef.current.value,
             })
         })
-        .then(response => {
-            if (response.ok) {
-                localStorage.setItem('token', data.token);
-                navigate('/management/home'); // Ruta de mientras
-            }
-        })
-        .then(data=>{
-            console.log(data);
-            localStorage.setItem('token',data.token)
-            
-        })
-        .catch(error => {
-            console.log("Error: ", error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    localStorage.setItem('token', response.headers.get('Authorization'))
+                    navigate('/management/home'); //ruta management xD
+                    return response.json()
+                } else {
+                    Swal.fire({
+                        title: "login",
+                        text: "error de login",
+                        icon: "error"
+                    })
+                }
+            })
+            .then(data => {
+                console.log(data.token);
+
+            })
+            .catch(error => {
+                console.log("Error: ", error);
+            });
     };
 
     return (
