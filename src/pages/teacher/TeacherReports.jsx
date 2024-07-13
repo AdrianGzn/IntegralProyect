@@ -13,7 +13,9 @@ import personalUseContext from "../../context/reportContext";
 
 function TeacherReports() {
     const [reports, setReports] = useState([]);
-    const value = useContext(personalUseContext);
+    const created = "teacher";
+    const updated = "teacher";
+    const deletes = false;
     const topic = useRef('');
 
     useEffect(() => {
@@ -28,21 +30,22 @@ function TeacherReports() {
             .then(data => {
                 setReports(data);
             })
-            .finally((final) => {console.log(final);})
             .catch(error => {
                 console.error('Error fetching reports:', error);
             });
-    }, [setReports]);
+    }, []);
 
     const addReport = () => {
         fetch(`${import.meta.env.VITE_URL}/report`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 "topic": topic.current.value,
+                "created_by": created,
+                "updated_by": updated,
+                "delete": deletes
             })
         })
         .then(response => response.json())

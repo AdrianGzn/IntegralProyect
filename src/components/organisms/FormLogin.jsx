@@ -1,55 +1,51 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
 import Swal from "sweetalert2";
-import '@sweetalert2/theme-bulma'
-import { useContext } from "react";
-import personalUseContext from "../../context/reportContext";
+import '@sweetalert2/theme-bulma';
 
 function FormLogin() {
     const nameRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
 
-    const value = useContext(personalUseContext)
-
     const handleLogin = async (event) => {
         event.preventDefault();
-        value.setPersonal({name: nameRef.current.value, passwor: passwordRef.current.value})
 
-        fetch(`${import.meta.env.VITE_URL}/personal/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: JSON.stringify({
-                name: nameRef.current.value,
-                password: passwordRef.current.value,
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.setItem('token', response.headers.get('Authorization'))
-                    navigate('/management/home'); //ruta management xD
-                    return response.json()
-                } else {
-                    Swal.fire({
-                        title: "login",
-                        text: "error de login",
-                        icon: "error"
-                    })
-                }
-            })
-            .then(data => {
-                console.log(data.token);
-
-            })
-            .catch(error => {
-                console.log("Error: ", error);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_URL}/personal/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+                body: JSON.stringify({
+                    name: nameRef.current.value,
+                    password: passwordRef.current.value,
+                })
             });
+
+            if (response.ok) {
+                const token = response.headers.get('Authorization');
+                const data = await response.json();
+
+                if (token) {
+                    localStorage.setItem('token', token);
+                }
+                console.log("l");
+                navigate(data.direction); // Redirigir basado en la dirección recibida
+            } else {
+                Swal.fire({
+                    title: "Login",
+                    text: "Error de login",
+                    icon: "error"
+                });
+            }
+        } catch (error) {
+            console.error("Error: ", error);
+        }
     };
 
     return (
