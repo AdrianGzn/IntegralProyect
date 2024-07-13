@@ -1,23 +1,20 @@
 import Button from "../../components/atoms/Button";
 import Input from "../../components/atoms/Input";
-import Swal from "sweetalert2";
 import Text from "../atoms/Text";
-
 
 function NewReport({ onClick }) {
 
     return (
-        <div>
-            <Text text="Crear nuevo reporte" className="!text-4xl" />
-            <div className="grid grid-cols-2 w-[5%]">
-                <Text text="Descripción" className="!text-base" />
+        <div className="w-[85%] bg-gray-800 p-6 rounded-lg">
+            <Text text="Crear nuevo reporte" className="!text-2xl !text-white mb-4" />
+            <div className="mb-4">
+                <Text text="Descripción" className="!text-base !text-gray-250" />
+                <Input
+                    placeholder="Iforme"
+                    className="ml-4 mt-2 p-3 w-[60%] h-[50%] rounded-md border border-gray-600 bg-slate-700 text-white  focus:border-blue-500"
+                />
             </div>
-            <div>
-                <div className="flex gap-2">
-                    <Input className="p-5 h-14 w-[20%] h-[5%]" />
-                    <Button onClick={onClick} text="Crear" className="!my-2" />
-                </div>
-            </div>
+            <Button onClick={onClick} text="Crear" className="bg-green-500 text-white py-2 px-4 rounded" />
         </div>
     );
 }
