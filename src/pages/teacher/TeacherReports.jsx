@@ -37,8 +37,7 @@ function TeacherReports() {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 "name": "aew",
