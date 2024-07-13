@@ -28,23 +28,35 @@ function FormLogin() {
             });
 
             if (response.ok) {
-                const token = response.headers.get('Authorization');
                 const data = await response.json();
+                const token = data.token;
+                const direction = data.direction;
 
                 if (token) {
                     localStorage.setItem('token', token);
+                    console.log(token);
                 }
-                console.log("l");
-                navigate(data.direction); // Redirigir basado en la dirección recibida
+
+                if (direction) {
+                    navigate(`${direction}`);
+                } else {
+                    console.log('No response');
+                }
             } else {
+                const errorData = await response.json();
                 Swal.fire({
                     title: "Login",
-                    text: "Error de login",
+                    text:  "Error de login",
                     icon: "error"
                 });
             }
         } catch (error) {
             console.error("Error: ", error);
+            Swal.fire({
+                title: "Error",
+                text: "Ocurrió un error al intentar iniciar sesión",
+                icon: "error"
+            });
         }
     };
 
