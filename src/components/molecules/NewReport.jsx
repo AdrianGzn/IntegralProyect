@@ -1,17 +1,16 @@
 import Button from "../../components/atoms/Button";
-import H1 from "../atoms/H1";
-import H2 from "../../components/atoms/H2";
 import Input from "../../components/atoms/Input";
 
+import Text from "../atoms/Text";
 
 
 function NewReport({ onClick }) {
 
     return (
         <div>
-            <H1 text="Crear nuevo reporte" />
+            <Text text="Crear nuevo reporte" className="!text-4xl" />
             <div className="grid grid-cols-2 w-[5%]">
-                <H2 text="Descripción" />
+                <Text text="Descripción" className="!text-base" />
             </div>
             <div>
                 <div className="flex gap-2">

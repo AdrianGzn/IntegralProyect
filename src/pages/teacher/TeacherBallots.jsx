@@ -5,55 +5,62 @@ import SearchBallotSection from '../../components/organisms/SearchBallotSection'
 
 function TeacherBallots() {
     const [pdfBytes, setPdfBytes] = useState(null);
+    const [setAlumns, setBallots] = useState([]);
     const [matricleSearch, setMatricleSearch] = useState();
-    const [alumns, setAlumns] = useState([]);
     const [filteredAlumn, setFilteredAlumn] = useState(null);
-    const [statusPDF, setStatus] = useState(false)
+    const [fetchPDF, setFetchPDF] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchAlumns = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/alumn`); //aquí va el endpoint de alumnos
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setAlumns(data);
-
-        } catch (error) {
-            setError(error.message);
-            console.error('Error fetching alumns:', error);
-        }
-    };
 
     useEffect(() => {
-        fetchAlumns();
-        return () => { }
-    }, []);
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("Response Correct Alumns");
+                return response.json();
+            }
+            throw new Error('Failed to fetch alumns');
+        })
+        .then(data => {
+            setAlumns(data);
+        })
+        .catch(error => {
+            console.error('Error fetching alumn:', error);
+        });
+    }, [setAlumns]);
 
-    useEffect(() => { //Filtra alumno buscado
-        if (matricleSearch) {
-            const alumn = alumns.find(alumn => alumn.matricle === parseInt(matricleSearch, 10));
-            setFilteredAlumn(alumn);
-            setStatus(true)//cambiando el status
-            console.log(statusPDF);
-        } else {
-            setFilteredAlumn(null);
-        }
-    }, [matricleSearch, alumns]);
+    useEffect(() => {
+        fetch(``)
+    }, [])
 
     const handleDownload = async (event) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/pdfs`, {  //también aquí va enpoint de alumnos
+            fetch(`${import.meta.env.VITE_URL}/ballot`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
                 },
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Response Correct Ballot");
+                    return response.json();
+                }
+                throw new Error('Failed to fetch ballot');
+            })
+            .then(data => {
+                setFetchPDF(data);
+            })
+            .catch(error => {
+                console.error('Error fetching alumn:', error);
             });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
 
             const data = await response.json();
             setPdfBytes(data);
@@ -80,13 +87,7 @@ function TeacherBallots() {
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col items-center border-2 border-white">
                     <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch}></SearchBallotSection>
                     <div className='h-[80%] w-full overflow-x-hidden'>
-                        {statusPDF ? ( //acortador para el PDF
-                            <ButtonPDFSection text={filteredAlumn.name}></ButtonPDFSection>
-                        ) : (
-                            alumns.map((alumn) => (
-                                <ButtonPDFSection key={alumn.id} text={alumn.name}></ButtonPDFSection>
-                            ))
-                        )}
+                        // Mapeo
                     </div>
                 </div>
             </div>

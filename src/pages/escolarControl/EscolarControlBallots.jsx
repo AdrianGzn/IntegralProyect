@@ -6,16 +6,16 @@ import { useState, useEffect, useRef } from "react"
 
 function EscolarControlBallots() {
 
-    const [ratingFinal, setRatingFinal] = useRef();
-    const [observations, setObservations] = useRef("");
-    const [subject1, setSubject1] = useRef("");
-    const [rating1, setRating1] = useRef("");
-    const [subject2, setSubject2] = useRef("");
-    const [rating2, setRating2] = useRef("");
-    const [subject3, setSubject3] = useRef("");
-    const [rating3, setRating3] = useRef("");
-    const [subject4, setSubject4] = useRef("");
-    const [rating4, setRating4] = useRef("");
+    const ratingFinal = useRef();
+    const observations = useRef("");
+    const subject1 = useRef("");
+    const rating1 = useRef("");
+    const subject2 = useRef("");
+    const rating2 = useRef("");
+    const subject3 = useRef("");
+    const rating3 = useRef("");
+    const subject4 = useRef("");
+    const rating4 = useRef("");   
 
     const handleSave = () => {
         console.log("Datos guardados");
@@ -24,8 +24,8 @@ function EscolarControlBallots() {
     return (
         <div className="h-full w-full bg-slate-900">
             <Header role="escolarControl" />
-            <div className="w-full h-[80vh] flex justify-center items-center">
-                <div className="h-4/5 w-4/6 flex flex-col items-center">
+            <div className="w-full h-[80vh] flex justify-center items-center  border-2 border-white">
+                <div className="h-4/5 w-4/6 flex flex-col items-center  border-2 border-white">
                     <div className="w-full h-[75%] flex items-center justify-evenly">
                         <div className="w-[30%]">
                             <InputSearch type="text" placeholder="Matricula"></InputSearch>
