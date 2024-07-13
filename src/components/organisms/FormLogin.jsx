@@ -6,19 +6,16 @@ import Field from "../molecules/Field";
 import Button from "../atoms/Button";
 import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma'
-import { useContext } from "react";
-import personalUseContext from "../../context/reportContext";
+
 
 function FormLogin() {
     const nameRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
 
-    const value = useContext(personalUseContext)
-
     const handleLogin = async (event) => {
         event.preventDefault();
-        value.setPersonal({name: nameRef.current.value, passwor: passwordRef.current.value})
+
 
         fetch(`${import.meta.env.VITE_URL}/personal/login`, {
             method: 'POST',
@@ -34,7 +31,7 @@ function FormLogin() {
             .then(response => {
                 if (response.ok) {
                     localStorage.setItem('token', response.headers.get('Authorization'))
-                    navigate('/management/home'); //ruta management xD
+                    //ruta management xD
                     return response.json()
                 } else {
                     Swal.fire({
@@ -45,6 +42,7 @@ function FormLogin() {
                 }
             })
             .then(data => {
+                navigate('management/home');
                 console.log(data.token);
 
             })

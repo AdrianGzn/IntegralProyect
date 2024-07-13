@@ -13,9 +13,7 @@ function DownloadFormat({ text }) {
         const pdfDoc = await PDFDocument.create();
         const page = pdfDoc.addPage([600, 400]);
 
- 
-        const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/imagen-632b7.appspot.com/o/277412245-352-k243590.jpg?alt=media&token=1caf0907-cec5-489e-9641-1a5ad1999cf4'; 
-        const imageBytes = await fetch(imageUrl).then(res => res.arrayBuffer());
+        const imageBytes = await fetch(`${import.meta.env.VITE_URL}/ballot`).then(res => res.arrayBuffer());
         const image = await pdfDoc.embedJpg(imageBytes);
 
    
@@ -37,7 +35,9 @@ function DownloadFormat({ text }) {
     return (
         <div className="min-h-[5%] w-4/6">
             <ButtonDownload onClick={createPdf} text={text}></ButtonDownload>
-            {pdfUrl && (
+            {
+         
+            pdfUrl && (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
                     <div style={{ height: '750px' }}>
                         <Viewer fileUrl={pdfUrl} />

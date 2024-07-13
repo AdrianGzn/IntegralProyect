@@ -2,7 +2,7 @@ import Button from "../../components/atoms/Button";
 import H1 from "../atoms/H1";
 import H2 from "../../components/atoms/H2";
 import Input from "../../components/atoms/Input";
-import Swal from "sweetalert2";
+
 
 
 function NewReport({ onClick }) {
