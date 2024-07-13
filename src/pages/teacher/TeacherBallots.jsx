@@ -86,7 +86,7 @@ function TeacherBallots() {
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col items-center border-2 border-white">
                     <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch}></SearchBallotSection>
-                    <div className='h-[80%] w-full overflow-x-hidden'>
+                    <div className='h-[60%] w-full overflow-x-hidden'>
                         // Mapeo
                     </div>
                 </div>
