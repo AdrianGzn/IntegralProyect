@@ -24,8 +24,8 @@ function EscolarControlBallots() {
     return (
         <div className="h-full w-full bg-slate-900">
             <Header role="escolarControl" />
-            <div className="w-full h-[80vh] flex justify-center items-center  border-2 border-white">
-                <div className="h-4/5 w-4/6 flex flex-col items-center  border-2 border-white">
+            <div className="w-full h-[80vh] flex justify-center items-center">
+                <div className="h-4/5 w-4/6 flex flex-col items-center">
                     <div className="w-full h-[75%] flex items-center justify-evenly">
                         <div className="w-[30%]">
                             <InputSearch type="text" placeholder="Matricula"></InputSearch>
