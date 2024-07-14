@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import Login from './pages/Login'
-import personalUseContext from './context/userContext'
+import { useState } from 'react';
+import Login from './pages/Login';
 
 function App() {
   const [personal, setPersonal] = useState({})
   
-  return (
-    <personalUseContext.Provider value={{personal, setPersonal}}>
-      <Login></Login>
-    </personalUseContext.Provider>
-    )
+  return (<>
+    <Login></Login>
+  </>)
 }
 
-export default App
+export default App;

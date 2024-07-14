@@ -45,14 +45,14 @@ function TeacherReports() {
                 "deleted": false
             })
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setReports(prevReports => [...prevReports, data]);
-            })
-            .catch(error => {
-                console.error('Error adding report:', error);
-            });
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setReports(prevReports => [...prevReports, data]);
+        })
+        .catch(error => {
+            console.error('Error adding report:', error);
+        });
     };
 
     return (
