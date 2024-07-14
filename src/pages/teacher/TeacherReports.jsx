@@ -5,8 +5,6 @@ import ReportCard from "../../components/molecules/ReportCard";
 import Text from "../../components/atoms/Text";
 import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma';
-import { useContext } from "react";
-import personalUseContext from "../../context/userContext";
 
 function TeacherReports() {
     const [reports, setReports] = useState([]);
