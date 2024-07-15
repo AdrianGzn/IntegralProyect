@@ -1,10 +1,10 @@
 import SearchBallot from "../molecules/SearchBallot";
 
-function SearchBallotSection({val, fnval}) {
+function SearchBallotSection({val, fnval, onClick}) {
     return (
         
         <div className="w-full">
-            <SearchBallot val={val} fnval={fnval}></SearchBallot>
+            <SearchBallot onClick={onClick} val={val} fnval={fnval}></SearchBallot>
         </div>
     )
 }

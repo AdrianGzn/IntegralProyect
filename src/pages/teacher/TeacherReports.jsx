@@ -8,17 +8,12 @@ import '@sweetalert2/theme-bulma';
 
 function TeacherReports() {
     const [reports, setReports] = useState([]);
-    const lastName = "gola";
-    const created_by = "teacher";
-    const updated_by = "teacher";
-    const deletes = false;
-    const topic = useRef('');
+    const topic = useRef(null);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`)
+        fetch(`${import.meta.env.VITE_URL}/report`)
             .then(response => {
                 if (response.ok) {
-                    console.log("Response is ok");
                     return response.json();
                 }
                 throw new Error('Failed to fetch reports');
@@ -29,30 +24,42 @@ function TeacherReports() {
             .catch(error => {
                 console.error('Error fetching reports:', error);
             });
-    }, []); // Debes dejar el array de dependencias vacío para que se ejecute solo una vez al montar el componente
+    }, []);
 
     const addReport = () => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+        if (!topic) {
+            Swal.fire({
+                title: 'Agregar reporte',
+                text: 'No se logro agregar',
+                icon: 'error'
+            });
+        }
+
+        fetch(`${import.meta.env.VITE_URL}/report`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "name": "aew",
-                "lastName": "reg",
-                "created_by": "reg",
-                "updated_by": "yo",
-                "deleted": false
+                topic: topic.current.value,
+                created_by: "teacher",
+                updated_by: "teacher",
+                deleted: false
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            setReports(prevReports => [...prevReports, data]);
-        })
-        .catch(error => {
-            console.error('Error adding report:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add report');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setReports(prevReports => [...prevReports, data]);
+            })
+            .catch(error => {
+                console.error('Error adding report:', error);
+                Swal.fire('Error', 'Failed to add report', 'error');
+            });
     };
 
     return (
@@ -60,20 +67,34 @@ function TeacherReports() {
             <Header role="teacher" />
             <div className="flex-grow flex justify-center items-start">
                 <div className="min-h-[80%] w-4/6 p-4 rounded-s">
-                    <NewReport onClick={addReport} />
+                    <NewReport topicRef={topic} onClick={addReport} />
                     <div className="flex gap-2 flex-col">
                         <Text text="Reportes activos" className="text-4xl" />
                         <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                             {reports.map((report, key) => (
-                                <ReportCard
-                                    key={key}
-                                    id={report.alumn_id}
-                                    status={report.deleted}
-                                    description={report.lastName}
-                                />
+                                !report.deleted && (
+                                    <ReportCard
+                                        key={key}
+                                        id={report.report_id}
+                                        status={report.deleted}
+                                        description={report.topic}
+                                    />
+                                )
                             ))}
                         </div>
-                        <Text text="Reportes anteriores" className="text-4xl" />
+                        <Text text="Reportes anteriores" className="text-4x1" />
+                        <div className="flex flex-wrap justify-evenly items-center w-full my-5">
+                            {reports.map((report, key) => (
+                                report.deleted && (
+                                    <ReportCard
+                                        key={key}
+                                        id={report.report_id}
+                                        status={report.deleted}
+                                        description={report.topic}
+                                    />
+                                )
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
