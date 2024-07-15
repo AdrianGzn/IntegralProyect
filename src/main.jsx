@@ -14,6 +14,7 @@ import TeacherBallots from './pages/teacher/TeacherBallots.jsx'
 
 import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
 import EscolarControlBallots from './pages/escolarControl/EscolarControlBallots.jsx'
+import EscolarControlQualifications from './pages/escolarControl/EscolarControlQualifications.jsx'
 
 import './index.css'
 import {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
   {
     path: "/escolarControl/ballots",
     element: <EscolarControlBallots />,
+  },
+  {
+    path: "/escolarControl/qualifications",
+    element: <EscolarControlQualifications />,
   },
 ]);
 

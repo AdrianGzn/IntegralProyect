@@ -33,8 +33,31 @@ function ManagementReports() {
         const id = idReport.current.value;
         const status = statusReport.current.value;
 
-        console.log(id);
-        console.log(status);
+        fetch(`${import.meta.env.VITE_URL}/report/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "status": status
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to update report');
+        })
+        .then(updatedReport => {
+            setReports(prevReports => 
+                prevReports.map(report => 
+                    report.alumn_id === id ? { ...report, deleted: updatedReport.deleted } : report
+                )
+            );
+        })
+        .catch(error => {
+            console.error('Error updating report:', error);
+        });
     };
 
     return (

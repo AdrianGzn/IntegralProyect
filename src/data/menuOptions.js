@@ -1,10 +1,6 @@
 const options = {
     teacher: [
         {
-            text: "Asistencias",
-            link: "/teacher/asistance"
-        },
-        {
             text: "Boletas",
             link: "/teacher/ballots"
         },
@@ -21,6 +17,10 @@ const options = {
         {
             text: "Boletas",
             link: "/escolarControl/ballots"
+        },
+        {
+            text: "Calificaciones generales",
+            link: "/escolarControl/qualifications"
         },
     ],
     management: [
