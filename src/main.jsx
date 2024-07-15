@@ -9,7 +9,6 @@ import ManagementReports from './pages/management/ManagementReports.jsx'
 import TeacherHome from './pages/teacher/TeacherHome.jsx'
 import TeacherReports from './pages/teacher/TeacherReports.jsx'
 import TeacherQualifications from './pages/teacher/TeacherQualifications.jsx'
-import TeacherAsistance from './pages/teacher/TeacherAsistance.jsx'
 import TeacherBallots from './pages/teacher/TeacherBallots.jsx'
 
 import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
@@ -42,10 +41,6 @@ const router = createBrowserRouter([
   {
     path: "/teacher/ballots",
     element: <TeacherBallots />,
-  },
-  {
-    path: "/teacher/asistance",
-    element: <TeacherAsistance />,
   },
   {
     path: "/teacher/reports",
