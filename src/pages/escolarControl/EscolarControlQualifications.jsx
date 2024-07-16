@@ -1,14 +1,18 @@
 import Header from "../../components/organisms/Header";
 import Table from "../../components/organisms/Table";
+import Text from "../../components/atoms/Text";
 import { useState, useEffect } from "react";
 
 function EscolarControlQualifications() {
     const [alumns, setAlumns] = useState([]);
     const [loading, setLoading] = useState(true);
-    
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+        const encabezado = [{ 1: "Id Boleta", 2: "Id Alumno", 3: "Materia", 4: "Calificación"}];
+
+        setAlumns(encabezado);
+
+        fetch(`${import.meta.env.VITE_URL}/rating`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +27,7 @@ function EscolarControlQualifications() {
             throw new Error('Failed to fetch alumns');
         })
         .then(data => {
-            setAlumns(data);
+            setAlumns(newAlumns => [...newAlumns, ...data]);
             setLoading(false);
         })
         .catch(error => {
@@ -39,7 +43,7 @@ function EscolarControlQualifications() {
                 <div className="h-[75vh] w-4/6 flex flex-col">
                     <div className="w-full flex justify-center">
                         {loading ? (
-                            <p>Cargando...</p>
+                            <Text text="Cargando..."></Text>
                         ) : (
                             <Table data={alumns} title="Hola" />
                         )}
