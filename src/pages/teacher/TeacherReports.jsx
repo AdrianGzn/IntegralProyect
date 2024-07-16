@@ -3,6 +3,8 @@ import Header from "../../components/organisms/Header";
 import NewReport from "../../components/molecules/NewReport";
 import ReportCard from "../../components/molecules/ReportCard";
 import Text from "../../components/atoms/Text";
+import { Navigate } from "react-router-dom";
+import { isnertOption, getOptions } from "../../data/menuOptions"
 import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma';
 
@@ -30,37 +32,50 @@ function TeacherReports() {
         if (!topic) {
             Swal.fire({
                 title: 'Agregar reporte',
-                text: 'No se logro agregar',
+                text: 'No se logro agregar, ingrese el id correcto',
                 icon: 'error'
             });
+        } else {
+            Swal.fire({
+                title: "Agregar reporte",
+                text: "el reporte se agrego",
+                icon: "success"
+            })
+
+            fetch(`${import.meta.env.VITE_URL}/report`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    personal_id: 1,
+                    topic: topic.current.value,
+                    created_by: "teacher",
+                    updated_by: "teacher",
+                    deleted: false
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to add report');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setReports(prevReports => [...prevReports, data]);
+                })
+                .catch(error => {
+                    console.error('Error adding report:', error);
+                    Swal.fire('Error', 'Failed to add report', 'error');
+                });
         }
 
-        fetch(`${import.meta.env.VITE_URL}/report`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                topic: topic.current.value,
-                created_by: "teacher",
-                updated_by: "teacher",
-                deleted: false
-            })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to add report');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setReports(prevReports => [...prevReports, data]);
-            })
-            .catch(error => {
-                console.error('Error adding report:', error);
-                Swal.fire('Error', 'Failed to add report', 'error');
-            });
     };
+
+    const search = (option) => {
+        Navigate(isnertOption(option))
+    }
+
 
     return (
         <div className="min-h-screen w-full bg-slate-900 flex flex-col">
@@ -84,16 +99,18 @@ function TeacherReports() {
                         </div>
                         <Text text="Reportes anteriores" className="text-4x1" />
                         <div className="flex flex-wrap justify-evenly items-center w-full my-5">
-                            {reports.map((report, key) => (
-                                report.deleted && (
-                                    <ReportCard
-                                        key={key}
-                                        id={report.report_id}
-                                        status={report.deleted}
-                                        description={report.topic}
-                                    />
-                                )
-                            ))}
+                            {
+                                //otra forma aparte del filter
+                                reports.map((report, key) => {
+                                    if(report.deleted != true) {
+                                        <ReportCard 
+                                          key={key}
+                                          id={report.report_id}
+                                          status={report.deleted}
+                                          description={report.topic}/>
+                                    }
+                                })
+                            }
                         </div>
                     </div>
                 </div>
