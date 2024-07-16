@@ -1,27 +1,49 @@
 import Header from "../../components/organisms/Header";
-import Field from "../../components/molecules/Field";
-import InputSearch from "../../components/atoms/InputSearch";
-import Button from "../../components/atoms/Button"
-import Table from "../../components/organisms/Table"
-import { useState, useEffect, useRef } from "react"
+import Table from "../../components/organisms/Table";
+import { useState, useEffect } from "react";
 
 function EscolarControlQualifications() {
+    const [alumns, setAlumns] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
 
-    const data = [
-        { id: 1, name: 'John Doe', age: 28, job: 'Developer' },
-        { id: 2, name: 'Jane Smith', age: 32, job: 'Designer' },
-        { id: 3, name: 'Sam Green', age: 24, job: 'Manager' },
-        { id: 3, name: 'Sam Green', age: 24, job: 'Manager' },
-        { id: 3, name: 'Sam Green', age: 24, job: 'Manager' },
-        { id: 3, name: 'Sam Green', age: 24, job: 'Manager' },
-    ];
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("Response Correct Alumns");
+                return response.json();
+            }
+            throw new Error('Failed to fetch alumns');
+        })
+        .then(data => {
+            setAlumns(data);
+            setLoading(false);
+        })
+        .catch(error => {
+            console.error('Error fetching alumn:', error);
+            setLoading(false);
+        });
+    }, []);
 
     return (
-        <div className="h-full w-full bg-slate-900">
+        <div className="min-h-screen w-full bg-slate-900">
             <Header role="escolarControl" />
-            <div className="w-full min-h-[80vh] flex justify-center items-center">
-                <div className="h-4/5 w-4/6 flex flex-col items-center border-2 border-white">
-                    <Table data={data} title="Hola" />
+            <div className="w-full flex justify-center items-center">
+                <div className="h-[75vh] w-4/6 flex flex-col">
+                    <div className="w-full flex justify-center">
+                        {loading ? (
+                            <p>Cargando...</p>
+                        ) : (
+                            <Table data={alumns} title="Hola" />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
