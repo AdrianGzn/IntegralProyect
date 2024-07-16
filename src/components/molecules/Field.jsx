@@ -6,7 +6,7 @@ function Field({ text, type, placeholder, inputRef, className }) {
         <div className={`m-2 flex flex-col w-3/5 ${className} items-center`}>
             <Text className="m-0 mb-1 !text-xs" text={text} />
             <Input
-                className="mx-0"
+                className="mx-0 w-15 h-[65%] text-white"
                 type={type}
                 placeholder={placeholder}
                 ref={inputRef}

@@ -1,6 +1,6 @@
 import Anchor from "../atoms/Anchor";
 import AnchorHome from "../atoms/AnchorHome";
-import getOptions from "../../data/menuOptions";
+import { getOptions} from "../../data/menuOptions";
 import InputSearch from "../atoms/InputSearch";
 import { useState } from "react";
 

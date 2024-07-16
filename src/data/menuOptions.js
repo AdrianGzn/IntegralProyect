@@ -31,8 +31,14 @@ const options = {
     ]
 }
 
+function isnertOption (option) {
+    if(option === 'Reportes') {
+        return options.teacher.link;
+    }
+}
+
 function getOptions () {
     return options;
 }
 
-export default getOptions;
+export {isnertOption, getOptions};

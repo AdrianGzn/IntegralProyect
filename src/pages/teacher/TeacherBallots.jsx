@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Header from "../../components/organisms/Header";
-import ButtonPDFSection from '../../components/organisms/ButtonPDFSection';
+import Header from '../../components/organisms/Header';
 import SearchBallotSection from '../../components/organisms/SearchBallotSection';
 import Swal from 'sweetalert2';
+import '@sweetalert2/theme-bulma';
 
 function TeacherBallots() {
     const [alumns, setAlumns] = useState([]);
-    const [matricleSearch, setMatricleSearch] = useState();
-    const [i, setI] = useState(-1)
-
+    const [matricleSearch, setMatricleSearch] = useState('');
+    const [i, setI] = useState(-1);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+        fetch(`${import.meta.env.VITE_URL}/ballot`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,44 +26,73 @@ function TeacherBallots() {
             })
             .then(data => {
                 setAlumns(data);
+                console.log(data);
             })
             .catch(error => {
                 console.error('Error fetching alumn:', error);
             });
     }, []);
 
-    const searchBallot = (id) => {
-        const find = alumns.findIndex(index => index.alumn_id === 1) // una busqueda para el index del alumno xD prro
-        if (find !== -1) {
-            setI(find)
-            Swal.fire({
-                title: "Buscar",
-                text: "se logro encontrar",
-                icon: "success"
-            })
-        } else {
-            setI(-1)
-            Swal.fire({
-                title: "Buscar",
-                text: "no se logro encontrar",
-                icon: "error"
-            })
-        }
-    }
+    const handleDownload = (item) => {
+        try {
+            if (!item || !item.content || typeof item.content !== 'string') {
+                throw new Error('Los datos del PDF no están disponibles.');
+            }
+            const base64Data = item.content;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
 
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ballot_${item.alumn_id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Error al preparar el PDF para descarga:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo descargar el PDF. Por favor, intenta nuevamente.',
+                icon: 'error'
+            });
+        }
+    };
+
+    const searchBallot = (id) => {
+        const find = alumns.findIndex(index => index.alumn_id === id);
+        if (find !== -1) {
+            setI(find);
+            Swal.fire({
+                title: "Buscar",
+                text: "Se logró encontrar",
+                icon: "success"
+            });
+        } else {
+            setI(-1);
+            Swal.fire({
+                title: "Buscar",
+                text: "No se logró encontrar",
+                icon: "error"
+            });
+        }
+    };
 
     return (
         <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col items-center border-2 border-white">
-                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onClick={() => searchBallot(matricleSearch)}></SearchBallotSection>
+                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onClick={(id) => searchBallot(id)} />
                     <div className='h-[60%] w-full overflow-x-hidden flex align-items-center'>
-                        {
-                            (i !== -1) && (
-                                <button key={alumns[i].alumn_id}>{alumns[i].content}hola</button>
-                            )
-                        }
+                        {alumns.map((item, key) => (
+                            <button key={key} onClick={() => handleDownload(item)}>Descargar PDF {key + 1}</button>
+                        ))}
                     </div>
                 </div>
             </div>
