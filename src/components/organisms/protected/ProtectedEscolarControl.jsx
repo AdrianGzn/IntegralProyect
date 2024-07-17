@@ -1,0 +1,14 @@
+import { Navigate } from "react-router-dom";
+import { getRole } from "../../../data/userActual";
+
+function ProtectedEscolarControl({ children, redirectTo = "/" }) {
+    const role = getRole();
+
+    if (role === "escolarControl") {
+        return children;
+    } else {
+        return <Navigate to={redirectTo} />;
+    }
+}
+
+export default ProtectedEscolarControl;

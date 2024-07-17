@@ -1,5 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { getRole } from './data/userActual.js';
+import ProtectedTeacher from "./components/organisms/protected/ProtectedTeacher.jsx";
+import ProtectedManagement from "./components/organisms/protected/ProtectedManagement.jsx";
+import ProtectedEscolarControl from "./components/organisms/protected/ProtectedEscolarControl.jsx";
 
 import App from './App.jsx'
 
@@ -16,10 +21,6 @@ import EscolarControlBallots from './pages/escolarControl/EscolarControlBallots.
 import EscolarControlQualifications from './pages/escolarControl/EscolarControlQualifications.jsx'
 
 import './index.css'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -28,39 +29,39 @@ const router = createBrowserRouter([
   },
   {
     path: "/management/home",
-    element: <ManagementHome />,
+    element: <ProtectedManagement><ManagementHome /></ProtectedManagement>,
   },
   {
     path: "/management/reports",
-    element: <ManagementReports />,
+    element: <ProtectedManagement><ManagementReports /></ProtectedManagement>,
   },
   {
     path: "/teacher/home",
-    element: <TeacherHome />,
+    element: <ProtectedTeacher><TeacherHome /></ProtectedTeacher>,
   },
   {
     path: "/teacher/ballots",
-    element: <TeacherBallots />,
+    element: <ProtectedTeacher><TeacherBallots /></ProtectedTeacher>,
   },
   {
     path: "/teacher/reports",
-    element: <TeacherReports />,
+    element: <ProtectedTeacher><TeacherReports /></ProtectedTeacher>,
   },
   {
     path: "/teacher/qualifications",
-    element: <TeacherQualifications />,
+    element: <ProtectedTeacher><TeacherQualifications /></ProtectedTeacher>,
   },
   {
     path: "/escolarControl/home",
-    element: <EscolarControlHome />,
+    element: <ProtectedEscolarControl><EscolarControlHome /></ProtectedEscolarControl>,
   },
   {
     path: "/escolarControl/ballots",
-    element: <EscolarControlBallots />,
+    element: <ProtectedEscolarControl><EscolarControlBallots /></ProtectedEscolarControl>,
   },
   {
     path: "/escolarControl/qualifications",
-    element: <EscolarControlQualifications />,
+    element: <ProtectedEscolarControl><EscolarControlQualifications /></ProtectedEscolarControl>,
   },
 ]);
 
