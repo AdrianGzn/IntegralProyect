@@ -3,6 +3,7 @@ import HeroSection from "../../components/organisms/HeroSection";
 import { getName, getRole } from "../../data/userActual";
 
 function ManagementHome() {
+
     return (
         <div className="min-h-screen w-full bg-slate-900">
             <Header role="management" />

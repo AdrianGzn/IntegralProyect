@@ -1,12 +1,14 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
 import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma';
+import { getRole, setUser, printUser } from "../../data/userActual";
 
 function FormLogin() {
+    const [redirect, setRedirect] = useState(false);
     const nameRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
@@ -26,31 +28,32 @@ function FormLogin() {
                     password: passwordRef.current.value,
                 })
             });
-
             if (response.ok) {
                 const data = await response.json();
+                const id = data.id;
+                const name = data.name;
+                const role = data.role;
                 const token = data.token;
-                const direction = data.role;
-                if (token) {
-                    localStorage.setItem('token', response.headers.get('Authorization'));
-                    console.log(token);
-                }
 
-                if (direction) {
-                    console.log(direction);
+                if (role) {
+                    localStorage.setItem('token', token);
+                    setUser(name, role, id);
+                    printUser();
+                    setRedirect(true);
                 } else {
                     console.log('No response');
                 }
+
                 Swal.fire({
-                    title: "Login",
-                    text: "Logro ingresar",
+                    title: "Acceder",
+                    text: "Se logro logear",
                     icon: "success"
-                })
+                });
             } else {
                 const errorData = await response.json();
                 Swal.fire({
                     title: "Login",
-                    text:  "Error de login",
+                    text: "Error de login",
                     icon: "error"
                 });
             }
@@ -63,6 +66,24 @@ function FormLogin() {
             });
         }
     };
+
+    useEffect(() => {
+        if (redirect) {
+            switch(getRole()){
+                case "management":
+                    navigate("/management/home");
+                    break;
+                case "teacher":
+                    navigate("/teacher/home");
+                    break;
+                case "escolarControl":
+                    navigate("/escolarControl/home");
+                    break;
+                default:
+                    navigate("/");
+            }   
+        }
+    }, [redirect]);
 
     return (
         <div className="rounded bg-slate-900 h-3/5 w-2/5 shadow-md shadow-slate-500/40 flex justify-center">

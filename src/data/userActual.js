@@ -1,23 +1,35 @@
-let name = "Romeo";
-let role = "Maestro";
-let id = 0;
+const user = {
+    name: "",
+    role: "",
+    id: 0
+};
 
 function setUser(newName, newRole, newId) {
-    name = newName;
-    role = newType;
-    id = newId;
+    user.name = newName;
+    user.role = newRole;
+    user.id = newId;
+}
+
+function clearUser() {
+    user.name = "";
+    user.role = "";
+    user.id = 0;
 }
 
 function getName() {
-    return name;
+    return user.name;
 }
 
 function getRole() {
-    return role;
+    return user.role;
 }
 
 function getId() {
-    return id;
+    return user.id;
 }
 
-export { setUser, getName, getRole, getId };
+function printUser() {
+    console.log("Id:" + user.id + " Nombre:" + user.name + " Role:" + user.role);
+}
+
+export { setUser, clearUser, getName, getRole, getId, printUser };
