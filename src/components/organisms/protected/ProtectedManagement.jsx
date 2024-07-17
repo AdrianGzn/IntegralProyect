@@ -4,6 +4,8 @@ import { getRole } from "../../../data/userActual";
 function ProtectedManagement({ children, redirectTo = "/" }) {
     const role = getRole();
 
+    console.log(role);
+
     if (role === "management") {
         return children;
     } else {

@@ -4,6 +4,8 @@ import { getRole } from "../../../data/userActual";
 function ProtectedEscolarControl({ children, redirectTo = "/" }) {
     const role = getRole();
 
+    console.log(role);
+
     if (role === "escolarControl") {
         return children;
     } else {

@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { getRole } from './data/userActual.js';
 import ProtectedTeacher from "./components/organisms/protected/ProtectedTeacher.jsx";
 import ProtectedManagement from "./components/organisms/protected/ProtectedManagement.jsx";
 import ProtectedEscolarControl from "./components/organisms/protected/ProtectedEscolarControl.jsx";
