@@ -9,7 +9,6 @@ function EscolarControlQualifications() {
 
     useEffect(() => {
         const encabezado = [{ 1: "Id Boleta", 2: "Id Alumno", 3: "Materia", 4: "Calificación"}];
-
         setAlumns(encabezado);
 
         fetch(`${import.meta.env.VITE_URL}/rating`, {
@@ -25,7 +24,7 @@ function EscolarControlQualifications() {
                 return response.json();
             }
             throw new Error('Failed to fetch alumns');
-        })
+        }) 
         .then(data => {
             setAlumns(newAlumns => [...newAlumns, ...data]);
             setLoading(false);

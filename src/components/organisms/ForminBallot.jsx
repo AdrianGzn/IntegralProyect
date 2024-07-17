@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
+import Text from "../atoms/Text";
 
 function ForminBallot() {
     const [content, setContent] = useState({});
@@ -112,24 +113,27 @@ function ForminBallot() {
     };
 
     return (
-        <div className="w-full h-[80vh] flex justify-center items-center">
-            <div className="h-4/5 w-4/6 flex flex-col items-center">
-                <div className="w-full h-[60%] flex items-center justify-evenly">
-                    <div className="w-[30%]">
-                        <Field text="Observaciones:" type="text" placeholder="observaciones" inputRef={observations} className="w-[90%]" />
-                        <Field text="Calificación final:" type="text" placeholder="calificación" inputRef={ratingFinal} className="w-[90%]" />
-                    </div>
-                    <div className="w-1/4">
+        <>
+                <div className="w-full flex items-center justify-evenly flex-wrap">
+                    
+                    <div className="w-1/4 min-w-64 mb-10 flex justify-center flex-wrap">
+                        <Text text="Materias" className="!text-xl underline decoration-lime-500"></Text>
                         <Field text="Materia 1:" type="text" placeholder="materia" inputRef={subject1} className="w-[90%]" />
                         <Field text="Materia 2:" type="text" placeholder="materia" inputRef={subject2} className="w-[90%]" />
                         <Field text="Materia 3:" type="text" placeholder="materia" inputRef={subject3} className="w-[90%]" />
                         <Field text="Materia 4:" type="text" placeholder="materia" inputRef={subject4} className="w-[90%]" />
                     </div>
-                    <div className="w-1/4">
+                    <div className="w-1/4 min-w-64 mb-10 flex justify-center flex-wrap">
+                        <Text text="Calificaciones" className="!text-xl underline decoration-lime-500"></Text>
                         <Field text="Calificación 1:" type="text" placeholder="calificación" inputRef={rating1} className="w-[90%]" />
                         <Field text="Calificación 2:" type="text" placeholder="calificación" inputRef={rating2} className="w-[90%]" />
                         <Field text="Calificación 3:" type="text" placeholder="calificación" inputRef={rating3} className="w-[90%]" />
                         <Field text="Calificación 4:" type="text" placeholder="calificación" inputRef={rating4} className="w-[90%]" />
+                    </div>
+                    <div className="w-[30%] min-w-64 mb-10 flex justify-center flex-wrap">
+                        <Text text="General" className="!text-xl underline decoration-lime-500"></Text>
+                        <Field text="Observaciones:" type="text" placeholder="observaciones" inputRef={observations} className="w-[90%]" />
+                        <Field text="Calificación final:" type="text" placeholder="calificación" inputRef={ratingFinal} className="w-[90%]" />
                     </div>
                 </div>
                 <div className="flex flex-col items-center justify-center mt-4 w-full h-[50]">
@@ -147,8 +151,7 @@ function ForminBallot() {
                         }}
                     </BlobProvider>
                 </div>
-            </div>
-        </div>
+        </>
     );
 }
 
