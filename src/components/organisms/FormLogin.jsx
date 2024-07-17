@@ -30,7 +30,7 @@ function FormLogin() {
             if (response.ok) {
                 const data = await response.json();
                 const token = data.token;
-                const direction = data.direction;
+                const direction = data.role;
 
                 if (token) {
                     localStorage.setItem('token', token);
@@ -38,7 +38,7 @@ function FormLogin() {
                 }
 
                 if (direction) {
-                    navigate(`${direction}`);
+                    console.log(direction);
                 } else {
                     console.log('No response');
                 }

@@ -19,7 +19,6 @@ function ForminBallot() {
     const subject4 = useRef(null);
     const rating4 = useRef(null);
 
-    // Function to convert Blob to Base64
     const convertBlobToBase64 = (blob) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -31,7 +30,6 @@ function ForminBallot() {
 
     useEffect(() => {
         if (PDFBase64) {
-            // Clean up the object URL after use
             return () => URL.revokeObjectURL(PDFBase64);
         }
     }, [PDFBase64]);
