@@ -25,8 +25,15 @@ function TeacherBallots() {
                 throw new Error('Failed to fetch alumns');
             })
             .then(data => {
-                setAlumns(data);
-                console.log(data);
+                const base64Data = data.content;
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
             })
             .catch(error => {
                 console.error('Error fetching alumn:', error);
@@ -34,52 +41,35 @@ function TeacherBallots() {
     }, []);
 
     const handleDownload = (item) => {
-        try {
-            if (!item || !item.content || typeof item.content !== 'string') {
-                throw new Error('Los datos del PDF no están disponibles.');
-            }
-            const base64Data = item.content;
-            const byteCharacters = atob(base64Data);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ballot_${item.alumn_id}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } catch (error) {
-            console.error('Error al preparar el PDF para descarga:', error);
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudo descargar el PDF. Por favor, intenta nuevamente.',
-                icon: 'error'
-            });
-        }
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ballot_${item.alumn_id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     };
 
-    const searchBallot = (id) => {
+    const searchBallot = (matricleSearch) => {
+        console.log(matricleSearch);
         const find = alumns.findIndex(index => index.alumn_id === id);
-        if (find !== -1) {
-            setI(find);
-            Swal.fire({
-                title: "Buscar",
-                text: "Se logró encontrar",
-                icon: "success"
-            });
-        } else {
-            setI(-1);
-            Swal.fire({
-                title: "Buscar",
-                text: "No se logró encontrar",
-                icon: "error"
-            });
+        try {
+            if (find !== -1) {
+                setI(find);
+                Swal.fire({
+                    title: "Buscar",
+                    text: "Se logró encontrar",
+                    icon: "success"
+                });
+            } else {
+                setI(-1);
+                Swal.fire({
+                    title: "Buscar",
+                    text: "No se logró encontrar",
+                    icon: "error"
+                });
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -88,7 +78,7 @@ function TeacherBallots() {
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col items-center border-2 border-white">
-                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onClick={(id) => searchBallot(id)} />
+                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onClick={() => searchBallot(matricleSearch)} />
                     <div className='h-[60%] w-full overflow-x-hidden flex align-items-center'>
                         {alumns.map((item, key) => (
                             <button key={key} onClick={() => handleDownload(item)}>Descargar PDF {key + 1}</button>
