@@ -31,9 +31,8 @@ function FormLogin() {
                 const data = await response.json();
                 const token = data.token;
                 const direction = data.role;
-
                 if (token) {
-                    localStorage.setItem('token', token);
+                    localStorage.setItem('token', response.headers.get('Authorization'));
                     console.log(token);
                 }
 
@@ -42,6 +41,11 @@ function FormLogin() {
                 } else {
                     console.log('No response');
                 }
+                Swal.fire({
+                    title: "Login",
+                    text: "Logro ingresar",
+                    icon: "success"
+                })
             } else {
                 const errorData = await response.json();
                 Swal.fire({
