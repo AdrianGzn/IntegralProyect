@@ -4,8 +4,8 @@ import Text from "../../components/atoms/Text";
 function ReportsSection({ reports }) {
 
     return (
-        <div className="flex gap-2 flex-col">
-            <Text text="Reportes activos" className="text-4xl" />
+        <div className="flex justify-center flex-wrap mb-10 bg-gray-800 rounded-lg">
+            <Text text="Reportes activos" className="!text-2xl !mb-0 underline decoration-lime-500" />
             <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                 {reports.map((report, key) => (
                     !report.deleted && (
@@ -18,7 +18,7 @@ function ReportsSection({ reports }) {
                     )
                 ))}
             </div>
-            <Text text="Reportes anteriores" className="text-4xl" />
+            <Text text="Reportes anteriores" className="!text-2xl mb-0 underline decoration-lime-500" />
             <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                 {
                     reports.filter(item => item.deleted == true).map((report, key) => (

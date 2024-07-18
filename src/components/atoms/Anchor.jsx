@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function Anchor(props) {
     return <div>
         <Link to={props.to}>
-            <p className={`text-white mx-5 hover:underline decoration-lime-500 ${props.className || ''}`}>{props.text}</p>
+            <p className={`text-2xl text-white mx-5 hover:underline decoration-lime-500 ${props.className || ''}`}>{props.text}</p>
         </Link>
     </div>
 }

@@ -71,7 +71,7 @@ function TeacherReports() {
     <div className="min-h-screen w-full bg-slate-900 flex flex-col">
       <Header role="teacher" />
       <div className="flex-grow flex justify-center items-start">
-        <div className="min-h-[80%] w-4/6 p-4 rounded-s">
+        <div className="min-h-[80%] w-4/6 rounded-s  flex justify-center flex-wrap">
           <NewReport topicRef={topicRef} statusTopic={statusTopicRef} options={options} onClick={addReport} />
           <ReportsSection reports={reports}></ReportsSection>
         </div>

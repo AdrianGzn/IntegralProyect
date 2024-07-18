@@ -1,6 +1,6 @@
 const user = {
     name: "",
-    role: "",
+    role: "escolarControl",
     id: 0
 };
 
