@@ -9,8 +9,8 @@ function ManagementReports() {
     const idRef = useRef(null);
     const statusRef = useRef(false); 
 
-    const changeData = (id, isAccepted) => {
-        fetch(`${import.meta.env.VITE_URL}/report/${id}`, {
+    const changeData = (idRef, statusRef) => {
+        fetch(`${import.meta.env.VITE_URL}/report/${idRef}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -19,7 +19,7 @@ function ManagementReports() {
                 personal_id: 1,
                 created_by: "teacher",
                 updated_by: "teacher",
-                deleted: isAccepted
+                status: {statusRef}
             })
         })
             .then(response => {

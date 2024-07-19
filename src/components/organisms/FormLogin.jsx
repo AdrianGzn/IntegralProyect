@@ -36,8 +36,7 @@ function FormLogin() {
                 const token = data.token;
 
                 if (role) {
-                    localStorage.setItem('token', token);
-                    setUser(name, role, id);
+                    setUser(name, role, id, token);
                     printUser();
                     setRedirect(true);
                 } else {
@@ -46,14 +45,14 @@ function FormLogin() {
 
                 Swal.fire({
                     title: "Acceder",
-                    text: "Se logro logear",
+                    text: "Se logró iniciar sesión",
                     icon: "success"
                 });
             } else {
                 const errorData = await response.json();
                 Swal.fire({
                     title: "Login",
-                    text: "Error de login",
+                    text: "Error de inicio de sesión",
                     icon: "error"
                 });
             }
