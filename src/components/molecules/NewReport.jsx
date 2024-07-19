@@ -27,7 +27,7 @@ function NewReport({ onClick, topicRef, statusTopic }) {
         <Text text="Descripción" className="!text-base !text-gray-250 my-1" />
         <Input
           placeholder="Informe"
-          className="ml-4 mt-0 p-3 w-[85%] h-24 rounded-md border border-gray-600 bg-slate-700 text-white focus:border-blue-500"
+          className="ml-4 mt-0 p-3 w-[80%] h-24 rounded-md border border-gray-600 bg-slate-700 text-white focus:border-blue-500"
           ref={topicRef}
         />
       </div>
