@@ -9,7 +9,7 @@ import '@sweetalert2/theme-bulma';
 function ChangeReport({ idReport, statusReport, options, event }) {
 
     const handleCreateReport = () => {
-        if (!idReport.current || !idReport.current.value) {
+        if (!idReport.current.value || !statusReport.current.value) {
             Swal.fire({
                 title: "Agregar",
                 text: "Ingrese los datos correctamente",
@@ -17,13 +17,7 @@ function ChangeReport({ idReport, statusReport, options, event }) {
             });
             return;
         }
-        const isAccepted = '';
-        if (statusReport === true) {
-            statusReport.current.value === "Denegar"
-        } else {
-            isAccepted = statusReport.current.value === "Aceptar"
-        }
-        event(idReport.current.value, isAccepted);
+        event(idReport.current.value, statusReport.current.value);
     };
 
     return (
@@ -34,7 +28,7 @@ function ChangeReport({ idReport, statusReport, options, event }) {
             <div className="flex justify-center items-center flex-wrap">
                 <Text text="Matrícula:" className="text-base my-2"></Text>
                 <InputSearch ref={idReport} />
-                <Select onChange={handleCreateReport} ref={statusReport} options={options} className="my-5 bg-lime-500" />
+                <Select ref={statusReport} options={options} className="my-5 bg-lime-500" />
                 <Button text="Guardar" onClick={handleCreateReport} className="h-7 w-36 my-0" />
             </div>
         </div>

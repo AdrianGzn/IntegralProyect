@@ -3,23 +3,24 @@ import { useRef } from "react";
 import ChangeReport from "../../components/organisms/ChangeReport";
 import Swal from "sweetalert2";
 import FormiUpdatenBallot from "../../components/organisms/ForminUpdateBallot";
+import { getId } from "../../data/userActual";
 
 function ManagementReports() {
     const options = ["Aceptar", "Denegar"];
     const idRef = useRef(null);
-    const statusRef = useRef(false); 
+    const statusRef = useRef(""); 
 
-    const changeData = (idRef, statusRef) => {
-        fetch(`${import.meta.env.VITE_URL}/report/${idRef}`, {
+    const changeData = (idReport, statusReport) => {
+        fetch(`${import.meta.env.VITE_URL}/report/${idReport}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                personal_id: 1,
+                personal_id: getId(),
                 created_by: "teacher",
                 updated_by: "teacher",
-                status: {statusRef}
+                status: statusReport
             })
         })
             .then(response => {
