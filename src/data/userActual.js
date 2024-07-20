@@ -1,15 +1,15 @@
 const user = {
-    name: localStorage.getItem('userName') || "",
-    role: localStorage.getItem('userRole') || "",
-    id: localStorage.getItem('userId') || 0,
-    token: localStorage.getItem('token') || ""
+    name: localStorage.getItem('name') || "",
+    role: localStorage.getItem('role') || "",
+    id: localStorage.getItem('personal_id') || 0,
+    token: localStorage.getItem('token') || "",
 };
 
-function setUser(name, role, id, token) {
-    user.name = name;
-    user.role = role;
-    user.id = id;
-    user.token = token;
+function setUser() {
+    user.name = localStorage.getItem('name');
+    user.role = localStorage.getItem('role');
+    user.id = localStorage.getItem('personal_id');
+    user.token = localStorage.getItem('token');
 }
 
 function clearUser() {

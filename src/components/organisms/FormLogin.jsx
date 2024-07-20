@@ -15,6 +15,7 @@ function FormLogin() {
 
     const handleLogin = async (event) => {
         event.preventDefault();
+
         fetch(`${import.meta.env.VITE_URL}/personal/login`, {
             method: 'POST',
             headers: {
@@ -26,35 +27,52 @@ function FormLogin() {
                 password: passwordRef.current.value,
             })
         })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.setItem('token', response.headers.get('Authorization'))
-                    return response.json()
-                }
-            })
-            .then(data => {
-                console.log(data);
-                localStorage.setItem('token', data.personal.token);
-                localStorage.setItem('personal_id', data.personal.personal_id);
-                localStorage.setItem('name', data.personal.name);
-    
-                let role = "";  // Cambiado de const a let
-                if (data.personal.role === 1) {
-                    role = "teacher";
-                } else if (data.personal.role === 2) {
-                    role = "management";
-                } else if (data.personal.role === 3) {
-                    role = "escolarControl";
-                } else {
-                    role = "";
-                }
-    
-                localStorage.setItem('role', role);
-                
-                setUser(data.personal.name, role, data.personal.personal_id, data.personal.token);
-                setRedirect(true);
+        .then(response => {
+            if (response.ok) {
+                localStorage.setItem('token', response.headers.get('Authorization'))
+                return response.json()
+            }
+        })
+        .then(data => {
+            console.log(data);
+            
+            let role = "";
+            if (data.personal.role === 1) {
+                role = "teacher";
+            } else if (data.personal.role === 2) {
+                role = "management";
+            } else if (data.personal.role === 3) {
+                role = "escolarControl";
+            } else {
+                role = "";
+            }
+
+            localStorage.setItem('token', data.personal.token);
+            localStorage.setItem('personal_id', data.personal.personal_id);
+            localStorage.setItem('name', data.personal.name);
+            localStorage.setItem('role', role);
+            
+            setUser();
+            setRedirect(true);
+
+            Swal.fire({
+                title: "Sesión iniciada con éxito",
+                text: "Bienvenido",
+                icon: "success"
             });
-    };
+        })
+        .catch(error => {
+            Swal.fire({
+                title: "Error",
+                text: "No se pudo iniciar sesión",
+                icon: "error"
+            });
+            console.log("Error:", error);
+        });
+
+    }
+
+
 
     useEffect(() => {
         if (redirect) { 

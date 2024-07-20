@@ -4,17 +4,33 @@ import Button from "../atoms/Button";
 import { getOptions } from "../../data/menuOptions";
 import { clearUser, getRole } from "../../data/userActual";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import '@sweetalert2/theme-bulma';
 
 function Header({ role, onClick }) {
     let options = getOptions()[role];
     const navigate = useNavigate();
 
     const logOut = () => {
-            console.log("get it xD");
-            console.log(getRole());
-            clearUser();
-            console.log(getRole());
-            navigate("/");
+            try {
+                console.log(getRole());
+                clearUser();
+                console.log(getRole());
+                navigate("/");
+
+                Swal.fire({
+                    title: "Cierre de sesión exitoso",
+                    text: "Gracias  ",
+                    icon: "success"
+                });
+            } catch (error) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudo cerrar sesión",
+                    icon: "error"
+                });
+                console.log("Error:", error);
+            }
     }
 
     return (
