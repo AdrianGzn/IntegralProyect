@@ -10,7 +10,7 @@ function ReportCard({ id, status, description }) {
                 </div>
                 <div className="flex items-center mb-2">
                     <Text text="Estatus:" className="!m-0 !text-base font-semibold text-gray-300" />
-                    <Text text={status ? "Activo" : "Inactivo"} className={`!mx-2 !text-base ${status ? "text-green-500" : "text-red-500"}`} />
+                    <Text text={status} className={`!mx-2 !text-base ${status ? "text-green-500" : "text-red-500"}`} />
                 </div>
                 <div className="flex items-center mb-2">
                     <Text text="Descripción:" className="!m-0 !text-base font-semibold text-gray-300" />

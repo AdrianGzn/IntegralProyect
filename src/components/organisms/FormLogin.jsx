@@ -15,35 +15,68 @@ function FormLogin() {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        useEffect(() => {
-            fetch(`${import.meta.env.VITE_URL}/personal/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
-                body: JSON.stringify({
-                    name: nameRef.current.value,
-                    password: passwordRef.current.value,
-                })
-            })
-                .then(response => {
-                    if (response.ok) {
-                        localStorage.setItem('token', response.headers.get('Authorization'))
-                        return response.json()
-                    }
-                })
-                .then(data => {
-                    console.log(data);
-                    console.log(data.personal.name);
-                    localStorage.setItem('token', data.token)
-                });
-        }, [])
 
-    };
+        fetch(`${import.meta.env.VITE_URL}/personal/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify({
+                name: nameRef.current.value,
+                password: passwordRef.current.value,
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                localStorage.setItem('token', response.headers.get('Authorization'))
+                return response.json()
+            }
+        })
+        .then(data => {
+            console.log(data);
+            
+            let role = "";
+            if (data.personal.role === 1) {
+                role = "teacher";
+            } else if (data.personal.role === 2) {
+                role = "management";
+            } else if (data.personal.role === 3) {
+                role = "escolarControl";
+            } else {
+                role = "";
+            }
+
+            localStorage.setItem('token', data.personal.token);
+            localStorage.setItem('personal_id', data.personal.personal_id);
+            localStorage.setItem('name', data.personal.name);
+            localStorage.setItem('role', role);
+            
+            setUser();
+            setRedirect(true);
+
+            Swal.fire({
+                title: "Sesión iniciada con éxito",
+                text: "Bienvenido",
+                icon: "success"
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                title: "Error",
+                text: "No se pudo iniciar sesión",
+                icon: "error"
+            });
+            console.log("Error:", error);
+        });
+
+    }
+
+
 
     useEffect(() => {
-        if (redirect) {
+        if (redirect) { 
+            printUser();
             switch (getRole()) {
                 case "management":
                     navigate("/management/home");
@@ -58,6 +91,7 @@ function FormLogin() {
                     navigate("/");
             }
         }
+        setRedirect(false);
     }, [redirect]);
 
     return (

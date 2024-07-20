@@ -2,32 +2,44 @@ import ReportCard from "../../components/molecules/ReportCard";
 import Text from "../../components/atoms/Text";
 
 function ReportsSection({ reports }) {
-
     return (
         <div className="flex justify-center flex-wrap mb-10 bg-gray-800 rounded-lg">
-            <Text text="Reportes activos" className="!text-2xl !mb-0 underline decoration-lime-500" />
-            <div className="flex flex-wrap justify-evenly items-center w-full my-5">
-                {reports.map((report, key) => (
-                    !report.deleted && (
-                        <ReportCard
-                            key={key}
-                            id={report.report_id}
-                            status={report.deleted}
-                            description={report.topic}
-                        />
-                    )
-                ))}
-            </div>
-            <Text text="Reportes anteriores" className="!text-2xl mb-0 underline decoration-lime-500" />
+            <Text text="Reportes Pendientes" className="!text-2xl !mb-0 underline decoration-lime-500" />
             <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                 {
-                    reports.filter(item => item.deleted == true).map((report, key) => (
+                    reports.filter((item) => item.report_status == "Pendiente").map((item, key) => (
                         <ReportCard
                             key={key}
-                            id={report.report_id}
-                            status={report.deleted}
-                            description={report.topic}
-                        />
+                            status={item.report_status}
+                            id={item.report_id}
+                            description={item.topic}
+                        ></ReportCard>                       
+                    ))
+                }
+            </div>
+            <Text text="Reportes Aceptado" className="!text-2xl !mb-0 underline decoration-lime-500" />
+            <div className="flex flex-wrap justify-evenly items-center w-full my-5">
+                {
+                    reports.filter((item) => item.report_status == "Aceptado").map((item, key) => (
+                        <ReportCard
+                            key={key}
+                            status={item.report_status}
+                            id={item.report_id}
+                            description={item.topic}
+                        ></ReportCard>                       
+                    ))
+                }
+            </div>
+            <Text text="Reportes Denegados" className="!text-2xl !mb-0 underline decoration-lime-500" />
+            <div className="flex flex-wrap justify-evenly items-center w-full my-5">
+                {
+                    reports.filter((item) => item.report_status == "Denegado").map((item, key) => (
+                        <ReportCard
+                            key={key}
+                            status={item.report_status}
+                            id={item.report_id}
+                            description={item.topic}
+                        ></ReportCard>                       
                     ))
                 }
             </div>

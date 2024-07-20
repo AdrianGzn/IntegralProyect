@@ -1,9 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { getRole } from "../../../data/userActual";
+import { getRole, printUser } from "../../../data/userActual";
 
 function ProtectedTeacher({ children, redirectTo = "/" }) {
     const role = getRole();
-
     console.log(role);
 
     if (role === "teacher") {

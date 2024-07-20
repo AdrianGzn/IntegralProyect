@@ -20,10 +20,10 @@ function EscolarControlQualifications() {
         })
         .then(response => {
             if (response.ok) {
-                console.log("Response Correct Alumns");
+                console.log("Response Correct Qualifications");
                 return response.json();
             }
-            throw new Error('Failed to fetch alumns');
+            throw new Error('Failed to fetch qualifications');
         }) 
         .then(data => {
             setAlumns(newAlumns => [...newAlumns, ...data]);
