@@ -20,6 +20,13 @@ function ForminBallot() {
     const subject4 = useRef(null);
     const rating4 = useRef(null);
 
+    const data = [
+        {
+            ratingFinal
+        }
+    ]
+
+    
     const convertBlobToBase64 = (blob) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -69,7 +76,7 @@ function ForminBallot() {
                         },
                         body: JSON.stringify({
                             alumn_id: 1,
-                            content: base64,
+                            content: observations,
                             created_by: "teacher",
                             updated_by: "teacher",
                             deleted: false

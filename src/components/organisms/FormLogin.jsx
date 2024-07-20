@@ -15,60 +15,32 @@ function FormLogin() {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/personal/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
-                body: JSON.stringify({
-                    name: nameRef.current.value,
-                    password: passwordRef.current.value,
-                })
-            });
-            if (response.ok) {
-                const data = await response.json();
-                const id = data.id;
-                const name = data.name;
-                const role = data.role;
-                const token = data.token;
-
-                if (role) {
-                    setUser(name, role, id, token);
-                    printUser();
-                    setRedirect(true);
-                } else {
-                    console.log('No response');
+        fetch(`${import.meta.env.VITE_URL}/personal/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify({
+                name: nameRef.current.value,
+                password: passwordRef.current.value,
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.setItem('token', response.headers.get('Authorization'))
+                    return response.json()
                 }
-
-                Swal.fire({
-                    title: "Acceder",
-                    text: "Se logró iniciar sesión",
-                    icon: "success"
-                });
-            } else {
-                const errorData = await response.json();
-                Swal.fire({
-                    title: "Login",
-                    text: "Error de inicio de sesión",
-                    icon: "error"
-                });
-            }
-        } catch (error) {
-            console.error("Error: ", error);
-            Swal.fire({
-                title: "Error",
-                text: "Ocurrió un error al intentar iniciar sesión",
-                icon: "error"
+            })
+            .then(data => {
+                console.log(data);
+                localStorage.setItem('token', data.token)
             });
-        }
     };
 
     useEffect(() => {
         if (redirect) {
-            switch(getRole()){
+            switch (getRole()) {
                 case "management":
                     navigate("/management/home");
                     break;
@@ -80,7 +52,7 @@ function FormLogin() {
                     break;
                 default:
                     navigate("/");
-            }   
+            }
         }
     }, [redirect]);
 

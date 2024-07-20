@@ -10,10 +10,11 @@ function Header({ role, onClick }) {
     const navigate = useNavigate();
 
     const logOut = () => {
-        console.log(getRole());
-        clearUser();
-        console.log(getRole());
-        navigate("/");
+            console.log("get it xD");
+            console.log(getRole());
+            clearUser();
+            console.log(getRole());
+            navigate("/");
     }
 
     return (

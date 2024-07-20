@@ -20,6 +20,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.50.1
         version: 5.50.1(react@18.3.1)
+      base64topdf:
+        specifier: ^1.1.8
+        version: 1.1.8
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -741,6 +744,9 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
+  base64topdf@1.1.8:
+    resolution: {integrity: sha512-nKuSq9EiuupC93SP0f5Hm5WYlgtPnmc1CGtuXXFChvoKazsYdanLcUYUSDaQhrY+VHKrLR8svcbpN2bHnO793w==}
+
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
 
@@ -1193,6 +1199,9 @@ packages:
 
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
+
+  fs@0.0.1-security:
+    resolution: {integrity: sha512-3XY9e1pP0CVEUCdj5BmfIZxRBTSDycnbqhIOGec9QYtmVH2fbLpj86CFWkrNOkt/Fvty4KZG5lTglL9j/gJ87w==}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -3099,6 +3108,10 @@ snapshots:
 
   base64-js@1.5.1: {}
 
+  base64topdf@1.1.8:
+    dependencies:
+      fs: 0.0.1-security
+
   bidi-js@1.0.3:
     dependencies:
       require-from-string: 2.0.2
@@ -3719,6 +3732,8 @@ snapshots:
     optional: true
 
   fs.realpath@1.0.0: {}
+
+  fs@0.0.1-security: {}
 
   fsevents@2.3.3:
     optional: true
