@@ -10,7 +10,7 @@ function TeacherReports() {
   const [reports, setReports] = useState([]);
   const topicRef = useRef("");
 
-  useEffect(() => { //para recibir reportes 
+  useEffect(() => {
     fetch(`${import.meta.env.VITE_URL}/report`)
     .then(response => {
       if (response.ok) {
@@ -36,7 +36,7 @@ function TeacherReports() {
       body: JSON.stringify({
         personal_id: getId(),
         topic: topicRef,
-        status: false, //Ponerlo de tipo string. "pendiente" 
+        status: "Pendiente",
         created_by: "teacher",
         updated_by: "teacher",
         deleted: false,

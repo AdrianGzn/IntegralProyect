@@ -5,15 +5,11 @@ const user = {
     token: localStorage.getItem('token') || ""
 };
 
-function setUser(newName, newRole, newId, newToken) {
-    user.name = newName;
-    user.role = newRole;
-    user.id = newId;
-    user.token = newToken;
-    localStorage.setItem('userName', newName);
-    localStorage.setItem('userRole', newRole);
-    localStorage.setItem('userId', newId.toString());
-    localStorage.setItem('token', newToken);
+function setUser(name, role, id, token) {
+    user.name = name;
+    user.role = role;
+    user.id = id;
+    user.token = token;
 }
 
 function clearUser() {
@@ -21,9 +17,9 @@ function clearUser() {
     user.role = "";
     user.id = 0;
     user.token = "";
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('name');
+    localStorage.removeItem('role');
+    localStorage.removeItem('personal_id');
     localStorage.removeItem('token');
 }
 

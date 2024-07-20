@@ -34,12 +34,31 @@ function FormLogin() {
             })
             .then(data => {
                 console.log(data);
-                localStorage.setItem('token', data.token)
+                localStorage.setItem('token', data.personal.token);
+                localStorage.setItem('personal_id', data.personal.personal_id);
+                localStorage.setItem('name', data.personal.name);
+    
+                let role = "";  // Cambiado de const a let
+                if (data.personal.role === 1) {
+                    role = "teacher";
+                } else if (data.personal.role === 2) {
+                    role = "management";
+                } else if (data.personal.role === 3) {
+                    role = "escolarControl";
+                } else {
+                    role = "";
+                }
+    
+                localStorage.setItem('role', role);
+                
+                setUser(data.personal.name, role, data.personal.personal_id, data.personal.token);
+                setRedirect(true);
             });
     };
 
     useEffect(() => {
-        if (redirect) {
+        if (redirect) { 
+            printUser();
             switch (getRole()) {
                 case "management":
                     navigate("/management/home");
@@ -54,6 +73,7 @@ function FormLogin() {
                     navigate("/");
             }
         }
+        setRedirect(false);
     }, [redirect]);
 
     return (

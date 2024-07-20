@@ -1,12 +1,11 @@
 import Text from "../../components/atoms/Text";
 import ReportCard from "../../components/molecules/ReportCard";
 import React, { useState, useEffect } from "react";
-function FormiUpdatenBallot() {
 
+function FormiUpdatenBallot() {
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
-
         fetch(`${import.meta.env.VITE_URL}/report`)
             .then(response => {
                 if (response.ok) {
@@ -22,7 +21,7 @@ function FormiUpdatenBallot() {
             .catch(error => {
                 console.error('Error fetching reports:', error);
             });
-    }, []); //Aquí se vuelve a renderizar para ver el reporte que se le cambió de status
+    }, []);
 
     return (
         <div className="w-full min-h-3/4">
