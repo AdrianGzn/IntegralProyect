@@ -32,7 +32,7 @@ function FormiUpdatenBallot() {
                 {reports.map((report, key) => (
                     <ReportCard key={key}
                        id={report.report_id}
-                       status={report.deleted}
+                       status={report.report_status}
                        description={report.topic}
                     ></ReportCard>
                 ))}
