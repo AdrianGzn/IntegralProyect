@@ -12,7 +12,7 @@ function ReportsSection({ reports }) {
                         <ReportCard
                             key={key}
                             id={report.report_id}
-                            status={report.deleted}
+                            status={report.status}
                             description={report.topic}
                         />
                     )
@@ -25,7 +25,7 @@ function ReportsSection({ reports }) {
                         <ReportCard
                             key={key}
                             id={report.report_id}
-                            status={report.deleted}
+                            status={report.status}
                             description={report.topic}
                         />
                     ))
