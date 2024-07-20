@@ -15,27 +15,31 @@ function FormLogin() {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        fetch(`${import.meta.env.VITE_URL}/personal/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: JSON.stringify({
-                name: nameRef.current.value,
-                password: passwordRef.current.value,
+        useEffect(() => {
+            fetch(`${import.meta.env.VITE_URL}/personal/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+                body: JSON.stringify({
+                    name: nameRef.current.value,
+                    password: passwordRef.current.value,
+                })
             })
-        })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.setItem('token', response.headers.get('Authorization'))
-                    return response.json()
-                }
-            })
-            .then(data => {
-                console.log(data);
-                localStorage.setItem('token', data.token)
-            });
+                .then(response => {
+                    if (response.ok) {
+                        localStorage.setItem('token', response.headers.get('Authorization'))
+                        return response.json()
+                    }
+                })
+                .then(data => {
+                    console.log(data);
+                    console.log(data.personal.name);
+                    localStorage.setItem('token', data.token)
+                });
+        }, [])
+
     };
 
     useEffect(() => {
