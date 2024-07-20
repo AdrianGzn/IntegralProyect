@@ -10,6 +10,7 @@ function TeacherBallots() {
     const [alumns, setAlumns] = useState([]);
     const [matricleSearch, setMatricleSearch] = useState('');
     const [pdfUrls, setPdfUrls] = useState([]);
+    const [newPDFs, setNewPDFS] = useState([]);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/ballot`, {
@@ -62,32 +63,34 @@ function TeacherBallots() {
     }
     
     const filtredPDF = (e) => {
-        const searchData = e.event.target; 
-        setMatricleSearch(searchData)
+        console.log("thisawe");
+        console.log(pdfUrls);
+        const searchTerm = e.target.value; // Obtener el valor del input de búsqueda
+        setMatricleSearch(searchTerm);
 
         const filtredItems = pdfUrls.filter((ballot)=> {
-            ballot.content.toLowerCase().includes(searchTerm.toLowerCase())
-        })//filtrado de boletas
+            return ballot.toLowerCase().includes(searchTerm.toLowerCase()); // Filtrar por término de búsqueda
+        });
 
-        setPdfUrls(filtredItems)//aca le envio el filtro
+        setNewPDFS(filtredItems); // Actualizar el estado con los nuevos PDFs filtrados
     }
+
     return (
         <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col wrap items-center border-2 border-white">
                     <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onChange={filtredPDF} />
-                    <button onClick={() => base64ToArrayBuffer(pdfUrls)}>gaew</button>
-                    <div className='h-[60%] w-full overflow-x-hidden flex align-items-center gap-10 p-10' >
+                    <div className='h-[60%] w-full overflow-x-hidden flex align-items-center gap-10 p-10'>
                         {
-                            pdfUrls.length === 0  ? 
+                            newPDFs.length === 0 ? 
                               (
-                                <p>No se encontro la boleta</p>
-                              ): (
-                                pdfUrls.map((pdfUrl, index) => (
+                                <p>No se encontraron boletas</p>
+                              ) : (
+                                newPDFs.map((pdfUrl, index) => (
                                     <div key={index}>
-                                       <a href={pdfUrl} download={`boleta-${index +1}.pdf`}><img src="../../public/icon_pdf.png" alt="Icon" className="w-5 h-5 mr-2" /></a>
-                                        <h6>Boleta{index + 1}</h6>
+                                        <a href={pdfUrl} download={`boleta-${index + 1}.pdf`}><img src="../../public/icon_pdf.png" alt="Icon" className="w-5 h-5 mr-2" /></a>
+                                        <h6>Boleta {index + 1}</h6>
                                     </div>
                                 ))
                               )
