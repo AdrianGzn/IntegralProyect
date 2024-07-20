@@ -20,34 +20,34 @@ function ManagementReports() {
                 personal_id: getId(),
                 created_by: "teacher",
                 updated_by: "teacher",
-                status: statusReport
+                report_status: statusReport
             })
         })
-            .then(response => {
-                if (response.ok) {
-                    Swal.fire({
-                        title: "Cambiar reporte",
-                        text: "Se logró cambiar el reporte",
-                        icon: "success"
-                    });
-                    return response.json();
-                } else {
-                    Swal.fire({
-                        title: "Cambiar reporte",
-                        text: "No se logró cambiar el reporte",
-                        icon: "error"
-                    });
-                    throw new Error('Failed to update report');
-                }
-            })
-            .catch(error => {
-                console.error('Error updating report:', error);
+        .then(response => {
+            if (response.ok) {
                 Swal.fire({
-                    title: "Error",
-                    text: "Ocurrió un error al cambiar el reporte",
+                    title: "Cambiar reporte",
+                    text: "Se logró cambiar el reporte",
+                    icon: "success"
+                });
+                return response.json();
+            } else {
+                Swal.fire({
+                    title: "Cambiar reporte",
+                    text: "No se logró cambiar el reporte",
                     icon: "error"
                 });
+                throw new Error('Failed to update report');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating report:', error);
+            Swal.fire({
+                title: "Error",
+                text: "Ocurrió un error al cambiar el reporte",
+                icon: "error"
             });
+        });
     };
 
     return (
