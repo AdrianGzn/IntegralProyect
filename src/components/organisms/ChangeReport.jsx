@@ -17,12 +17,8 @@ function ChangeReport({ idReport, statusReport, options, event }) {
             });
             return;
         }
-        const isAccepted = '';
-        if (statusReport === true) {
-            statusReport.current.value === "Denegar"
-        } else {
-            isAccepted = statusReport.current.value === "Aceptar"
-        }
+        const isAccepted = statusReport.current.value === "Aceptar"
+
         event(idReport.current.value, isAccepted);
     };
 
