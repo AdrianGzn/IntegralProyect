@@ -1,12 +1,6 @@
 import { forwardRef } from 'react';
 
-const InputSearch = forwardRef(({ type, placeholder, className, onClick }, ref) => {
-
-    const onClickDown = (event) => {
-        if(event.key === 'Enter') {
-            onClick()
-        }
-    }
+const InputSearch = forwardRef(({ type, placeholder, className, onChange  }, ref) => {
 
     return (
         <div className={`h-full rounded-full w-full my-0 bg-lime-500 flex max-w-56 ${className || ''}`}>
@@ -16,9 +10,10 @@ const InputSearch = forwardRef(({ type, placeholder, className, onClick }, ref) 
                 </svg>
             </div>
             <input
-                onKeyDown={onClickDown}
                 className="ml-2 bg-transparent outline-none placeholder-slate-900"
+
                 type={type}
+                onChange={onChange}
                 placeholder={placeholder}
                 ref={ref}
             />

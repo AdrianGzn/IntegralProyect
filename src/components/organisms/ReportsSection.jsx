@@ -20,7 +20,7 @@ function ReportsSection({ reports }) {
             <Text text="Reportes Aceptado" className="!text-2xl !mb-0 underline decoration-lime-500" />
             <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                 {
-                    reports.filter((item) => item.report_status == "Aceptado").map((item, key) => (
+                    reports.filter((item) => item.report_status == "Aceptar").map((item, key) => (
                         <ReportCard
                             key={key}
                             status={item.report_status}
@@ -33,7 +33,7 @@ function ReportsSection({ reports }) {
             <Text text="Reportes Denegados" className="!text-2xl !mb-0 underline decoration-lime-500" />
             <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                 {
-                    reports.filter((item) => item.report_status == "Denegado").map((item, key) => (
+                    reports.filter((item) => item.report_status == "Denegar").map((item, key) => (
                         <ReportCard
                             key={key}
                             status={item.report_status}

@@ -4,11 +4,14 @@ import SearchBallotSection from '../../components/organisms/SearchBallotSection'
 import Swal from 'sweetalert2';
 import '@sweetalert2/theme-bulma';
 import PDFButton from '../../components/atoms/PDFButton';
+import { pdf } from '@react-pdf/renderer';
+var AWS = require('aws-sdk')
 
 function TeacherBallots() {
     const [alumns, setAlumns] = useState([]);
     const [matricleSearch, setMatricleSearch] = useState('');
     const [pdfUrls, setPdfUrls] = useState([]);
+    const [newPDFs, setNewPDFS] = useState([]);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/ballot`, {
@@ -59,43 +62,40 @@ function TeacherBallots() {
         }
         return bytes;
     }
+    
+    const filtredPDF = (e) => {
+        console.log("thisawe");
+        console.log(pdfUrls);
+        const searchTerm = e.target.value; // Obtener el valor del input de búsqueda
+        setMatricleSearch(searchTerm);
 
-    const searchBallot = (matricleSearch) => {
-        console.log(matricleSearch);
-        const find = alumns.findIndex(index => index.alumn_id === matricleSearch);
-        try {
-            if (find !== -1) {
-                Swal.fire({
-                    title: "Buscar",
-                    text: "Se logró encontrar",
-                    icon: "success"
-                });
-            } else {
-                Swal.fire({
-                    title: "Buscar",
-                    text: "No se logró encontrar",
-                    icon: "error"
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+        const filtredItems = pdfUrls.filter((ballot)=> {
+            return ballot.toLowerCase().includes(searchTerm.toLowerCase()); // Filtrar por término de búsqueda
+        });
+
+        setNewPDFS(filtredItems); // Actualizar el estado con los nuevos PDFs filtrados
+    }
 
     return (
         <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
             <Header role="teacher" />
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col wrap items-center border-2 border-white">
-                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onClick={() => searchBallot(matricleSearch)} />
-                    <button onClick={() => base64ToArrayBuffer(pdfUrls)}>gaew</button>
-                    <div className='h-[60%] w-full overflow-x-hidden flex align-items-center gap-10 p-10' >
-                        {pdfUrls.map((pdfUrl, index) => (
-                            <div key={index}>
-                               <a href={pdfUrl} download={`boleta-${index +1}.pdf`}><img src="../../public/icon_pdf.png" alt="Icon" className="w-5 h-5 mr-2" /></a>
-                                <h6>Boleta{index + 1}</h6>
-                            </div>
-                        ))}
+                    <SearchBallotSection val={matricleSearch} fnVal={setMatricleSearch} onChange={filtredPDF} />
+                    <div className='h-[60%] w-full overflow-x-hidden flex align-items-center gap-10 p-10'>
+                        {
+                            newPDFs.length === 0 ? 
+                              (
+                                <p>No se encontraron boletas</p>
+                              ) : (
+                                newPDFs.map((pdfUrl, index) => (
+                                    <div key={index}>
+                                        <a href={pdfUrl} download={`boleta-${index + 1}.pdf`}><img src="../../public/icon_pdf.png" alt="Icon" className="w-5 h-5 mr-2" /></a>
+                                        <h6>Boleta {index + 1}</h6>
+                                    </div>
+                                ))
+                              )
+                        }
                     </div>
                 </div>
             </div>
