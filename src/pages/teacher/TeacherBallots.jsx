@@ -4,8 +4,8 @@ import SearchBallotSection from '../../components/organisms/SearchBallotSection'
 import Swal from 'sweetalert2';
 import '@sweetalert2/theme-bulma';
 import PDFButton from '../../components/atoms/PDFButton';
-import { pdf } from '@react-pdf/renderer';
-var AWS = require('aws-sdk')
+/*import { pdf } from '@react-pdf/renderer';
+var AWS = require('aws-sdk')*/
 
 function TeacherBallots() {
     const [alumns, setAlumns] = useState([]);

@@ -3,7 +3,7 @@ import Text from "../../components/atoms/Text";
 
 function ReportsSection({ reports }) {
     return (
-        <div className="flex justify-center flex-wrap mb-10 bg-gray-800 rounded-lg">
+        <div className="flex justify-center flex-wrap my-10 bg-gray-800 rounded-lg">
             <Text text="Reportes Pendientes" className="!text-2xl !mb-0 underline decoration-lime-500" />
             <div className="flex flex-wrap justify-evenly items-center w-full my-5">
                 {

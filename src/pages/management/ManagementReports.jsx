@@ -1,11 +1,12 @@
 import Header from "../../components/organisms/Header";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import ChangeReport from "../../components/organisms/ChangeReport";
 import Swal from "sweetalert2";
-import FormiUpdatenBallot from "../../components/organisms/ForminUpdateBallot";
 import { getId } from "../../data/userActual";
+import ReportsSection from "../../components/organisms/ReportsSection";
 
 function ManagementReports() {
+    const [reports, setReports] = useState([]);
     const options = ["Aceptar", "Denegar"];
     const idRef = useRef(null);
     const statusRef = useRef(""); 
@@ -48,7 +49,25 @@ function ManagementReports() {
                 icon: "error"
             });
         });
+
     };
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/report`)
+        .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Failed to fetch reports');
+        })
+        .then(data => {
+        setReports(data);
+        })
+        .catch(error => {
+        console.error('Error fetching reports:', error);
+        Swal.fire('Error', 'Failed to fetch reports', 'error');
+        });
+    }, []);
 
     return (
         <div className="h-full w-full bg-slate-900">
@@ -56,7 +75,7 @@ function ManagementReports() {
             <div className="w-full min-h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 min-h-[75%] w-4/6">
                     <ChangeReport idReport={idRef} statusReport={statusRef} options={options} event={changeData} />
-                    <FormiUpdatenBallot></FormiUpdatenBallot>
+                    <ReportsSection reports={reports}></ReportsSection>
                 </div>
             </div>
         </div>

@@ -36,7 +36,7 @@ function TeacherReports() {
       body: JSON.stringify({
         personal_id: getId(),
         topic: topicRef,
-        status: "Pendiente",
+        report_status: "Pendiente",
         created_by: "teacher",
         updated_by: "teacher",
         deleted: false,

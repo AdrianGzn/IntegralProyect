@@ -23,7 +23,7 @@ function NewReport({ onClick, topicRef }) {
   };
 
   return (
-    <div className="w-full md:w-[85%] min-h-80 bg-gray-800 rounded-lg pt-5 mb-10">
+    <div className="w-full md:w-[85%] min-h-80 bg-gray-800 rounded-lg pt-5">
       <Text text="Crear nuevo reporte" className="!text-2xl !text-white !mt-0 mb-4 underline decoration-lime-500" />
       <div className="w-[90%] mx-5">
         <Text text="Descripción" className="!text-base !text-gray-250 my-1 mx-0" />
