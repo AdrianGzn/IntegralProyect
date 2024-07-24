@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pdfslick/react": "^1.5.1",
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf/renderer": "^3.4.4",
     "@sweetalert2/theme-bulma": "^5.0.16",
     "@tanstack/react-query": "^5.50.1",
+    "aws-amplify": "^6.4.1",
     "aws-sdk": "^2.1659.0",
     "base64topdf": "^1.1.8",
     "cors": "^2.8.5",
@@ -23,10 +25,12 @@
     "mysql": "^2.18.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.4.168",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-pdf": "^9.1.0",
     "react-router-dom": "^6.23.1",
+    "require": "^2.4.20",
     "styled-components": "^6.1.11",
     "sweetalert2": "^11.12.2",
     "sweetalert2-react": "^0.8.3"
