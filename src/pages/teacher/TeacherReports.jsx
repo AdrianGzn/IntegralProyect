@@ -34,8 +34,8 @@ function TeacherReports() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        personal_id: 1,
-        topic: "aew",
+        personal_id: getId(),
+        topic: topicRef,
         report_status: "Pendiente",
         created_by: "teacher",
         updated_by: "teacher",
