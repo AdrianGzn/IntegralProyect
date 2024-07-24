@@ -1,5 +1,6 @@
-import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState, useEffect, useContext } from "react";
+import UserContext from "../../context/userContext";
+import { useNavigate, Navigate } from "react-router-dom";
 import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
@@ -8,6 +9,7 @@ import '@sweetalert2/theme-bulma';
 import { getRole, setUser, printUser } from "../../data/userActual";
 
 function FormLogin() {
+    const {user} = useContext(UserContext);
     const [redirect, setRedirect] = useState(false);
     const nameRef = useRef(null);
     const passwordRef = useRef(null);
@@ -71,7 +73,6 @@ function FormLogin() {
         });
 
     }
-
 
 
     useEffect(() => {

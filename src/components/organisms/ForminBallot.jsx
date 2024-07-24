@@ -9,16 +9,16 @@ import Text from "../atoms/Text";
 function ForminBallot() {
     const [content, setContent] = useState({});
     const [PDFBase64, setPDFBase64] = useState('');
-    const ratingFinal = useRef(null);
-    const observations = useRef(null);
-    const subject1 = useRef(null);
-    const rating1 = useRef(null);
-    const subject2 = useRef(null);
-    const rating2 = useRef(null);
-    const subject3 = useRef(null);
-    const rating3 = useRef(null);
-    const subject4 = useRef(null);
-    const rating4 = useRef(null);
+    const ratingFinal = useRef("");
+    const observations = useRef("");
+    const subject1 = useRef("");
+    const rating1 = useRef("");
+    const subject2 = useRef("");
+    const rating2 = useRef("");
+    const subject3 = useRef("");
+    const rating3 = useRef("");
+    const subject4 = useRef("");
+    const rating4 = useRef("");
 
     const data = [
         {
@@ -143,7 +143,31 @@ function ForminBallot() {
                 </div>
                 <div className="flex flex-col items-center justify-center mt-4 w-full h-[50]">
                     <Button className="mb-4" text="Guardar" onClick={addBallot} />
-                    <BlobProvider document={<PDFformat ratingFinal={content.ratingFinal || ''} observations={content.observations} subject1={content.subject1 || ''} subject2={content.subject2} subject3={content.subject3} subject4={content.subject4} />}>
+                    <BlobProvider 
+                        document={
+                            <PDFformat 
+                                /*ratingFinal={content.ratingFinal || ''} 
+                                observations={content.observations} 
+                                subject1={content.subject1 || ''} 
+                                subject2={content.subject2} 
+                                subject3={content.subject3} 
+                                subject4={content.subject4}*/
+                                
+                                trimestre1Asignatura = {subject1.current.value}
+                                trimestre1Calificación = {rating1.current.value}
+                                trimestre1Observaciones = "Ninguna"
+                                trimestre2Asignatura = {subject2.current.value}
+                                trimestre2Calificación = {rating2.current.value}
+                                trimestre2Observaciones = "Ninguna"
+                                lenguaData = "Nada"
+                                asistenciasData = "Nada"
+                                lengData = "Nada"
+                                sugerencia1 = {observations.current.value}
+                                sugerencia2 = "Moderar el tono de voz"
+                                sugerencia3 = "Ser puntual"
+                            />
+                        }
+                    >
                         {({ blob, url }) => {
                             if (blob && url) {
                                 setPDFBase64(blob);
