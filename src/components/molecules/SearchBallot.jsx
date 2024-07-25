@@ -1,11 +1,13 @@
-import Text from "../atoms/Text";
-import InputSearch from "../atoms/InputSearch";
+import Text from '../atoms/Text';
+import InputSearch from '../atoms/InputSearch';
 
-function SearchBallot(props) {
-    return <div className='h-full borde-full w-full p-5 flex flex-wrap'>
-        <Text text="Buscar por matrícula" className="!m-0 !mx-5 !text-base"></Text>
-        <InputSearch onClick={props.onClick} type="text" placeholder="Buscar" val={props.val} fnVal={props.fnVal}></InputSearch>
-    </div>
+function SearchBallot({ val, fnVal }) {
+    return (
+        <div className='w-full p-5 flex flex-wrap'>
+            <Text text="Buscar por matrícula" className="!m-0 !mx-5 !text-base" />
+            <InputSearch type="text" placeholder="Buscar" className="" onChange={fnVal} />
+        </div>
+    );
 }
 
 export default SearchBallot;
