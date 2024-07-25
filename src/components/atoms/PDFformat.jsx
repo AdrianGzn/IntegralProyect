@@ -19,21 +19,22 @@ const styles = StyleSheet.create({
     },
     table: {
         display: "table",
-        width: "auto",
+        width: "100%",
         borderStyle: "solid",
         borderWidth: 1,
         borderRightWidth: 0,
         borderBottomWidth: 0,
+        marginBottom: 0,
     },
     tableObs: {
         display: "table",
-        width: "80%",
+        width: "100%",
         borderStyle: "solid",
         borderWidth: 1,
         borderRightWidth: 0,
         borderBottomWidth: 0,
-        minHeight: "80%",
-        marginLeft: "10%",
+        marginLeft: "0%",
+        marginRight: "0%",
     },
     tableRow: {
         flexDirection: "row",
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
     },
     tableColRest: {
-        width: "75%",
+        width: "80%",
         borderStyle: "solid",
         borderWidth: 1,
         borderLeftWidth: 0,
@@ -74,12 +75,14 @@ const styles = StyleSheet.create({
     },
     column: {
         flexDirection: 'column',
-        marginLeft: 20,
+        marginLeft: 10,
+        width: '47%',
     },
     gap: {
         marginBottom: 10,
     },
 });
+
 
 const PDFformat = (props) => (
     <Document>
@@ -96,50 +99,56 @@ const PDFformat = (props) => (
                 <Text>Periodo de Evaluación Anual</Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
-                <View style={styles.table}>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>Periodo</Text>
+
+                {/* Tabla de Calificaciones */}
+                <View style={styles.column}>
+                    <View style={styles.table}>
+                        <View style={styles.tableRow}>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Periodo</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Asignatura</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Calificación</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>Observaciones</Text>
+                            </View>
                         </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>Asignatura</Text>
+                        <View style={styles.tableRow}>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>1° Trimestre</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>{props.trimestre1Asignatura}</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>{props.trimestre1Calificación}</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>{props.trimestre1Observaciones}</Text>
+                            </View>
                         </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>Calificación</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>Observaciones</Text>
-                        </View>
-                    </View>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{props.ratingFinal}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}></Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{}</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}></Text>
-                        </View>
-                    </View>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>2º Trimestre</Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}></Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}></Text>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}></Text>
+                        <View style={styles.tableRow}>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>2º Trimestre</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>{props.trimestre2Asignatura}</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>{props.trimestre2Calificación}</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>{props.trimestre2Observaciones}</Text>
+                            </View>
                         </View>
                     </View>
                 </View>
+
+                {/* Tabla de las otras cosas */}
                 <View style={styles.column}>
                     <View style={[styles.table, styles.gap]}>
                         <View style={styles.tableRow}>
@@ -147,7 +156,7 @@ const PDFformat = (props) => (
                                 <Text style={styles.tableCell}>Lengua</Text>
                             </View>
                             <View style={styles.tableColRest}>
-                                <Text style={styles.tableCell}></Text>
+                                <Text style={styles.tableCell}>{props.lenguaData}</Text>
                             </View>
                         </View>
                     </View>
@@ -157,7 +166,7 @@ const PDFformat = (props) => (
                                 <Text style={styles.tableCell}>Asistencias</Text>
                             </View>
                             <View style={styles.tableColRest}>
-                                <Text style={styles.tableCell}></Text>
+                                <Text style={styles.tableCell}>{props.asistenciasData}</Text>
                             </View>
                         </View>
                     </View>
@@ -167,12 +176,14 @@ const PDFformat = (props) => (
                                 <Text style={styles.tableCell}>Leng</Text>
                             </View>
                             <View style={styles.tableColRest}>
-                                <Text style={styles.tableCell}></Text>
+                                <Text style={styles.tableCell}>{props.lengData}</Text>
                             </View>
                         </View>
                     </View>
                 </View>
             </View>
+
+            {/* Tabla de sugerencias */}
             <View style={styles.tableObs}>
                 <View style={styles.tableRow}>
                     <View style={styles.tableCol}>
@@ -187,7 +198,7 @@ const PDFformat = (props) => (
                         <Text style={styles.tableCell}>1</Text>
                     </View>
                     <View style={styles.tableColRest}>
-                        <Text style={styles.tableCell}>{}</Text>
+                        <Text style={styles.tableCell}>{props.sugerencia1}</Text>
                     </View>
                 </View>
                 <View style={styles.tableRow}>
@@ -195,7 +206,7 @@ const PDFformat = (props) => (
                         <Text style={styles.tableCell}>2</Text>
                     </View>
                     <View style={styles.tableColRest}>
-                        <Text style={styles.tableCell}></Text>
+                        <Text style={styles.tableCell}>{props.sugerencia2}</Text>
                     </View>
                 </View>
                 <View style={styles.tableRow}>
@@ -203,7 +214,7 @@ const PDFformat = (props) => (
                         <Text style={styles.tableCell}>3</Text>
                     </View>
                     <View style={styles.tableColRest}>
-                        <Text style={styles.tableCell}></Text>
+                        <Text style={styles.tableCell}>{props.sugerencia3}</Text>
                     </View>
                 </View>
             </View>
