@@ -12,9 +12,17 @@ function TeacherBallots() {
     const [newPDFs, setNewPDFs] = useState([]);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/ballot`)
+        fetch(`${import.meta.env.VITE_URL}/ballot`, {
+            method: 'GET',
+
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            
+        })
             .then((response) => {
                 if (response.ok) {
+                    console.log("ok");
                     return response.json();
                 }
                 throw new Error('Network response was not ok.');
