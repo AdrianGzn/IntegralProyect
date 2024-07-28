@@ -1,100 +1,144 @@
-import Table from "./Table";
-import Text from "../atoms/Text";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import Table from './Table';
+import Text from '../atoms/Text';
+import Field from '../molecules/Field';
+import Button from '../atoms/Button';
+import Swal from 'sweetalert2';
 
 function QualificationsSection() {
     const [qualifications, setQualifications] = useState([]);
-    const [subject1, setSubject1] = useState([]);
-    const [subject2, setSubject2] = useState([]);
-    const [subject3, setSubject3] = useState([]);
-    const [subject4, setSubject4] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [options, setOptions] = useState([]);
+    const Español = useRef('');
+    const Matematícas = useRef('');
+    const Ciencia = useRef('');
+    const Grado = useRef('')
+
+    const encabezado = ["id Calificaciones", "Id Boleta", "Cantidad", "Grado","Created at"];
 
     useEffect(() => {
-        const encabezado = ["id Calificaciones", "Id Boleta", "Cantidad", "Created at"];
-        setSubject1(encabezado);
-        setSubject2(encabezado);
-        setSubject3(encabezado);
-        setSubject4(encabezado);
-
-        fetch(`${import.meta.env.VITE_URL}/subjectRating `, { //Fetch para calificaciones
+        // Fetch for available options
+        fetch(`${import.meta.env.VITE_URL}/ballot`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Type-Allow-Origin': '*'
-            },
+                'Content-Type': 'application/json'
+            }
         })
-            .then(response => {
-                if (response.ok) {
-                    console.log("Se logro xD");
-                    return response.json();
-                }
-                throw new Error('Failed to fetch rating');
-            })
-            .then(data => {
-                setQualifications(data); 
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching rating:', error);
-                setLoading(false);
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            setOptions(data.map(item => item.alumn_id)); 
+        })
+        .catch(error => {
+            console.error('Error fetching options:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an issue fetching options.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
             });
+        });
     }, []);
 
 
     useEffect(() => {
-        if (!loading) {
-            const encabezado = { 1: "id Calificaciones", 2: "Id Boleta", 3: "Cantidad", 4: "Created at" };
-            const subject1Data = [encabezado];
-            const subject2Data = [encabezado];
-            const subject3Data = [encabezado];
-            const subject4Data = [encabezado];
-
-            qualifications.map(qualification => {
-                        subject1Data.push(qualification.rating_id);
-                        subject2Data.push(qualification.subject_id);
-                        subject3Data.push(qualification.rating_id);
-                        subject4Data.push(qualification );
+        fetch(`${import.meta.env.VITE_URL}/subjectRating`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to fetch qualifications.');
+        })
+        .then(data => {
+            setQualifications(data);
+            setLoading(false);
+        })
+        .catch(error => {
+            console.error('Error fetching qualifications:', error);
+            setLoading(false);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an issue fetching the qualifications.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
             });
+        });
+    }, []);
 
-            setSubject1(subject1Data);
-            setSubject2(subject2Data);
-            setSubject3(subject3Data);
-            setSubject4(subject4Data);
-        }
-    }, [loading, qualifications]);
+    const processQualifications = (data) => {
+        const subjectData = [encabezado];
+
+        data.forEach(qualification => {
+            subjectData.push([
+                qualification.rating_id,
+                qualification.subject_id,
+                qualification.amount,
+                qualification.created_at
+            ]);
+        });
+
+        return subjectData;
+    };
+
+    const subjectData = !loading ? processQualifications(qualifications) : [];
 
     return (
-        <div className="w-full min-h-[80vh] flex justify-center items-center">
-            <div className="h-4/5 w-4/6 border-2 mb-10 border-white flex flex-wrap">
-                <div className="w-full mb-10 flex justify-center">
-                    {loading ? (
-                        <Text text="Cargando..."></Text>
-                    ) : (
-                        <Table data={subject1} title="Materia 1" />
-                    )}
+        <div className="w-full min-h-[80vh] flex flex-col items-center justify-center">
+            <div className="mb-4 flex flex-wrap gap-4 w-full max-w-4xl p-4 bg-gray-800 rounded-lg shadow-md">
+                <select
+                    className="w-full md:w-1/4 h-10 px-2 border rounded"
+                    name="matriculas"
+                    multiple={true}
+                >
+                    {options.map(option => (
+                        <option key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
+                </select>
+                <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <Text text="Español" />
+                        <Field ref={Español} placeholder="Español" />
+                    </div>
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <Text text="Matemáticas" />
+                        <Field ref={Matematícas} placeholder="Matemáticas" />
+                    </div>
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <Text text="Ciencias" />
+                        <Field ref={Ciencia} placeholder="Ciencias" />
+                    </div>
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <Text text="Grado" />
+                        <Field ref={Grado} placeholder="Grado" />
+                    </div>
                 </div>
-                <div className="w-full mb-10 flex justify-center">
-                    {loading ? (
-                        <Text text="Cargando..."></Text>
-                    ) : (
-                        <Table data={subject2} title="Materia 2" />
-                    )}
-                </div>
-                <div className="w-full mb-10 flex justify-center">
-                    {loading ? (
-                        <Text text="Cargando..."></Text>
-                    ) : (
-                        <Table data={subject3} title="Materia 3" />
-                    )}
-                </div>
-                <div className="w-full mb-10 flex justify-center">
-                    {loading ? (
-                        <Text text="Cargando..."></Text>
-                    ) : (
-                        <Table data={subject4} title="Materia 4" />
-                    )}
-                </div>
+                <Button
+                    text="Subir Calificaciones"
+                   
+                    className="mt-4"
+                />
+            </div>
+            <div className="h-4/5 w-4/6 border-2 mb-10 border-white flex flex-col items-center bg-gray-800 rounded-lg shadow-md p-4">
+                {["Materia 1", "Materia 2", "Materia 3", "Materia 4"].map((title, index) => (
+                    <div key={index} className="w-full mb-10 flex justify-center">
+                        {loading ? (
+                            <Text text="Cargando..." />
+                        ) : (
+                            <Table data={subjectData} title={title} />
+                        )}
+                    </div>
+                ))}
             </div>
         </div>
     );

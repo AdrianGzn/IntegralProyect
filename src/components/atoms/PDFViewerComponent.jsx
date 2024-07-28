@@ -1,36 +1,32 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { usePDFSlick } from "@pdfslick/react";
-import PDFNavigation from "../../PDFnavigation/PDFnavigation";
+import { PDFSlickViewer } from "@pdfslick/react";
 import "@pdfslick/react/dist/pdf_viewer.css";
 
 const PDFViewerComponent = ({ pdfFilePath }) => {
-  const { viewerRef, usePDFSlickStore, PDFSlickViewer } = usePDFSlick(
-    pdfFilePath,
-    {
-      scaleValue: "page-fit",
-    }
-  );
+  const containerRef = React.useRef(null);
 
-  const scale = usePDFSlickStore((s) => s.scale);
-  const numPages = usePDFSlickStore((s) => s.numPages);
-  const pageNumber = usePDFSlickStore((s) => s.pageNumber);
+  React.useEffect(() => {
+    if (containerRef.current) {
+      new PDFSlickViewer(containerRef.current, {
+        url: pdfFilePath,
+        scaleValue: "page-fit", // Configura aquí las opciones válidas
+      });
+    }
+  }, [pdfFilePath]);
 
   const openPDFInNewTab = () => {
-      const pdfViewerUrl = `/pdf-viewer?pdfUrl=${encodeURIComponent(pdfFilePath)}`;
-      window.open(pdfViewerUrl, "_blank");
-    
+    const pdfViewerUrl = `/pdf-viewer?pdfUrl=${encodeURIComponent(pdfFilePath)}`;
+    window.open(pdfViewerUrl, "_blank");
   };
 
   return (
-    <div className="absolute inset-0 pdfSlick">
-      <div className="relative h-full">
-        <div ref={viewerRef} className="pdf-viewer-container" onClick={openPDFInNewTab}>
-          <PDFSlickViewer {...{ viewerRef, usePDFSlickStore }} />
-        </div>
-        <div className="absolute w-full top-0 left-0">
-        </div>
-      </div>
+    <div className="relative h-full w-full">
+      <div
+        ref={containerRef}
+        className="absolute inset-0"
+        onClick={openPDFInNewTab}
+      />
     </div>
   );
 };
