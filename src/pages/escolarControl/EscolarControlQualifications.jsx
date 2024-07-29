@@ -8,7 +8,7 @@ function EscolarControlQualifications() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const encabezado = [{ 1: "Id Boleta", 2: "Id Calificación", 3: "Id Alumno", 5: "grado", 4: "Calificación"}];
+        const encabezado = [{ 1: "Id Calificación", 2: "Id Alumnno", 3: "Cantidad", 5: "Materia", 4: "Grado"}];
         setAlumns(encabezado);
 
         fetch(`${import.meta.env.VITE_URL}/rating`, {
@@ -39,7 +39,7 @@ function EscolarControlQualifications() {
         <div className="min-h-screen w-full bg-slate-900">
             <Header role="escolarControl" />
             <div className="w-full flex justify-center items-center">
-                <div className="h-[75vh] w-4/6 flex flex-col">
+                <div className="min-h-[75vh] w-4/6 flex flex-col">
                     <div className="w-full flex justify-center">
                         {loading ? (
                             <Text text="Cargando..."></Text>
