@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 
-const Select = forwardRef(({ options }, ref) => {
+const Select = forwardRef(({ options, className }, ref) => {
     return (
-        <select ref={ref} className="mx-2 my-3">
+        <select ref={ref} className={`mx-2 my-3 ${className || ''}`}>
             {options.map((option, index) => (
                 <option key={index} value={option}>
                     {option}
