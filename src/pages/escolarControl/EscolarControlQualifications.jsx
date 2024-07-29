@@ -1,40 +1,48 @@
 import Header from "../../components/organisms/Header";
 import Table from "../../components/organisms/Table";
 import Text from "../../components/atoms/Text";
+import Swal from "sweetalert2"; // Asegúrate de importar Swal
 import { useState, useEffect } from "react";
 
 function EscolarControlQualifications() {
-    const [alumns, setAlumns] = useState([]);
+    const [ratings, setRatings] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const encabezado = [{ 1: "Id Boleta", 2: "Id Calificación", 3: "Id Alumno", 5: "grado", 4: "Calificación"}];
-        setAlumns(encabezado);
+        const encabezado = ["Id Boleta", "Id Calificación", "Id Alumno", "grado", "Calificación"];
 
-        fetch(`${import.meta.env.VITE_URL}/subject/espa`, {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: {
-
+                'Content-Type': 'application/json'
             }
         })
         .then(response => {
             if (response.ok) {
-                console.log("Response Correct Qualifications");
                 return response.json();
             }
-            throw new Error('Failed to fetch qualifications');
-        }) 
+            throw new Error('Network response was not ok.');
+        })
         .then(data => {
-            setAlumns(newAlumns => [...newAlumns, ...data]);
+            const combinedData = [encabezado, ...data.map(item => [
+                item.boletaId,  
+                item.calificacionId,
+                item.alumnoId,
+                item.grado,
+                item.calificacion
+            ])];
+            setRatings(combinedData);
             setLoading(false);
         })
         .catch(error => {
-            console.error('Error fetching alumn:', error);
-            setLoading(false);
+            console.error('Error fetching options:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an issue fetching options.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+            setLoading(true);
         });
     }, []);
 
@@ -45,9 +53,9 @@ function EscolarControlQualifications() {
                 <div className="h-[75vh] w-4/6 flex flex-col">
                     <div className="w-full flex justify-center">
                         {loading ? (
-                            <Text text="Cargando..."></Text>
+                            <Text text="Cargando..." />
                         ) : (
-                            <Table data={alumns} title="Español" />
+                            <Table data={ratings} title="Español" />
                         )}
                     </div>
                 </div>
