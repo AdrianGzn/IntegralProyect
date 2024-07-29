@@ -8,15 +8,18 @@ function EscolarControlQualifications() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const encabezado = [{ 1: "Id Boleta", 2: "Id Alumno", 3: "Materia", 4: "Calificación"}];
+        const encabezado = [{ 1: "Id Boleta", 2: "Id Calificación", 3: "Id Alumno", 5: "grado", 4: "Calificación"}];
         setAlumns(encabezado);
 
-        fetch(`${import.meta.env.VITE_URL}/rating`, {
+        fetch(`${import.meta.env.VITE_URL}/subject/espa`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },
+            body: {
+
+            }
         })
         .then(response => {
             if (response.ok) {
@@ -44,7 +47,7 @@ function EscolarControlQualifications() {
                         {loading ? (
                             <Text text="Cargando..."></Text>
                         ) : (
-                            <Table data={alumns} title="Hola" />
+                            <Table data={alumns} title="Español" />
                         )}
                     </div>
                 </div>

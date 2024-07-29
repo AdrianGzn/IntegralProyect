@@ -9,14 +9,23 @@ function NewReport({ onClick, topicRef }) {
 
   const handleCreateReport = () => {
 
+    const validPattern = /^[a-zA-Z0-9.,:;\n"']*$/;
+
     if (!topicRef.current || !topicRef.current.value) {
         Swal.fire({
-            title: "Agregar",
-            text: "ingrese los datos",
+            title: "Error",
+            text: "Por favor, ingrese los datos",
             icon: "error"
-        })
+        });
       return;
-    }else {
+    } else if (!validPattern.test(topicRef.current.value)) {
+        Swal.fire({
+            title: "Error",
+            text: "El texto contiene caracteres no permitidos",
+            icon: "error"
+        });
+      return;
+    } else {
       onClick(topicRef.current.value);
     }
 
@@ -39,4 +48,3 @@ function NewReport({ onClick, topicRef }) {
 }
 
 export default NewReport;
-

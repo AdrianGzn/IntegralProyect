@@ -7,6 +7,18 @@ import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma';
 
 function ChangeReport({ idReport, statusReport, options, event }) {
+    const handleBlurIdReport = (event, pattern) => {
+        const { value } = event.target;
+        const validPattern = new RegExp(pattern);
+
+        if (!validPattern.test(value)) {
+            Swal.fire({
+                title: "Error",
+                text: "El ID deben ser datos numéricos",
+                icon: "error"
+            });
+        }
+    };
 
     const handleCreateReport = () => {
         if (!idReport.current.value || !statusReport.current.value) {
@@ -27,7 +39,11 @@ function ChangeReport({ idReport, statusReport, options, event }) {
             </div>
             <div className="flex justify-center items-center flex-wrap">
                 <Text text="Matrícula:" className="text-base my-2"></Text>
-                <InputSearch ref={idReport} />
+                <InputSearch
+                    ref={idReport}
+                    pattern="^\d{0,5}$"
+                    onBlur={handleBlurIdReport}
+                />
                 <Select ref={statusReport} options={options} className="my-5 bg-lime-500" />
                 <Button text="Guardar" onClick={handleCreateReport} className="h-7 w-36 my-0" />
             </div>
