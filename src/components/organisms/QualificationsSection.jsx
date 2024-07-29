@@ -26,6 +26,7 @@ function QualificationsSection() {
         })
         .then(response => {
             if (response.ok) {
+                console.log("win")
                 return response.json();
             }
             throw new Error('Network response was not ok.');
@@ -46,7 +47,7 @@ function QualificationsSection() {
 
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/subjectRating`, {
+        fetch(`${import.meta.env.VITE_URL}/subject/espa`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,6 +76,7 @@ function QualificationsSection() {
     }, []);
 
     const processQualifications = (data) => {
+        console.log(qualifications)
         const subjectData = [encabezado];
 
         data.forEach(qualification => {
@@ -82,7 +84,7 @@ function QualificationsSection() {
                 qualification.rating_id,
                 qualification.subject_id,
                 qualification.amount,
-                qualification.created_at
+                qualification.gradePertenence,
             ]);
         });
 
@@ -130,7 +132,7 @@ function QualificationsSection() {
                 />
             </div>
             <div className="h-4/5 w-4/6 border-2 mb-10 border-white flex flex-col items-center bg-gray-800 rounded-lg shadow-md p-4">
-                {["Materia 1", "Materia 2", "Materia 3", "Materia 4"].map((title, index) => (
+                {["Español", "Matematícas", "Ciencias naturales"].map((title, index) => (
                     <div key={index} className="w-full mb-10 flex justify-center">
                         {loading ? (
                             <Text text="Cargando..." />
