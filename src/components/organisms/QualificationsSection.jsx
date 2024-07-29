@@ -154,8 +154,8 @@ function QualificationsSection() {
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to add ${pertenence} qualification.`);
-                setAddedQualifications(addedQualifications + 1);
             }
+            setAddedQualifications(addedQualifications + 1);
         })
         .catch(error => {
             console.error(`Error adding ${pertenence} qualifications:`, error);
