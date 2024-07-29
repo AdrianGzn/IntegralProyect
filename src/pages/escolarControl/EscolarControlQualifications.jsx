@@ -11,15 +11,12 @@ function EscolarControlQualifications() {
         const encabezado = [{ 1: "Id Boleta", 2: "Id Calificación", 3: "Id Alumno", 5: "grado", 4: "Calificación"}];
         setAlumns(encabezado);
 
-        fetch(`${import.meta.env.VITE_URL}/subject/espa`, {
+        fetch(`${import.meta.env.VITE_URL}/rating`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },
-            body: {
-
-            }
         })
         .then(response => {
             if (response.ok) {

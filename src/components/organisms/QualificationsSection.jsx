@@ -8,6 +8,7 @@ import Select from '../atoms/Select';
 
 function QualificationsSection() {
     const [qualifications, setQualifications] = useState([]);
+    const [mathQualifications, setMathQualifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [options, setOptions] = useState([]);
     const alumnId = useRef('');
@@ -76,6 +77,35 @@ function QualificationsSection() {
         });
     }, [addedQualifications]);
 
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/subject/math`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to fetch qualifications.');
+        })
+        .then(data => {
+            setMathQualifications(data);
+            setLoading(false);
+        })
+        .catch(error => {
+            console.error('Error fetching qualifications:', error);
+            setLoading(false);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an issue fetching the qualifications.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        });
+    }, []);
+
     const processQualifications = (data) => {
         const subjectData = [encabezado];
 
@@ -91,7 +121,8 @@ function QualificationsSection() {
         return subjectData;
     };
 
-    const subjectData = !loading ? processQualifications(qualifications) : [];
+    const subjectDataEspañol = !loading ? processQualifications(qualifications) : [];
+    const subjectDataMath = !loading ? processQualifications(mathQualifications) : [];
 
     const validateInput = (value) => {
         const regEx = /^\d{1,2}$/;
@@ -119,93 +150,41 @@ function QualificationsSection() {
             return;
         }
 
-        fetch(`${import.meta.env.VITE_URL}/rating`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                alumn_id: alumnId.current.value,
-                amount: Español.current.value,
-                pertenence: "Spanish",
-                gradePertenence: Grado.current.value,
-                created_by: "escolar",
-                updated_by: "escolarControl",
-                deleted: false
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to add Spanish qualification.');
-            }
-        })
-        .catch(error => {
-            console.error('Error adding Spanish qualifications:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue adding the Spanish qualification.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-        });
+        const qualificationsData = [
+            { pertenence: "Spanish", amount: Español.current.value },
+            { pertenence: "Math", amount: Matematicas.current.value },
+            { pertenence: "Science", amount: Ciencia.current.value }
+        ];
 
-        fetch(`${import.meta.env.VITE_URL}/rating`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                alumn_id: alumnId.current.value,
-                amount: Matematicas.current.value,
-                pertenence: "Math",
-                gradePertenence: Grado.current.value,
-                created_by: "escolar",
-                updated_by: "escolarControl",
-                deleted: false
+        qualificationsData.forEach(({ pertenence, amount }) => {
+            fetch(`${import.meta.env.VITE_URL}/rating`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    alumn_id: alumnId.current.value,
+                    amount,
+                    pertenence,
+                    gradePertenence: Grado.current.value,
+                    created_by: "escolar",
+                    updated_by: "escolarControl",
+                    deleted: false
+                })
             })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to add Math qualification.');
-            }
-        })
-        .catch(error => {
-            console.error('Error adding Math qualifications:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue adding the Math qualification.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-        });
-
-        fetch(`${import.meta.env.VITE_URL}/rating`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                alumn_id: alumnId.current.value,
-                amount: Ciencia.current.value,
-                pertenence: "Science",
-                gradePertenence: Grado.current.value,
-                created_by: "escolar",
-                updated_by: "escolarControl",
-                deleted: false
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to add ${pertenence} qualification.`);
+                }
             })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to add Science qualification.');
-            }
-        })
-        .catch(error => {
-            console.error('Error adding Science qualifications:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue adding the Science qualification.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
+            .catch(error => {
+                console.error(`Error adding ${pertenence} qualifications:`, error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: `There was an issue adding the ${pertenence} qualification.`,
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
+                });
             });
         });
 
@@ -241,15 +220,23 @@ function QualificationsSection() {
                 <Button text="Subir Calificaciones" onClick={addQualifications} className="!mx-0 !mt-5 !mb-0" />
             </div>
             <div className="min-h-4/5 w-4/6 mb-10 flex flex-col items-center bg-gray-800 rounded-lg shadow-md p-4">
-                {["Español", "Matemáticas", "Ciencias naturales"].map((title, index) => (
-                    <div key={index} className="w-full mb-10 flex justify-center">
-                        {loading ? (
-                            <Text text="Cargando..." />
-                        ) : (
-                            <Table data={subjectData} title={title} />
-                        )}
-                    </div>
-                ))}
+                <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {loading ? (
+                        <Text text="Cargando..." />
+                    ) : (
+                        <>
+                            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                <Table data={subjectDataEspañol} title="Español" />
+                            </div>
+                            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                <Table data={subjectDataMath} title="Matemáticas" />
+                            </div>
+                            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                <Table data={processQualifications(qualifications, "Ciencias naturales")} title="Ciencias naturales" />
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
