@@ -1,7 +1,7 @@
 import Header from "../../components/organisms/Header";
 import Table from "../../components/organisms/Table";
 import Text from "../../components/atoms/Text";
-import Swal from "sweetalert2"; // Asegúrate de importar Swal
+import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 
 function EscolarControlQualifications() {
@@ -11,11 +11,12 @@ function EscolarControlQualifications() {
     useEffect(() => {
         const encabezado = ["Id Boleta", "Id Calificación", "Id Alumno", "grado", "Calificación"];
 
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+        fetch(`${import.meta.env.VITE_URL}/rating`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
         })
         .then(response => {
             if (response.ok) {
@@ -24,12 +25,13 @@ function EscolarControlQualifications() {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
+            console.log(data);
             const combinedData = [encabezado, ...data.map(item => [
-                item.boletaId,  
-                item.calificacionId,
-                item.alumnoId,
-                item.grado,
-                item.calificacion
+                item.rating_id,  
+                item.alumn_id,
+                item.amount,
+                item.gradePertenence,
+                item.gradePertenence
             ])];
             setRatings(combinedData);
             setLoading(false);
@@ -50,7 +52,7 @@ function EscolarControlQualifications() {
         <div className="min-h-screen w-full bg-slate-900">
             <Header role="escolarControl" />
             <div className="w-full flex justify-center items-center">
-                <div className="h-[75vh] w-4/6 flex flex-col">
+                <div className="min-h-[75vh] w-4/6 flex flex-col">
                     <div className="w-full flex justify-center">
                         {loading ? (
                             <Text text="Cargando..." />

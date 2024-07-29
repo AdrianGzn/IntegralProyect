@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
@@ -6,11 +6,14 @@ import Text from "../atoms/Text";
 import InputSearch from "../atoms/InputSearch";
 
 function ForminBallot() {
+    const [alumnsIds, setAlumnsIds] = useState([]);
     const ratingFinal = useRef("");
     const observations = useRef("");
     const alumn_id = useRef("");
 
     const handleBlurAlumnId = () => {
+
+        let found = false;
         const value = alumn_id.current.value;
         const validPattern = /^\d{1,5}$/;
 
@@ -19,6 +22,47 @@ function ForminBallot() {
                 title: "Error",
                 text: "El valor de la matrícula debe contener solo números y no exceder los 5 dígitos",
                 icon: "error"
+            });
+        }
+
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            setAlumnsIds(data.map(item => item.alumn_id)); 
+            console.log(alumnsIds);
+        })
+        .catch(error => {
+            console.error('Error fetching options:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an issue fetching options.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        });
+
+        for (let i = 0; i < alumnsIds.length; i++) {
+            if(value == alumnsIds[i]){
+                found = true;
+            }
+        }
+
+        if(!found) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Debe ingresar una id existente',
+                icon: 'error',
+                confirmButtonText: 'Okay'
             });
         }
     };
@@ -102,7 +146,7 @@ function ForminBallot() {
         <>
             <div className="flex justify-center">
                 <div className="w-[80%] min-w-[270px] flex justify-center flex-wrap rounded-lg bg-slate-800">
-                    <Text text="General" className="!text-4xl underline decoration-lime-500"></Text>
+                    <Text text="Generar" className="!text-4xl underline decoration-lime-500"></Text>
                     <div className="w-full flex justify-evenly  items-center flex-wrap">
                         <div className="h-20 w-[26%] min-w-64 flex justify-center flex-wrap">
                             <Text text="Matricula:" className="my-1"></Text>

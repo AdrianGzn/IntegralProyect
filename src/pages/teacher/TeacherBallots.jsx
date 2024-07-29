@@ -26,7 +26,7 @@ function TeacherBallots() {
         })
         .then(data => {
             setPdfUrls(data);
-            setNewPDFs(data); // Inicialmente, mostrar todas las URLs
+            setNewPDFs(data);
         })
         .catch(error => {
             console.error('Error fetching ballot data:', error);
@@ -39,14 +39,15 @@ function TeacherBallots() {
         });
     }, []);
 
-    const filteredPDF = (e) => {
-        const searchTerm = e.target.value.toLowerCase();
+    const filteredPDF = (searchTerm) => {
         setMatricleSearch(searchTerm);
 
-        // Filtrar los PDF según el ID de matrícula
-        const filteredItems = pdfUrls.filter(ballot =>
-            ballot.alumn_id.toLowerCase().includes(searchTerm)
-        );
+        const filteredItems = pdfUrls.filter(ballot => {
+            // Convert alumn_id to string and handle cases where alumn_id is undefined or null
+            const alumnId = ballot.alumn_id ? ballot.alumn_id.toString() : '';
+            return alumnId.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+
         setNewPDFs(filteredItems);
     };
 
@@ -64,4 +65,3 @@ function TeacherBallots() {
 }
 
 export default TeacherBallots;
-

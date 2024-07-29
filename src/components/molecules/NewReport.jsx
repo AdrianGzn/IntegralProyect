@@ -9,7 +9,7 @@ function NewReport({ onClick, topicRef }) {
 
   const handleCreateReport = () => {
 
-    const validPattern = /^[a-zA-Z0-9.,:;\n"']*$/;
+    const validPattern = /^[a-zA-Z0-9.,:;\n"'\s]*$/;
 
     if (!topicRef.current || !topicRef.current.value) {
         Swal.fire({

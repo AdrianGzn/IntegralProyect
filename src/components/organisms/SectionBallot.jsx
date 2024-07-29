@@ -12,6 +12,7 @@ function SectionBallot({ newPDFs }) {
             return null; 
           }
           const fileName = pdfUrl.url.split('/').pop();
+          const alumnId = pdfUrl.alumn_id ? pdfUrl.alumn_id.toString() : '';
 
           return (
             <div key={index} className="flex flex-col items-center gap-4 bg-white p-4 rounded-lg shadow-lg border border-gray-200">
@@ -28,7 +29,7 @@ function SectionBallot({ newPDFs }) {
                 />
                 <span className="text-base text-blue-600 font-medium">{fileName}</span>
               </a>
-              <p className="text-sm text-gray-700">Matrícula: {pdfUrl.alumn_id}</p>
+              <p className="text-sm text-gray-700">Matrícula: {alumnId}</p>
             </div>
           );
         })

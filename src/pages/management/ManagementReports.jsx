@@ -7,6 +7,7 @@ import ReportsSection from "../../components/organisms/ReportsSection";
 
 function ManagementReports() {
     const [reports, setReports] = useState([]);
+    const [count, setCount] = useState(0); // Estado para count
     const options = ["Aceptar", "Denegar"];
     const idRef = useRef(null);
     const statusRef = useRef(""); 
@@ -31,6 +32,7 @@ function ManagementReports() {
                     text: "Se logró cambiar el reporte",
                     icon: "success"
                 });
+                setCount(prevCount => prevCount + 1); // Actualiza count usando el setter de estado
                 return response.json();
             } else {
                 Swal.fire({
@@ -49,25 +51,24 @@ function ManagementReports() {
                 icon: "error"
             });
         });
-
     };
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/report`)
         .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error('Failed to fetch reports');
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to fetch reports');
         })
         .then(data => {
-        setReports(data);
+            setReports(data);
         })
         .catch(error => {
-        console.error('Error fetching reports:', error);
-        Swal.fire('Error', 'Failed to fetch reports', 'error');
+            console.error('Error fetching reports:', error);
+            Swal.fire('Error', 'Failed to fetch reports', 'error');
         });
-    }, []);
+    }, [count]); // Dependencia en count para re-renderizar
 
     return (
         <div className="h-full w-full bg-slate-900">
