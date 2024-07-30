@@ -1,4 +1,5 @@
 // PDFNavigation.js
+import React from 'react';
 
 import React from 'react';
 

@@ -3,6 +3,7 @@ import UserContext from './context/userContext.js';
 import { useState } from 'react';
 import { PDFViewer } from '@react-pdf/renderer';
 import PDFformat from './components/atoms/PDFformat';
+import React from 'react';
 
 import ProtectedTeacher from "./components/organisms/protected/ProtectedTeacher.jsx";
 import ProtectedManagement from "./components/organisms/protected/ProtectedManagement.jsx";
@@ -21,6 +22,9 @@ import TeacherBallots from './pages/teacher/TeacherBallots.jsx'
 import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
 import EscolarControlBallots from './pages/escolarControl/EscolarControlBallots.jsx'
 import EscolarControlQualifications from './pages/escolarControl/EscolarControlQualifications.jsx'
+import EscolarControlAlumns from './pages/escolarControl/EscolarControlAlumns.jsx'
+import EscolarControlTeachers from './pages/escolarControl/EscolarControlTeachers.jsx'
+import EscolarControlClass from "./pages/escolarControl/EscolarControlClass.jsx"
 
 function App() {
   const [user, setUser] = useState({});
@@ -70,9 +74,21 @@ function App() {
             path= "/escolarControl/qualifications"
             element= {<ProtectedEscolarControl><EscolarControlQualifications /></ProtectedEscolarControl>}
           />
+          <Route
+            path= "/escolarControl/alumns"
+            element= {<ProtectedEscolarControl><EscolarControlAlumns /></ProtectedEscolarControl>}
+          />
+          <Route
+            path= "/escolarControl/teachers"
+            element= {<ProtectedEscolarControl><EscolarControlTeachers /></ProtectedEscolarControl>}
+          />
+          <Route
+            path= "/escolarControl/class"
+            element= {<ProtectedEscolarControl><EscolarControlClass /></ProtectedEscolarControl>}
+          />
           <Route 
             path="/management/home"
-            element = {<ManagementHome />} 
+            element = {<ProtectedManagement><ManagementHome /></ProtectedManagement>} 
           />
           <Route
             path= "/management/reports"

@@ -22,6 +22,18 @@ const options = {
             text: "Calificaciones generales",
             link: "/escolarControl/qualifications"
         },
+        {
+            text: "Clases",
+            link: "/escolarControl/class"
+        },
+        {
+            text: "Añadir Maestros",
+            link: "/escolarControl/teachers"
+        },
+        {
+            text: "Alumnnos",
+            link: "/escolarControl/alumns"
+        },
     ],
     management: [
         {
