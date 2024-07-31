@@ -4,6 +4,7 @@ import AddAlumn from "../../components/organisms/AddAlumn";
 import { useRef, useState, useEffect } from "react";
 import React from "react";
 import Swal from "sweetalert2";
+
 function EscolarControlAlumns() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
@@ -15,7 +16,6 @@ function EscolarControlAlumns() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                class_id: 0,
                 name: nameRef.current.value,
                 lastName: lastNameRef.current.value,
                 created_by: 'escolarControl',
@@ -42,7 +42,7 @@ function EscolarControlAlumns() {
             console.error('Error:', error);
             Swal.fire({
                 title: "No se logró agregar",
-                text: "No se pudo agregar la boleta",
+                text: "No se pudo agregar el alumno",
                 icon: "error"
             });
         });
@@ -53,12 +53,17 @@ function EscolarControlAlumns() {
         if (!usernamePattern.test(nameRef.current.value)) {
             Swal.fire({
                 title: "Error",
-                text: "El nombre de usuario debe contener entre 1 y 30 letras sin números.",
+                text: "El nombre debe contener entre 1 y 30 letras sin números.",
+                icon: "error"
+            });
+        } else if (!usernamePattern.test(lastNameRef.current.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "El apellido debe contener entre 1 y 30 letras sin números.",
                 icon: "error"
             });
         }
     };
-
 
     return (
         <div className="h-full w-full bg-slate-900">
@@ -70,10 +75,9 @@ function EscolarControlAlumns() {
                         lastNameReference={lastNameRef}
                         onBlur={validateNames}
                         onClick={addAlumn}
-                    ></AddAlumn>
+                    />
                 </div>
             </div>
-            
         </div>
     );
 }

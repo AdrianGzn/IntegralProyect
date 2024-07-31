@@ -21,6 +21,7 @@ function EscolarControlTeachers() {
                 name: nameRef.current.value,
                 lastName: lastNameRef.current.value,
                 password: passRef,
+                url: "",
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false
