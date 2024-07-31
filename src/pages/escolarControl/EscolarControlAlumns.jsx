@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 function EscolarControlAlumns() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
-    const classA = useRef('')
 
     const addAlumn = () => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {

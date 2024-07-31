@@ -10,19 +10,20 @@ function TeacherBallots() {
     const [pdfUrls, setPdfUrls] = useState([]);
     const [newPDFs, setNewPDFs] = useState([]);
     const [role, setRole] = useState('');
-    const [pdfUrlForRole, setPdfUrlForRole] = useState(''); // Estado para almacenar la URL específica
+    const [pdfUrlForRole, setPdfUrlForRole] = useState('');
 
-    // Obtener el role del localStorage y almacenarlo en el estado
     useEffect(() => {
-        const storedRole = localStorage.getItem('personal_id');
+        const storedRole = 10;
+        console.log(storedRole);
         if (storedRole) {
             setRole(storedRole);
             console.log('Role from localStorage:', storedRole);
         }
     }, []);
 
-    // Fetch PDF data
     useEffect(() => {
+        if (!role) return; // Avoid fetching if role is not set
+
         fetch(`${import.meta.env.VITE_URL}/personal`, {
             method: 'GET',
             headers: {
@@ -30,17 +31,17 @@ function TeacherBallots() {
             }
         })
         .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
+            if (response.ok) return response.json();
             throw new Error('Network response was not ok.');
         })
         .then(data => {
             console.log(data);
             setPdfUrls(data);
 
-            const filteredData = data.filter(pdf => pdf.role_id === role); // Ajusta la propiedad `role_id` según tu estructura de datos
+            const filteredData = data.filter(pdf => pdf.personal_id === role);
             setNewPDFs(filteredData);
+
+            // Assuming personal_id is the correct field to match role
             const urlForRole = data.find(pdf => pdf.personal_id === role)?.url || '';
             setPdfUrlForRole(urlForRole);
         })
@@ -54,6 +55,7 @@ function TeacherBallots() {
             });
         });
     }, [role]);
+
     const filteredPDF = (searchTerm) => {
         setMatricleSearch(searchTerm);
 
@@ -67,20 +69,14 @@ function TeacherBallots() {
 
     return (
         <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
-            <Header role={role} /> {/* Pasar el role al componente Header */}
+            <Header role={role} />
             <div className="w-full h-[80vh] flex justify-center items-center">
                 <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col wrap items-center">
                     <SectionBallot newPDFs={newPDFs} />
                 </div>
             </div>
-            {pdfUrlForRole && (
-                <div className="p-4 text-white">
-                    <p>URL for personal_id {role}: {pdfUrlForRole}</p>
-                </div>
-            )}
         </div>
     );
 }
 
 export default TeacherBallots;
-

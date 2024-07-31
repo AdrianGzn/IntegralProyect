@@ -5,7 +5,7 @@ function SectionBallot({ newPDFs }) {
   return (
     <div className="min-h-[60%] w-full overflow-x-hidden flex flex-wrap items-center gap-6 p-10">
       {newPDFs.length === 0 ? (
-        <p className="text-white text-lg">No PDFs available</p>
+        <p className="text-white text-lg">No se ha asignado ninguna lista de asistencia</p>
       ) : (
         newPDFs.map((pdfUrl, index) => {
           if (!pdfUrl || !pdfUrl.url) {
@@ -29,7 +29,6 @@ function SectionBallot({ newPDFs }) {
                 />
                 <span className="text-base text-blue-600 font-medium">{fileName}</span>
               </a>
-              <p className="text-sm text-gray-700">Matrícula: {alumnId}</p>
             </div>
           );
         })

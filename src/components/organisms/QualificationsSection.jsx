@@ -12,28 +12,23 @@ function QualificationsSection() {
     const [cienceQualifications, setCienceQualifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [options, setOptions] = useState([]);
+    const [addedQualifications, setAddedQualifications] = useState(0); // Definido aquí
+
     const alumnId = useRef('');
     const Español = useRef('');
     const Matematicas = useRef('');
     const Ciencia = useRef('');
     const Grado = useRef('');
 
-    const encabezado = ["Nmerod de lista", "Calificación", "Grado"];
-    const [addedQualifications, setAddedQualifications] = useState(0);
+    const encabezado = ["Número de lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias Naturales", "Calificación"];
 
     useEffect(() => {
         fetchOptions();
-    }, [addedQualifications]);
+    }, []);
 
     useEffect(() => {
         fetchQualifications('espa', setQualifications);
-    }, [addedQualifications]);
-
-    useEffect(() => {
         fetchQualifications('cience', setCienceQualifications);
-    }, [addedQualifications]);
-
-    useEffect(() => {
         fetchQualifications('math', setMathQualifications);
     }, [addedQualifications]);
 
@@ -81,21 +76,40 @@ function QualificationsSection() {
             });
     };
 
-    const processQualifications = (data) => {
+    const processQualifications = (dataEspañol, dataMath, dataCience) => {
+        const qualificationsMap = new Map();
+
+        const addToMap = (data, subject) => {
+            data.forEach(qualification => {
+                const { alumn_id, amount, gradePertenence } = qualification;
+                if (!qualificationsMap.has(alumn_id)) {
+                    qualificationsMap.set(alumn_id, {
+                        alumn_id,
+                        name: '',       // Placeholder for name
+                        lastName: '',   // Placeholder for last name
+                        español: '',
+                        matematicas: '',
+                        ciencias: '',
+                        gradePertenence
+                    });
+                }
+                qualificationsMap.get(alumn_id)[subject] = amount;
+            });
+        };
+
+        addToMap(dataEspañol, 'español');
+        addToMap(dataMath, 'matematicas');
+        addToMap(dataCience, 'ciencias');
+
         const subjectData = [encabezado];
-        data.forEach(qualification => {
-            subjectData.push([
-                qualification.alumn_id,
-                qualification.amount,
-                qualification.gradePertenence,
-            ]);
+        qualificationsMap.forEach(({ alumn_id, name, lastName, español, matematicas, ciencias, gradePertenence }) => {
+            subjectData.push([alumn_id, name, lastName, español, matematicas, ciencias, gradePertenence]);
         });
+
         return subjectData;
     };
 
-    const subjectDataEspañol = !loading ? processQualifications(qualifications) : [];
-    const subjectDataMath = !loading ? processQualifications(mathQualifications) : [];
-    const subjectCience = !loading ? processQualifications(cienceQualifications) : [];
+    const subjectData = !loading ? processQualifications(qualifications, mathQualifications, cienceQualifications) : [];
 
     const validateInput = (value) => {
         const regEx = /^\d{1,2}$/;
@@ -154,7 +168,7 @@ function QualificationsSection() {
                 if (!response.ok) {
                     throw new Error(`Failed to add ${pertenence} qualification.`);
                 }
-                setAddedQualifications(addedQualifications + 1);
+                setAddedQualifications(prev => prev + 1); // Correctly updating the state
             })
             .catch(error => {
                 console.error(`Error adding ${pertenence} qualifications:`, error);
@@ -171,7 +185,7 @@ function QualificationsSection() {
         <div className="w-full min-h-[80vh] flex flex-col items-center justify-center">
             <div className="w-[70%] mb-4 flex flex-wrap p-4 bg-gray-800 rounded-lg shadow-md">
                 <div className="w-[70%] flex my-1">
-                    <Text text="Numero de lista del alumno" className="!m-0"></Text>
+                    <Text text="Número de lista del alumno" className="!m-0"></Text>
                     <Select options={options} ref={alumnId} className="!my-0"></Select>
                 </div>
 
@@ -199,17 +213,9 @@ function QualificationsSection() {
                     {loading ? (
                         <Text text="Cargando..." />
                     ) : (
-                        <>
-                            <div className="w-[415px] m-5 bg-gray-700 p-4 rounded-lg shadow-md">
-                                <Table data={subjectDataEspañol} title="Español" />
-                            </div>
-                            <div className="w-[415px] m-5 bg-gray-700 p-4 rounded-lg shadow-md">
-                                <Table data={subjectDataMath} title="Matemáticas" />
-                            </div>
-                            <div className="w-[415px] m-5 bg-gray-700 p-4 rounded-lg shadow-md">
-                                <Table data={subjectCience} title="Ciencias naturales" />
-                            </div>
-                        </>
+                        <div className="w-[70%] bg-gray-700 p-4 rounded-lg shadow-md">
+                            <Table data={subjectData} title="Calificaciones Combinadas" />
+                        </div>
                     )}
                 </div>
             </div>
