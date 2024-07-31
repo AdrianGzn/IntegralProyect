@@ -1,91 +1,20 @@
 import Header from "../../components/organisms/Header";
-import NewClass from "../../components/organisms/NewCalss";
-import AddAlumnClass from "../../components/organisms/AddAlumnClass"
 import { useRef, useState, useEffect } from "react";
-import { classNames } from "@react-pdf-viewer/core";
 import React from "react";
 import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma';
+import FormAddAlumn from "../../components/organisms/FormAddAlumn";
+import FormAssignClass from "../../components/organisms/FormAssignClass";
 
 function EscolarControlClass() {
-    const [classes, setClasses] = useState([]);
     const [alumns, setAlumns] = useState([]);
+    const [alumnsToPut, setAlumnsToPut] = useState([]);
     const nameAlumn = useRef("");
     const lastNameAlumn = useRef("");
     const nameTeacher = useRef("");
     const lastNameTeacher = useRef("");
-    const gradeClass = useRef(0);
-    const groupClass = useRef("");
-    let found = false;
-    let foundAlumn = false;
-    let idFound = 0;
-    let idAlumn = 0;
 
-
-    const newClass = () => {
-        fetch(`${import.meta.env.VITE_URL}/class`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                className: groupClass.current.value,
-                classGrade: gradeClass.current.value,
-                created_by: "escolarControl",
-                updated_by: "escolarControl",
-                deleted: false,
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Network response was not ok');
-            }
-        })
-        .then(data => {
-            console.log('Success:', data);
-            Swal.fire({
-                title: "Agregado",
-                text: "Se agregó la clase correctamente",
-                icon: "success"
-            });
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            Swal.fire({
-                title: "No se logró agregar",
-                text: "No se pudo agregar la clase",
-                icon: "error"
-            });
-        });
-
-
-    }
-
-    const addAlumn = () => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch qualifications.'))
-        .then(data => {
-            setAlumns(data);
-
-        })
-        .catch(error => {
-            console.error('Error fetching alumns:', error);
-            setLoading(false);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue fetching the alumns.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-        });
-
+    useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'GET',
             headers: {
@@ -100,104 +29,106 @@ function EscolarControlClass() {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
-            setClasses(datas);
+            console.log(data);
+            const filteredAlumns = data.map(alumn => ({
+                alumn_id: alumn.alumn_id, 
+                name: alumn.name,
+                lastName: alumn.lastName
+            }));
+            setAlumns(filteredAlumns);
         })
         .catch(error => {
-            console.error('Error fetching alumns:', error);
+            console.error('Error fetching options:', error);
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an issue fetching alumns.',
+                text: 'There was an issue fetching options.',
                 icon: 'error',
                 confirmButtonText: 'Okay'
             });
         });
+    }, []);
 
-        
+    const addAlumn = () => {
+        let found = false;
+        let position = 0;
         for (let i = 0; i < alumns.length; i++) {
-            if (alumns[i].name == name && alumns[i].lastName) {
-                idAlumn = alumns[i].alumn_id;
-                foundAlumn = true;
-            }
-        }
-
-        for (let i = 0; i < classes.length; i++) {
-            if (classes[i].className == groupClass.current.value && classes[i].classGrade == gradeClass.current.value) {
+            if (alumns[i].name == nameAlumn.current.value && alumns[i].lastName == lastNameAlumn.current.value) {
                 found = true;
-                idFound = classes[i].class_id;
-            }
-            
+                position = i;
+                break;
+            }  
         }
 
-
-        if(found & foundAlumn) {
-            fetch(`${import.meta.env.VITE_URL}/alumn/${alumnId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    class_id: idFound,
-                    name: nameAlumn.current.value,
-                    lastName: lastNameAlumn.current.value,
-                    created_by: 'escolarControl',
-                    updated_by: 'escolarControl',
-                    deleted: false
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .then(data => {
-                console.log('Success:', data);
-                Swal.fire({
-                    title: "Agregado",
-                    text: "Se agregó la boleta",
-                    icon: "success"
-                });
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: "No se logró agregar",
-                    text: "No se pudo agregar la boleta",
-                    icon: "error"
-                });
-            });
-
-        }else {
+        if (!found) {
             Swal.fire({
-                title: "No se logró agregar",
-                text: "No se pudo encontrar la clase",
-                icon: "error"
+                title: 'Error!',
+                text: 'Alumno no existente',
+                icon: 'error',
+                confirmButtonText: 'Okay'
             });
+        } else {
+            setAlumnsToPut(prevAlumnsToPut => [...prevAlumnsToPut, alumns[position]]);
+            Swal.fire({
+                title: "Encontrado",
+                text: "Se logro encontrar",
+                icon: "success"
+            })
         }
     }
 
-    return <div className="min-h-screen w-full bg-slate-900">
-        <Header role="escolarControl" />
-        <div className="w-full flex justify-center items-center">
-        <div className="min-h-[75vh] w-4/6 flex flex-col">
-            <NewClass
-                groupReference={groupClass}
-                gradeReference={gradeClass}
-                nameReference={nameTeacher}
-                lastNameReference={lastNameTeacher}
-                onClick={newClass}
-            ></NewClass>
-            <AddAlumnClass
-                gradeReference={gradeClass}
-                groupReference={groupClass}
-                nameReference={nameTeacher}
-                lastNameReference={lastNameTeacher}
-                onClick={addAlumn}
-            ></AddAlumnClass>
+    const assignAlumn = () => {
+        fetch(`${import.meta.env.VITE_URL}/personal`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'updated_by': "escolarControl",
+                'alumnos': alumnsToPut
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Agregado',
+                    text: 'El alumno ha sido agregado correctamente',
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                });
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching options:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an issue fetching options.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        });
+    }
+
+    return (
+        <div className="min-h-screen w-full bg-slate-900">
+            <Header role="escolarControl" />
+            <div className="w-full flex justify-center items-center">
+                <div className="min-h-[75vh] w-4/6 flex flex-col">
+                    <FormAddAlumn
+                        referenceName={nameAlumn}
+                        referenceLastName={lastNameAlumn}
+                        onClick={addAlumn}
+                    />
+                    <FormAssignClass
+                        referenceName={nameTeacher}
+                        referenceLastName={lastNameTeacher}
+                        onClick={assignAlumn}
+                    />
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    );
 }
 
 export default EscolarControlClass;

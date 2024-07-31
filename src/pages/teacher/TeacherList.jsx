@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../components/organisms/Header";
-import DownloadList from "../../components/organisms/DownLoadList";
+import DownloadList from "../../components/organisms/DownloadList";
 import { getId } from "../../data/userActual";
 import Swal from 'sweetalert2';
 
@@ -15,19 +15,13 @@ function EscolarControlList() {
                 'Access-Control-Allow-Origin': '*',
             },
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Network response was not ok.');
-        })
+        .then(response => response.json())
         .then(data => {
             const filteredAlumns = data.map(alumn => ({
                 alumn_id: alumn.alumn_id,
                 name: alumn.name,
                 lastName: alumn.lastName
             }));
-            console.log(filteredAlumns);
             setAlumns(filteredAlumns);
         })
         .catch(error => {
@@ -52,21 +46,18 @@ function EscolarControlList() {
             })
         })
         .then(response => {
-            if (response.ok) {
-                Swal.fire({
-                    title: "Cambiar reporte",
-                    text: "Se logró cambiar el reporte",
-                    icon: "success"
-                });
-                return response.json();
-            } else {
-                Swal.fire({
-                    title: "Cambiar reporte",
-                    text: "No se logró cambiar el reporte",
-                    icon: "error"
-                });
+            if (!response.ok) {
                 throw new Error('Failed to update report');
             }
+            Swal.fire({
+                title: "Cambiar reporte",
+                text: "Se logró cambiar el reporte",
+                icon: "success"
+            });
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
         })
         .catch(error => {
             console.error('Error updating report:', error);
@@ -76,7 +67,6 @@ function EscolarControlList() {
                 icon: "error"
             });
         });
-
     }
 
     return (

@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 function EscolarControlAlumns() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
+    const classA = useRef('')
 
     const addAlumn = () => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
@@ -16,8 +17,9 @@ function EscolarControlAlumns() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: nameRef.current.value,
-                lastName: lastNameRef.current.value,
+                class_id: 1,
+                name: "regiber",
+                lastName: "hola",
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false
@@ -62,6 +64,14 @@ function EscolarControlAlumns() {
                 text: "El apellido debe contener entre 1 y 30 letras sin números.",
                 icon: "error"
             });
+        }else if(!usernamePattern.test(classA.current.value)) {
+            Swal.fire({
+                title: "Error de ingreso",
+
+                text: "no se logro",
+
+                icon: "error"
+            })
         }
     };
 
@@ -73,6 +83,7 @@ function EscolarControlAlumns() {
                     <AddAlumn 
                         nameReference={nameRef}
                         lastNameReference={lastNameRef}
+                        classReference={classA}
                         onBlur={validateNames}
                         onClick={addAlumn}
                     />
