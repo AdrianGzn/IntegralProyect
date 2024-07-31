@@ -19,10 +19,6 @@ function FormAssignClass(props) {
                 text="Agregar"
                 onClick={props.onClick}
             />
-            <Button
-               text="Generar Lista"
-               onClick={props.onClick}
-            ></Button>
         </div>
     );
 }

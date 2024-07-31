@@ -8,6 +8,23 @@ function EscolarControlTeachers() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
     const passRef = useRef("");
+    const [setClass, newClasses] = useState([])
+
+
+    fetch(`${import.meta.env.VITE_URL}/class`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        if(response.ok) {
+            return response.json()
+        }
+    })
+    .then((data) => {
+        setClass(data.class_id)
+    })
 
     const addTeacher = () => {
         fetch(`${import.meta.env.VITE_URL}/personal`, {

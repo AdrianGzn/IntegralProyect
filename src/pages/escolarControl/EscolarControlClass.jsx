@@ -70,21 +70,23 @@ function EscolarControlClass() {
             setAlumnsToPut(prevAlumnsToPut => [...prevAlumnsToPut, alumns[position]]);
             Swal.fire({
                 title: "Encontrado",
-                text: "Se logro encontrar",
+                text: "Se agrego a la lista",
                 icon: "success"
             })
         }
     }
 
     const assignAlumn = () => {
-        fetch(`${import.meta.env.VITE_URL}/personal`, {
+        fetch(`${import.meta.env.VITE_URL}/personal/${10}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 'updated_by': "escolarControl",
-                'alumnos': alumnsToPut
+                'alumns': alumnsToPut,
+
+                "alumnos": alumnsToPut
             })
         })
         .then(response => {
