@@ -5,6 +5,7 @@ import { getOptions } from "../../data/menuOptions";
 import { clearUser, getRole } from "../../data/userActual";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import React from "react";
 import '@sweetalert2/theme-bulma';
 
 function Header({ role, onClick }) {

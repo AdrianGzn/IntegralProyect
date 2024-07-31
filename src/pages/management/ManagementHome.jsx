@@ -1,7 +1,7 @@
 import Header from "../../components/organisms/Header";
 import HeroSection from "../../components/organisms/HeroSection";
 import { getName, getRole } from "../../data/userActual";
-
+import React from "react";
 function ManagementHome() {
 
     return (

@@ -1,5 +1,6 @@
 import ButtonDownload from "../atoms/ButtonDownload";
 import React, { useState } from "react";
+import React from "react";
 import { PDFDocument, rgb } from 'pdf-lib';
 import { saveAs } from "file-saver";
 import { Worker, Viewer } from '@react-pdf-viewer/core';

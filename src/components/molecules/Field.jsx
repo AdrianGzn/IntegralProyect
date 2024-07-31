@@ -1,6 +1,6 @@
 import Text from "../atoms/Text";
 import Input from "../atoms/Input";
-
+import React from "react";
 function Field({ text, type, placeholder, inputRef, className, classNameText, classNameInput, onBlur }) {
     return (
         <div className={`m-2 flex flex-col w-3/5 items-center ${className}`}>

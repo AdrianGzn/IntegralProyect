@@ -3,7 +3,7 @@ import NewClass from "../../components/organisms/NewCalss";
 import AddAlumnClass from "../../components/organisms/AddAlumnClass"
 import { useRef, useState, useEffect } from "react";
 import { classNames } from "@react-pdf-viewer/core";
-
+import React from "react";
 function EscolarControlClass() {
     const [classes, setClasses] = useState([]);
     const nameAlumn = useRef("");

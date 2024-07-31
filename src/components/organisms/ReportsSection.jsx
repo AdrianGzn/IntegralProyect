@@ -1,6 +1,6 @@
 import ReportCard from "../../components/molecules/ReportCard";
 import Text from "../../components/atoms/Text";
-
+import React from "react";
 function ReportsSection({ reports }) {
     return (
         <div className="flex justify-center flex-wrap my-10 bg-gray-800 rounded-lg">

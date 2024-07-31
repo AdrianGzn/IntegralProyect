@@ -1,7 +1,7 @@
 import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
-
+import React from "react";
 function NewClass(props) {
     return <div className="w-full my-5 bg-slate-700 rounded-md">
         <Text text="Agregar nueva clase" className="!text-2xl"></Text>

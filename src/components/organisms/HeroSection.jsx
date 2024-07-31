@@ -1,6 +1,6 @@
 import Text from "../atoms/Text"
 import Img from "../atoms/Img";
-
+import React from "react";
 function HeroSection(props) {
     return (
         <div className="h-full w-full flex flex-col lg:flex-row justify-evenly items-center">

@@ -3,6 +3,7 @@ import Table from "../../components/organisms/Table";
 import Text from "../../components/atoms/Text";
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
+import React from "react";
 
 function EscolarControlQualifications() {
     const [ratings, setRatings] = useState([]);

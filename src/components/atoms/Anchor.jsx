@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import React from "react";
 function Anchor(props) {
     return <div>
         <Link to={props.to}>

@@ -1,5 +1,5 @@
 import SearchBallot from "../molecules/SearchBallot";
-
+import React from "react";
 function SearchBallotSection({val, fnval, onClick}) {
     return (
         

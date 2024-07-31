@@ -4,6 +4,7 @@ import Field from "../molecules/Field";
 import Button from "../atoms/Button";
 import Text from "../atoms/Text";
 import InputSearch from "../atoms/InputSearch";
+import React from "react";
 
 function ForminBallot() {
     const [alumnsIds, setAlumnsIds] = useState([]);

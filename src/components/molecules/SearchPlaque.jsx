@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Input from "../../components/atoms/InputNavigate"
-
+import React from "react";
 function SearchPlaque() {
     const [plaque, setPlaque] = useState("")
 

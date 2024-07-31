@@ -2,7 +2,7 @@ import Header from "../../components/organisms/Header";
 import "@sweetalert2/theme-bulma";
 import AddTeacher from "../../components/organisms/AddTeacher"
 import { useRef, useState, useEffect } from "react";
-
+import React from "react";
 
 function EscolarControlTeachers() {
     const nameRef = useRef("");

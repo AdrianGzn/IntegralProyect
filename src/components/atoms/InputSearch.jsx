@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-
+import React from 'react';
 const InputSearch = forwardRef(({ type, placeholder, className, onChange, onBlur, pattern }, ref) => {
     return (
         <div className={`h-full rounded-full w-full my-0 bg-lime-500 flex max-w-56 ${className || ''}`}>

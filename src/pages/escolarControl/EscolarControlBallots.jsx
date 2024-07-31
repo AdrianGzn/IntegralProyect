@@ -1,7 +1,7 @@
 import Header from "../../components/organisms/Header";
 import "@sweetalert2/theme-bulma";
 import ForminBallot from "../../components/organisms/ForminBallot";
-
+import React from "react";
 function EscolarControlBallots() {
 
     return (

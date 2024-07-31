@@ -4,7 +4,7 @@ import ChangeReport from "../../components/organisms/ChangeReport";
 import Swal from "sweetalert2";
 import { getId } from "../../data/userActual";
 import ReportsSection from "../../components/organisms/ReportsSection";
-
+import React from "react";
 function ManagementReports() {
     const [reports, setReports] = useState([]);
     const [count, setCount] = useState(0); // Estado para count

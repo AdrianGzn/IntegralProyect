@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useContext } from "react";
+import React from "react"
 import UserContext from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import Text from "../atoms/Text";

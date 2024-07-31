@@ -1,5 +1,5 @@
 import Text from "../atoms/Text";
-
+import React from "react";
 function ReportCard({ id, status, description }) {
     return (
         <div className="p-4 bg-slate-700 w-64 my-5 rounded-lg  min-h-40 shadow-sm">

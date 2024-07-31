@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getRole } from "../../data/userActual";
-
+import React from "react";
 function AnchorHome(props) {
     const [direction, setDirection] = useState("");
 

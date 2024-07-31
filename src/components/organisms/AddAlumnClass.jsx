@@ -2,6 +2,7 @@ import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
 import { useRef } from "react";
+import React from "react";
 
 function AddAlumnClass(props) {
     return <div className="w-full my-5 p-5 bg-slate-700 rounded-md">
