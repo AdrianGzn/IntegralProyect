@@ -1,5 +1,5 @@
 import Cell from "../atoms/Cell";
-
+import React from "react";
 function Row(props) {
     return <div className="w-full h-16 flex">
         {

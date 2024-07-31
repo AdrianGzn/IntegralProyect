@@ -147,13 +147,6 @@ function EscolarControlClass() {
                 lastNameReference={lastNameTeacher}
                 onClick={newClass}
             ></NewClass>
-            <AddAlumnClass
-                gradeReference={gradeClass}
-                groupReference={groupClass}
-                nameReference={nameAlumn}
-                lastNameReference={lastNameAlumn}
-                onClick={addAlumn}
-            ></AddAlumnClass>
         </div>
     </div>
 </div>

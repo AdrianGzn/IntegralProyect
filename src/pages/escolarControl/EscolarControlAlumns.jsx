@@ -3,10 +3,11 @@ import "@sweetalert2/theme-bulma";
 import AddAlumn from "../../components/organisms/AddAlumn";
 import { useRef, useState, useEffect } from "react";
 import React from "react";
-
+import Swal from "sweetalert2";
 function EscolarControlAlumns() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
+    const classA = useRef('')
 
     const addAlumn = () => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {

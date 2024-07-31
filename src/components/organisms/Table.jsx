@@ -1,6 +1,6 @@
 import Text from "../atoms/Text";
 import Row from "../molecules/Row";
-
+import React from "react"
 function Table(props) {
     const columns = Object.keys(props.data[0]).length;
     const w = columns * 95;

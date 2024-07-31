@@ -18,7 +18,7 @@ function QualificationsSection() {
     const Ciencia = useRef('');
     const Grado = useRef('');
 
-    const encabezado = ["Id Calificaciones", "Id Materia", "Cantidad", "Grado"];
+    const encabezado = ["Nmerod de lista", "Calificación", "Grado"];
     const [addedQualifications, setAddedQualifications] = useState(0);
 
     useEffect(() => {
@@ -44,17 +44,17 @@ function QualificationsSection() {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
-        .then(data => setOptions(data.map(item => item.alumn_id)))
-        .catch(error => {
-            console.error('Error fetching options:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue fetching options.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
+            .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok.'))
+            .then(data => setOptions(data.map(item => item.alumn_id)))
+            .catch(error => {
+                console.error('Error fetching options:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an issue fetching options.',
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
+                });
             });
-        });
     };
 
     const fetchQualifications = (subject, setQualificationsFn) => {
@@ -64,29 +64,28 @@ function QualificationsSection() {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch qualifications.'))
-        .then(data => {
-            setQualificationsFn(data);
-            setLoading(false);
-        })
-        .catch(error => {
-            console.error('Error fetching qualifications:', error);
-            setLoading(false);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue fetching the qualifications.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
+            .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch qualifications.'))
+            .then(data => {
+                setQualificationsFn(data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching qualifications:', error);
+                setLoading(false);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an issue fetching the qualifications.',
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
+                });
             });
-        });
     };
 
     const processQualifications = (data) => {
         const subjectData = [encabezado];
         data.forEach(qualification => {
             subjectData.push([
-                qualification.rating_id,
-                qualification.subject_id,
+                qualification.alumn_id,
                 qualification.amount,
                 qualification.gradePertenence,
             ]);
@@ -151,31 +150,35 @@ function QualificationsSection() {
                 deleted: false
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to add ${pertenence} qualification.`);
-            }
-            setAddedQualifications(addedQualifications + 1);
-        })
-        .catch(error => {
-            console.error(`Error adding ${pertenence} qualifications:`, error);
-            Swal.fire({
-                title: 'Error!',
-                text: `There was an issue adding the ${pertenence} qualification.`,
-                icon: 'error',
-                confirmButtonText: 'Okay'
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to add ${pertenence} qualification.`);
+                }
+                setAddedQualifications(addedQualifications + 1);
+            })
+            .catch(error => {
+                console.error(`Error adding ${pertenence} qualifications:`, error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: `There was an issue adding the ${pertenence} qualification.`,
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
+                });
             });
-        });
     };
 
     return (
         <div className="w-full min-h-[80vh] flex flex-col items-center justify-center">
             <div className="w-[70%] mb-4 flex flex-wrap p-4 bg-gray-800 rounded-lg shadow-md">
                 <div className="w-[70%] flex my-1">
-                    <Text text="Id del alumno" className="!m-0"></Text>
+                    <Text text="Numero de lista del alumno" className="!m-0"></Text>
                     <Select options={options} ref={alumnId} className="!my-0"></Select>
                 </div>
+
                 <div className="w-full my-1 flex flex-wrap">
+                    <div>
+                        <Text text="Grupo A" className="!m-0"></Text>
+                    </div>
                     <div className="w-1/4 min-w-32">
                         <Field inputRef={Español} text="Español" placeholder="Español" />
                     </div>
