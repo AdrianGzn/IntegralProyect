@@ -4,31 +4,22 @@ import Button from "../atoms/Button";
 import React from "react";
 
 function AddAlumn(props) {
-    const { nameReference, lastNameReference, classReference, onBlur, onClick } = props;
+    const { nameReference, lastNameReference, classReference, onClick } = props;
 
     return (
-        <div className="w-full p-5 bg-slate-700 rounded-md">
-            <Text text="Agregar Alumno" className="!text-2xl" />
+        <div className="w-full p-5 bg-slate-700 rounded-md flex flex-wrap justify-center">
+            <Text text="Dar de alta a alumno" className="!text-2xl" />
             <Field
                 text="Nombre:"
                 type="text"
                 placeholder="Nombre"
                 ref={nameReference}
-                onBlur={onBlur}
             />
             <Field
                 text="Apellidos:"
                 type="text"
                 placeholder="Apellidos"
                 ref={lastNameReference}
-                onBlur={onBlur}
-            />
-            <Field
-                text="Clase:"
-                type="text"
-                placeholder="Clase"
-                ref={classReference}
-                onBlur={onBlur}
             />
             <Button
                 text="Guardar"

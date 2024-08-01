@@ -4,19 +4,42 @@ import AddAlumn from "../../components/organisms/AddAlumn";
 import { useRef } from "react";
 import Swal from "sweetalert2";
 import React from "react";
+
 function EscolarControlAlumns() {
     const nameRef = useRef('');
     const lastNameRef = useRef('');
-    const classARef = useRef('');
+
+    const validateNames = () => {
+        const usernamePattern = /^[a-zA-Z\s]{1,30}$/;
+        if (!usernamePattern.test(nameRef.current.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "El nombre debe contener entre 1 y 30 letras sin números.",
+                icon: "error"
+            });
+            return false;
+        } else if (!usernamePattern.test(lastNameRef.current.value)) {
+            Swal.fire({
+                title: "Error",
+                text: "El apellido debe contener entre 1 y 30 letras sin números.",
+                icon: "error"
+            });
+            return false;
+        }
+        return true;
+    };
 
     const addAlumn = () => {
+        if (!validateNames()) {
+            return;
+        }
+
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                class_id: classARef.current.value, 
                 name: nameRef.current.value,
                 lastName: lastNameRef.current.value,
                 created_by: 'escolarControl',
@@ -47,29 +70,6 @@ function EscolarControlAlumns() {
                 icon: "error"
             });
         });
-    }
-
-    const validateNames = () => {
-        const usernamePattern = /^[a-zA-Z\s]{1,30}$/;
-        if (!usernamePattern.test(nameRef.current.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "El nombre debe contener entre 1 y 30 letras sin números.",
-                icon: "error"
-            });
-        } else if (!usernamePattern.test(lastNameRef.current.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "El apellido debe contener entre 1 y 30 letras sin números.",
-                icon: "error"
-            });
-        } else if (!classARef.current.value) {
-            Swal.fire({
-                title: "Error",
-                text: "El campo de clase es obligatorio.",
-                icon: "error"
-            });
-        }
     };
 
     return (
@@ -77,11 +77,9 @@ function EscolarControlAlumns() {
             <Header role="escolarControl" />
             <div className="w-full min-h-[80vh] flex justify-center">
                 <div className="w-4/6">
-                    <AddAlumn 
+                    <AddAlumn
                         nameReference={nameRef}
                         lastNameReference={lastNameRef}
-                        classReference={classARef}
-                        onBlur={validateNames}
                         onClick={addAlumn}
                     />
                 </div>
