@@ -1,19 +1,33 @@
-import React, { useState, useEffect } from "react";
-import Header from "../../components/organisms/Header";
-import DownloadList from "../../components/organisms/DownLoadList";
-import { getId } from "../../data/userActual";
+import React, { useState, useEffect } from 'react';
+import Header from '../../components/organisms/Header';
+import SectionBallot from '../../components/organisms/SectionBallot';
 import Swal from 'sweetalert2';
+import '@sweetalert2/theme-bulma';
+import '@pdfslick/react/dist/pdf_viewer.css';
 
-function EscolarControlList() {
-    const [alumns, setAlumns] = useState([]);
+function TeacherList() {
+    const [matricleSearch, setMatricleSearch] = useState('');
+    const [pdfUrls, setPdfUrls] = useState([]);
+    const [newPDFs, setNewPDFs] = useState([]);
+    const [role, setRole] = useState('');
+    const [pdfUrlForRole, setPdfUrlForRole] = useState(''); // Estado para almacenar la URL específica
 
+    // Obtener el role del localStorage y almacenarlo en el estado
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/rating`, {
+        const storedRole = localStorage.getItem('personal_id');
+        if (storedRole) {
+            setRole(storedRole);
+            console.log('Role from localStorage:', storedRole);
+        }
+    }, []);
+
+    // Fetch PDF data
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/personal`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
+                'Content-Type': 'application/json'
+            }
         })
         .then(response => {
             if (response.ok) {
@@ -22,73 +36,51 @@ function EscolarControlList() {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
-            const filteredAlumns = data.map(alumn => ({
-                alumn_id: alumn.alumn_id,
-                name: alumn.name,
-                lastName: alumn.lastName
-            }));
-            console.log(filteredAlumns);
-            setAlumns(filteredAlumns);
+            console.log(data);
+            setPdfUrls(data);
+
+            const filteredData = data.filter(pdf => pdf.role_id === role); // Ajusta la propiedad `role_id` según tu estructura de datos
+            setNewPDFs(filteredData);
+            const urlForRole = data.find(pdf => pdf.personal_id === role)?.url || '';
+            setPdfUrlForRole(urlForRole);
         })
         .catch(error => {
-            console.error('Error fetching options:', error);
+            console.error('Error fetching ballot data:', error);
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an issue fetching options.',
+                text: 'There was an issue fetching the ballot data.',
                 icon: 'error',
                 confirmButtonText: 'Okay'
             });
         });
-    }, []);
+    }, [role]);
+    const filteredPDF = (searchTerm) => {
+        setMatricleSearch(searchTerm);
 
-    const Download = () => {
-        fetch(`${import.meta.env.VITE_URL}/personal/${getId()}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                url: alumns
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                Swal.fire({
-                    title: "Cambiar reporte",
-                    text: "Se logró cambiar el reporte",
-                    icon: "success"
-                });
-                return response.json();
-            } else {
-                Swal.fire({
-                    title: "Cambiar reporte",
-                    text: "No se logró cambiar el reporte",
-                    icon: "error"
-                });
-                throw new Error('Failed to update report');
-            }
-        })
-        .catch(error => {
-            console.error('Error updating report:', error);
-            Swal.fire({
-                title: "Error",
-                text: "Ocurrió un error al cambiar el reporte",
-                icon: "error"
-            });
+        const filteredItems = pdfUrls.filter(ballot => {
+            const alumnId = ballot.alumn_id ? ballot.alumn_id.toString() : '';
+            return alumnId.toLowerCase().includes(searchTerm.toLowerCase());
         });
 
-    }
+        setNewPDFs(filteredItems);
+    };
 
     return (
-        <div className="h-full w-full bg-slate-900">
-            <Header role="escolarControl" />
-            <div className="w-full min-h-[80vh] flex justify-center">
-                <div className="w-4/6">
-                    <DownloadList onClick={Download} />
+        <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
+            <Header role="teacher" />
+            <div className="w-full h-[80vh] flex justify-center items-center">
+                <div className="h-4/5 w-4/6 lg:w-4/6 flex flex-col wrap items-center">
+                    <SectionBallot newPDFs={newPDFs} />
                 </div>
             </div>
+            {pdfUrlForRole && (
+                <div className="p-4 text-white">
+                    <p>URL for personal_id {role}: {pdfUrlForRole}</p>
+                </div>
+            )}
         </div>
     );
 }
 
-export default EscolarControlList;
+export default TeacherList;
+

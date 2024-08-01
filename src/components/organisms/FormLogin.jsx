@@ -42,8 +42,6 @@ function FormLogin() {
             let role = "";
             if (data.personal.role === 1) {
                 role = "teacher";
-            } else if (data.personal.role === 2) {
-                role = "management";
             } else if (data.personal.role === 3) {
                 role = "escolarControl";
             } else {
