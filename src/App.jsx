@@ -63,10 +63,6 @@ function App() {
             path= "/escolarControl/class"
             element= {<ProtectedEscolarControl><EscolarControlClass /></ProtectedEscolarControl>}
           />
-          <Route
-            path= "/escolarControl/teachers"
-            element= {<ProtectedEscolarControl><EscolarControlTeachers /></ProtectedEscolarControl>}
-          />
         </Routes>
       </UserContext.Provider>
     </BrowserRouter>

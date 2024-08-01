@@ -3,11 +3,28 @@ import "@sweetalert2/theme-bulma";
 import AddTeacher from "../../components/organisms/AddTeacher"
 import { useRef, useState, useEffect } from "react";
 import React from "react";
-
+import Swal from "sweetalert2";
 function EscolarControlTeachers() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
     const passRef = useRef("");
+    const [setClass, newClasses] = useState([])
+
+
+    fetch(`${import.meta.env.VITE_URL}/class`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        if(response.ok) {
+            return response.json()
+        }
+    })
+    .then((data) => {
+        newClasses(data.class_id)
+    })
 
     const addTeacher = () => {
         fetch(`${import.meta.env.VITE_URL}/personal`, {
@@ -16,11 +33,11 @@ function EscolarControlTeachers() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                class_id: 0,
+                class_id: 1,
                 role_id: 1,
-                name: nameRef.current.value,
-                lastName: lastNameRef.current.value,
-                password: passRef,
+                name: "awe",
+                lastName: "ae",
+                password: "aweaew",
                 url: "",
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',

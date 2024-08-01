@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useContext } from "react";
-import React from "react"
+import React from "react";
 import UserContext from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import Text from "../atoms/Text";
@@ -32,9 +32,10 @@ function FormLogin() {
         })
         .then(response => {
             if (response.ok) {
-                localStorage.setItem('token', response.headers.get('Authorization'))
-                return response.json()
+                localStorage.setItem('token', response.headers.get('Authorization'));
+                return response.json();
             }
+            throw new Error('Network response was not ok.');
         })
         .then(data => {
             console.log(data);
@@ -44,8 +45,6 @@ function FormLogin() {
                 role = "teacher";
             } else if (data.personal.role === 3) {
                 role = "escolarControl";
-            } else {
-                role = "";
             }
 
             localStorage.setItem('token', data.personal.token);
@@ -70,7 +69,6 @@ function FormLogin() {
             });
             console.log("Error:", error);
         });
-
     }
 
     const validateUsername = () => {
@@ -125,7 +123,7 @@ function FormLogin() {
                     placeholder="Usuario"
                     text="Usuario"
                     className="mb-4"
-                    inputRef={nameRef}
+                    ref={nameRef}
                     onBlur={validateUsername}
                 />
                 <Field
@@ -133,7 +131,7 @@ function FormLogin() {
                     placeholder="****"
                     text="Contraseña"
                     className="mb-4"
-                    inputRef={passwordRef}
+                    ref={passwordRef}
                     onBlur={validatePassword}
                 />
                 <Button
