@@ -29,7 +29,6 @@ function EscolarControlClass() {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
-            console.log(data);
             const filteredAlumns = data.map(alumn => ({
                 alumn_id: alumn.alumn_id, 
                 name: alumn.name,
@@ -49,17 +48,11 @@ function EscolarControlClass() {
     }, []);
 
     const addAlumn = () => {
-        let found = false;
-        let position = 0;
-        for (let i = 0; i < alumns.length; i++) {
-            if (alumns[i].name == nameAlumn.current.value && alumns[i].lastName == lastNameAlumn.current.value) {
-                found = true;
-                position = i;
-                break;
-            }  
-        }
+        const foundIndex = alumns.findIndex(alumn =>
+            alumn.name === nameAlumn.current.value && alumn.lastName === lastNameAlumn.current.value
+        );
 
-        if (!found) {
+        if (foundIndex === -1) {
             Swal.fire({
                 title: 'Error!',
                 text: 'Alumno no existente',
@@ -67,25 +60,25 @@ function EscolarControlClass() {
                 confirmButtonText: 'Okay'
             });
         } else {
-            setAlumnsToPut(prevAlumnsToPut => [...prevAlumnsToPut, alumns[position]]);
+            setAlumnsToPut(prevAlumnsToPut => [...prevAlumnsToPut, alumns[foundIndex]]);
             Swal.fire({
                 title: "Encontrado",
-                text: "Se agrego a la lista",
+                text: "Se agregó a la lista",
                 icon: "success"
-            })
+            });
         }
     }
 
     const assignAlumn = () => {
-        fetch(`${import.meta.env.VITE_URL}/personal/${10}`, {
+        fetch(`${import.meta.env.VITE_URL}/personal/${10}`, { 
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'updated_by': "escolarControl",
-                'alumns': alumnsToPut,
-
+                "personalData": {
+                    updated_by: "escolarControl"
+                },
                 "alumnos": alumnsToPut
             })
         })
@@ -102,10 +95,10 @@ function EscolarControlClass() {
             }
         })
         .catch(error => {
-            console.error('Error fetching options:', error);
+            console.error('Error updating data:', error);
             Swal.fire({
                 title: 'Error!',
-                text: 'There was an issue fetching options.',
+                text: 'There was an issue updating data.',
                 icon: 'error',
                 confirmButtonText: 'Okay'
             });

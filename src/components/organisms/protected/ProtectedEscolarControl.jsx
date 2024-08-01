@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { getRole } from "../../../data/userActual";
-
+import React from "react";
 function ProtectedEscolarControl({ children, redirectTo = "/" }) {
     const role = getRole();
 

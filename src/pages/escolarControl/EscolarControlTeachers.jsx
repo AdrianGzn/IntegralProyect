@@ -3,7 +3,7 @@ import "@sweetalert2/theme-bulma";
 import AddTeacher from "../../components/organisms/AddTeacher"
 import { useRef, useState, useEffect } from "react";
 import React from "react";
-
+import Swal from "sweetalert2";
 function EscolarControlTeachers() {
     const nameRef = useRef("");
     const lastNameRef = useRef("");
@@ -23,7 +23,7 @@ function EscolarControlTeachers() {
         }
     })
     .then((data) => {
-        setClass(data.class_id)
+        newClasses(data.class_id)
     })
 
     const addTeacher = () => {
@@ -33,11 +33,11 @@ function EscolarControlTeachers() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                class_id: 0,
+                class_id: 1,
                 role_id: 1,
-                name: nameRef.current.value,
-                lastName: lastNameRef.current.value,
-                password: passRef,
+                name: "awe",
+                lastName: "ae",
+                password: "aweaew",
                 url: "",
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
