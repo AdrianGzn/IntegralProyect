@@ -53,7 +53,7 @@ function App() {
           />
           <Route 
             path="/escolarControl/home"
-            element = {<EscolarControlHome />} 
+            element = {<ProtectedEscolarControl><EscolarControlHome /></ProtectedEscolarControl>} 
           />
           <Route
             path= "/escolarControl/alumns"
@@ -62,6 +62,10 @@ function App() {
           <Route
             path= "/escolarControl/class"
             element= {<ProtectedEscolarControl><EscolarControlClass /></ProtectedEscolarControl>}
+          />
+          <Route 
+            path="/escolarControl/teachers"
+            element = {<ProtectedEscolarControl><EscolarControlTeachers /></ProtectedEscolarControl>} 
           />
         </Routes>
       </UserContext.Provider>
