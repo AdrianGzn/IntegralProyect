@@ -85,8 +85,8 @@ function QualificationsSection() {
                 if (!qualificationsMap.has(alumn_id)) {
                     qualificationsMap.set(alumn_id, {
                         alumn_id,
-                        name: '',       // Placeholder for name
-                        lastName: '',   // Placeholder for last name
+                        name: '',
+                        lastName: '',
                         español: '',
                         matematicas: '',
                         ciencias: '',
