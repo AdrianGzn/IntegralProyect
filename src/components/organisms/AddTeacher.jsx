@@ -1,17 +1,40 @@
 import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
-import { useRef } from "react";
 import React from "react";
 
 function AddTeacher(props) {
-    return <div className="w-full p-5 bg-slate-700 rounded-md">
-        <Text text="Agregar Profesor" className="!text-2xl"></Text>
-        <Field text="Nombre:" type="text" placeholder="Nombre" onBlur={props.onBlur}></Field>
-        <Field text="Apellidos:" type="text" placeholder="Apellidos" onBlur={props.onBlur}></Field>
-        <Field text="Contraseña:" type="password" placeholder="Contraseña" ></Field>
-        <Button text="Guardar" onClick={props.onClick}></Button>
-    </div>
+    const { nameReference, lastNameReference, passReference, onBlur, onClick } = props;
+
+    return (
+        <div className="w-full p-5 bg-slate-700 rounded-md">
+            <Text text="Agregar Profesor" className="!text-2xl" />
+            <Field
+                text="Nombre:"
+                type="text"
+                placeholder="Nombre"
+                ref={nameReference}
+                onBlur={onBlur}
+            />
+            <Field
+                text="Apellidos:"
+                type="text"
+                placeholder="Apellidos"
+                ref={lastNameReference}
+                onBlur={onBlur}
+            />
+            <Field
+                text="Contraseña:"
+                type="password"
+                placeholder="Contraseña"
+                ref={passReference}
+            />
+            <Button
+                text="Guardar"
+                onClick={onClick}
+            />
+        </div>
+    );
 }
 
 export default AddTeacher;

@@ -1,14 +1,13 @@
 import Header from "../../components/organisms/Header";
 import "@sweetalert2/theme-bulma";
 import AddAlumn from "../../components/organisms/AddAlumn";
-import { useRef, useState, useEffect } from "react";
-import React from "react";
+import { useRef } from "react";
 import Swal from "sweetalert2";
-
+import React from "react";
 function EscolarControlAlumns() {
-    const nameRef = useRef("");
-    const lastNameRef = useRef("");
-    const classA = useRef('')
+    const nameRef = useRef('');
+    const lastNameRef = useRef('');
+    const classARef = useRef('');
 
     const addAlumn = () => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
@@ -17,9 +16,9 @@ function EscolarControlAlumns() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                class_id: 1,
-                name: "regiber",
-                lastName: "hola",
+                class_id: classARef.current.value, 
+                name: nameRef.current.value,
+                lastName: lastNameRef.current.value,
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false
@@ -64,14 +63,12 @@ function EscolarControlAlumns() {
                 text: "El apellido debe contener entre 1 y 30 letras sin números.",
                 icon: "error"
             });
-        }else if(!usernamePattern.test(classA.current.value)) {
+        } else if (!classARef.current.value) {
             Swal.fire({
-                title: "Error de ingreso",
-
-                text: "no se logro",
-
+                title: "Error",
+                text: "El campo de clase es obligatorio.",
                 icon: "error"
-            })
+            });
         }
     };
 
@@ -83,7 +80,7 @@ function EscolarControlAlumns() {
                     <AddAlumn 
                         nameReference={nameRef}
                         lastNameReference={lastNameRef}
-                        classReference={classA}
+                        classReference={classARef}
                         onBlur={validateNames}
                         onClick={addAlumn}
                     />
