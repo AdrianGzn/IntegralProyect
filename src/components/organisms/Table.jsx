@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import Th from '../atoms/Th';
 
-function Table({ data, size, headers }) {
+function Table({ data, size, headers, name }) {
   const [rows, setRows] = useState(data);
   const [editing, setEditing] = useState({ rowIndex: null, colIndex: null });
 
@@ -60,11 +60,13 @@ function Table({ data, size, headers }) {
         link.href = url;
         link.download = 'table.pdf';
         link.click();
-        const urlNew = URL.revokeObjectURL(url);
+        urlNew = URL.revokeObjectURL(url);
       })
       .catch(error => {
         console.error('Error generando la boleta:', error);
       });
+
+
   };
 
   return (

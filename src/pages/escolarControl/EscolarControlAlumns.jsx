@@ -44,7 +44,7 @@ function EscolarControlAlumns() {
                 class_id:1,
                 name: nameRef.current.value,
                 lastName: fathersLastNameRef.current.value,
-                //lastName: mothersLastNameRef.current.value,
+                lastName: mothersLastNameRef.current.value,
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false

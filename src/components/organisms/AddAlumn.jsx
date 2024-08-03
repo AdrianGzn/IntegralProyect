@@ -27,7 +27,7 @@ function AddAlumn(props) {
             />
             <Button
                 text="Guardar"
-                onClick={onClick}
+                onClick={props.onClick}
             />
         </div>
     );
