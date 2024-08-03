@@ -7,7 +7,8 @@ import React from "react";
 
 function EscolarControlAlumns() {
     const nameRef = useRef('');
-    const lastNameRef = useRef('');
+    const mothersLastNameRef = useRef('');
+    const fathersLastNameRef = useRef('');
 
     const validateNames = () => {
         const usernamePattern = /^[a-zA-Z\s]{1,30}$/;
@@ -40,8 +41,10 @@ function EscolarControlAlumns() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                class_id:1,
                 name: nameRef.current.value,
-                lastName: lastNameRef.current.value,
+                lastName: fathersLastNameRef.current.value,
+                //lastName: mothersLastNameRef.current.value,
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false
@@ -79,7 +82,8 @@ function EscolarControlAlumns() {
                 <div className="w-4/6">
                     <AddAlumn
                         nameReference={nameRef}
-                        lastNameReference={lastNameRef}
+                        mothersLastNameReference={mothersLastNameRef}
+                        fathersLastNameReference={fathersLastNameRef}
                         onClick={addAlumn}
                     />
                 </div>

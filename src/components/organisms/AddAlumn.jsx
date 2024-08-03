@@ -4,22 +4,26 @@ import Button from "../atoms/Button";
 import React from "react";
 
 function AddAlumn(props) {
-    const { nameReference, lastNameReference, classReference, onClick } = props;
-
     return (
-        <div className="w-full p-5 bg-slate-700 rounded-md flex flex-wrap justify-center">
+        <div className="w-full p-5 bg-slate-700 rounded-md flex flex-col flex-wrap justify-center">
             <Text text="Dar de alta a alumno" className="!text-2xl" />
             <Field
                 text="Nombre:"
                 type="text"
                 placeholder="Nombre"
-                ref={nameReference}
+                ref={props.nameReference}
             />
             <Field
-                text="Apellidos:"
+                text="Apellido paterno:"
                 type="text"
-                placeholder="Apellidos"
-                ref={lastNameReference}
+                placeholder="Paterno"
+                ref={props.fathersLastNameReference}
+            />
+            <Field
+                text="Apellido materno:"
+                type="text"
+                placeholder="Materno"
+                ref={props.mothersLastNameReference}
             />
             <Button
                 text="Guardar"

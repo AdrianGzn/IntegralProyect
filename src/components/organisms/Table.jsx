@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { format } from 'date-fns';
+import Th from '../atoms/Th';
 
-function Table({ data, numbers, names, lastNames }) {
+function Table({ data, size, headers }) {
   const [rows, setRows] = useState(data);
   const [editing, setEditing] = useState({ rowIndex: null, colIndex: null });
 
@@ -16,7 +18,9 @@ function Table({ data, numbers, names, lastNames }) {
 
   const handleCellChange = (e, rowIndex, colIndex) => {
     const newRows = [...rows];
-    newRows[rowIndex][`col${colIndex + 1}`] = e.target.value;
+    if (newRows[rowIndex][`col${colIndex + 1}`] === '') {
+      newRows[rowIndex][`col${colIndex + 1}`] = e.target.value;
+    }
     setRows(newRows);
   };
 
@@ -26,6 +30,8 @@ function Table({ data, numbers, names, lastNames }) {
 
   const generatePDF = () => {
     const input = document.getElementById('table-container');
+    const currentDate = new Date();
+    const formattedDate = format(currentDate, 'dd/MM/yyyy HH:mm:ss');
     
     html2canvas(input)
       .then((canvas) => {
@@ -37,6 +43,8 @@ function Table({ data, numbers, names, lastNames }) {
         let heightLeft = imgHeight;
         let position = 0;
 
+        pdf.text(`Fecha: ${formattedDate}`, 10, 10);
+        position = 20; // Deja un poco de espacio para la fecha
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
 
@@ -52,7 +60,7 @@ function Table({ data, numbers, names, lastNames }) {
         link.href = url;
         link.download = 'table.pdf';
         link.click();
-        const urlNew =  URL.revokeObjectURL(url);
+        const urlNew = URL.revokeObjectURL(url);
       })
       .catch(error => {
         console.error('Error generando la boleta:', error);
@@ -71,19 +79,15 @@ function Table({ data, numbers, names, lastNames }) {
         <table className="min-w-full divide-y divide-gray-300 bg-white shadow-md rounded-md border border-gray-300">
           <thead className="bg-gray-600 text-white">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider border-r border-gray-300">Num lista</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider border-r border-gray-300">Nombre</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider border-r border-gray-300">Apellidos</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider border-r border-gray-300">Español</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider border-r border-gray-300">Matemáticas</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider border-r border-gray-300">Ciencias</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Calificación final</th>
+              {headers.map((header, index) => (
+                <Th key={index} text={header} />
+              ))}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-300">
             {rows.map((row, rowIndex) => (
               <tr key={rowIndex} className="hover:bg-gray-100 transition-colors">
-                {[...Array(7).keys()].map((_, colIndex) => (
+                {[...Array(size).keys()].map((_, colIndex) => (
                   <td
                     key={colIndex}
                     className={`px-4 py-4 whitespace-nowrap border-r border-gray-300 ${editing.rowIndex === rowIndex && editing.colIndex === colIndex ? 'bg-gray-100' : ''}`}

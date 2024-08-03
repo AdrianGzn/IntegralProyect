@@ -12,6 +12,7 @@ function EscolarControlClass() {
     const lastNameAlumn = useRef("");
     const nameTeacher = useRef("");
     const lastNameTeacher = useRef("");
+    const id = useRef("");
 
     useEffect(() => {
         const fetchAlumns = async () => {
@@ -87,7 +88,7 @@ function EscolarControlClass() {
         if (checkIfEmpty()) return;
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/personal/${id}`, { 
+            const response = await fetch(`${import.meta.env.VITE_URL}/personal/${10}`, { 
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

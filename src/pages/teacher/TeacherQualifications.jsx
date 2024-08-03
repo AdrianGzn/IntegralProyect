@@ -9,6 +9,7 @@ function TeacherQualifications() {
     const [numberList, setNumberList] = useState([]);
     const [names, setNames] = useState([]);
     const [lastNames, setLastNames] = useState([]);
+    const headers = ["Num lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias", "Calificacion fianl"];
     
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/personal`, {
@@ -67,10 +68,9 @@ function TeacherQualifications() {
                 <div className="h-[75vh] w-4/6 flex flex-col p-4">
                     <Table 
                         title="Teacher Qualifications" 
-                        data={data} 
-                        numbers={numberList}
-                        names={names}
-                        lastNames={lastNames}
+                        headers={headers}
+                        data={data}
+                        size={7}
                     />
                 </div>
             </div>
