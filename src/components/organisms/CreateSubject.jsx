@@ -1,7 +1,7 @@
 import Text from "../atoms/Text"
 import Field from "../molecules/Field"
 import Button from "../atoms/Button"
-
+import React from "react"
 function CreateSubject(props) {
     return <div className="w-4/5 my-5 bg-slate-700 rounded-md flex flex-col flex-wrap items-center">
         <Text text="Crear asignatura"></Text>
