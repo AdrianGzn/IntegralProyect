@@ -9,9 +9,10 @@ function TeacherQualifications() {
     const [numberList, setNumberList] = useState([]);
     const [names, setNames] = useState([]);
     const [lastNames, setLastNames] = useState([]);
-    const headers = ["Num lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias", "Calificacion fianl"];
-    
+    const headers = ["Num lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias", "Calificación final"];
+
     useEffect(() => {
+        // Obtener los alumnos del personal
         fetch(`${import.meta.env.VITE_URL}/personal`, {
             method: 'GET',
             headers: {
@@ -27,6 +28,8 @@ function TeacherQualifications() {
             }
         })
         .then(data => {
+            console.log(data);
+            
             for (let i = 0; i < data.length; i++) {
                 if (data[i].personal_id == getId()) {
                     setAlumns(data[i].alumns || []);
@@ -38,28 +41,48 @@ function TeacherQualifications() {
             console.log("Ha ocurrido un error: " + error);
         });
     }, []);
-    
+
     useEffect(() => {
         if (alumns.length > 0) {
-            const newNumberList = alumns.map(item => item.alumn_id);
-            const newNames = alumns.map(item => item.name);
-            const newLastNames = alumns.map(item => item.lastName);
-            
-            setNumberList(newNumberList);
-            setNames(newNames);
-            setLastNames(newLastNames);
-            
-            const newData = alumns.map((item, index) => ({col1: newNumberList[index], col2: newNames[index], col3: newLastNames[index], col4: '', col5: '', col6: '', col7: ''}));
-            setData(newData);
+            fetch(`${import.meta.env.VITE_URL}/subject/totalAmount`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('La respuesta no es ok.');
+                }
+            })
+            .then(subjectData => {
+                console.log(subjectData);
+                
+                const alumnIds = new Set(alumns.map(item => item.alumn_id));
+                const filteredData = subjectData.filter(subject => alumnIds.has(subject.alumn_id));
+
+                const newData = filteredData.map(subject => {
+                    const alumn = alumns.find(a => a.alumn_id == subject.alumn_id);
+                    return {
+                        col1: alumn.alumn_id,
+                        col2: alumn.name,
+                        col3: alumn.lastName,
+                        col4: subject.espanol || 0,
+                        col5: subject.matematicas || 0,
+                        col6: subject.ciencias || 0,
+                        col7: subject.averageAmount || 0
+                    };
+                });
+
+                setData(newData);
+            })
+            .catch(error => {
+                console.log("Ha ocurrido un error: " + error);
+            });
         }
     }, [alumns]);
-    
-    useEffect(() => {
-        console.log(numberList);
-        console.log(names);
-        console.log(lastNames);
-    }, [numberList, names, lastNames]);
-    
 
     return (
         <div className="min-h-screen w-full bg-slate-900">

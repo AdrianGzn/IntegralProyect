@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import Th from '../atoms/Th';
 
-function Table({ data, size, headers, name }) {
+function Table({ data, size, headers }) {
   const [rows, setRows] = useState(data);
   const [editing, setEditing] = useState({ rowIndex: null, colIndex: null });
 
@@ -13,14 +13,15 @@ function Table({ data, size, headers, name }) {
   }, [data]);
 
   const handleCellClick = (rowIndex, colIndex) => {
-    setEditing({ rowIndex, colIndex });
+    // Permitir edición solo en las columnas 4, 5, 6
+    if ([3, 4, 5].includes(colIndex)) {
+      setEditing({ rowIndex, colIndex });
+    }
   };
 
   const handleCellChange = (e, rowIndex, colIndex) => {
     const newRows = [...rows];
-    if (newRows[rowIndex][`col${colIndex + 1}`] === '') {
-      newRows[rowIndex][`col${colIndex + 1}`] = e.target.value;
-    }
+    newRows[rowIndex][`col${colIndex + 1}`] = e.target.value;
     setRows(newRows);
   };
 
@@ -60,13 +61,11 @@ function Table({ data, size, headers, name }) {
         link.href = url;
         link.download = 'table.pdf';
         link.click();
-        urlNew = URL.revokeObjectURL(url);
+        URL.revokeObjectURL(url);
       })
       .catch(error => {
-        console.error('Error generando la boleta:', error);
+        console.error('Error generando el PDF:', error);
       });
-
-
   };
 
   return (
@@ -98,14 +97,14 @@ function Table({ data, size, headers, name }) {
                     {editing.rowIndex === rowIndex && editing.colIndex === colIndex ? (
                       <input
                         type="text"
-                        value={row[`col${colIndex + 1}`]}
+                        value={row[`col${colIndex + 1}`] || ''}
                         onChange={(e) => handleCellChange(e, rowIndex, colIndex)}
                         onBlur={handleCellBlur}
                         autoFocus
                         className="w-[60%] border border-gray-300 rounded px-2 py-1"
                       />
                     ) : (
-                      row[`col${colIndex + 1}`]
+                      row[`col${colIndex + 1}`] || ''
                     )}
                   </td>
                 ))}
