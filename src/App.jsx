@@ -13,12 +13,13 @@ import Login from './pages/Login.jsx'
 import TeacherHome from './pages/teacher/TeacherHome.jsx'
 import TeacherQualifications from './pages/teacher/TeacherQualifications.jsx'
 import TeacherList from './pages/teacher/TeacherList.jsx'
-
+import TeacherQualification from './pages/teacher/TeacherQualification.jsx';
 import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
 import EscolarControlAlumns from './pages/escolarControl/EscolarControlAlumns.jsx'
 import EscolarControlTeachers from './pages/escolarControl/EscolarControlTeachers.jsx'
 import EscolarControlClass from "./pages/escolarControl/EscolarControlClass.jsx"
-import EscolarControlSubject from '.pages/escolarControl/EscolarControlSubject.jsx'
+import EscolarControlSubject from './pages/escolarControl/EscolarControlSubject.jsx'
+
 
 function App() {
   const [user, setUser] = useState({});
@@ -33,45 +34,49 @@ function App() {
     </div>*/
 
     <BrowserRouter>
-      <UserContext.Provider value={{user, setUser}} >
+      <UserContext.Provider value={{ user, setUser }} >
         <Routes>
           <Route
             index
             path="/"
-            element = {<Login />} 
+            element={<Login />}
           />
-          <Route 
+          <Route
             path="/teacher/home"
-            element = {<ProtectedTeacher><TeacherHome /></ProtectedTeacher>} 
+            element={<ProtectedTeacher><TeacherHome /></ProtectedTeacher>}
           />
           <Route
-            path= "/teacher/list"
-            element= {<ProtectedTeacher><TeacherList /></ProtectedTeacher>}
+            path="/teacher/list"
+            element={<ProtectedTeacher><TeacherList /></ProtectedTeacher>}
           />
-          <Route 
-            path= "/teacher/qualifications"
-            element= {<ProtectedTeacher><TeacherQualifications /></ProtectedTeacher>}
+          <Route
+            path="/teacher/qualifications"
+            element={<ProtectedTeacher><TeacherQualifications /></ProtectedTeacher>}
           />
-          <Route 
+          <Route
+            path="/teacher/qualification"
+            element={<ProtectedTeacher><TeacherQualification /></ProtectedTeacher>}
+          />
+          <Route
             path="/escolarControl/home"
-            element = {<ProtectedEscolarControl><EscolarControlHome /></ProtectedEscolarControl>} 
+            element={<ProtectedEscolarControl><EscolarControlHome /></ProtectedEscolarControl>}
           />
           <Route
-            path= "/escolarControl/alumns"
-            element= {<ProtectedEscolarControl><EscolarControlAlumns /></ProtectedEscolarControl>}
+            path="/escolarControl/alumns"
+            element={<ProtectedEscolarControl><EscolarControlAlumns /></ProtectedEscolarControl>}
           />
           <Route
-            path= "/escolarControl/class"
-            element= {<ProtectedEscolarControl><EscolarControlClass /></ProtectedEscolarControl>}
+            path="/escolarControl/class"
+            element={<ProtectedEscolarControl><EscolarControlClass /></ProtectedEscolarControl>}
           />
-          <Route 
+          <Route
             path="/escolarControl/teachers"
-            element = {<ProtectedEscolarControl><EscolarControlTeachers /></ProtectedEscolarControl>} 
+            element={<ProtectedEscolarControl><EscolarControlTeachers /></ProtectedEscolarControl>}
           />
           <Route
             path="/escolarControl/subject"
-            element = {<ProtectedEscolarControl><EscolarControlSubject /></ProtectedEscolarControl>}
-          /> 
+            element={<ProtectedEscolarControl><EscolarControlSubject /></ProtectedEscolarControl>}
+          />
         </Routes>
       </UserContext.Provider>
     </BrowserRouter>
