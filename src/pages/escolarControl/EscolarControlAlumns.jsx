@@ -80,7 +80,7 @@ function EscolarControlAlumns() {
             <Header role="escolarControl" />
             <div className="w-full flex justify-center items-center">
                 <div className="min-h-[80vh] w-4/6 flex flex-col items-center">
-                <AddAlumn
+                    <AddAlumn
                         nameReference={nameRef}
                         mothersLastNameReference={mothersLastNameRef}
                         fathersLastNameReference={fathersLastNameRef}
