@@ -7,8 +7,8 @@ function AddTeacher(props) {
     const { nameReference, lastNameReference, passReference, onBlur, onClick } = props;
 
     return (
-        <div className="w-full p-5 bg-slate-700 rounded-md flex flex-wrap justify-center">
-            <Text text="Dar de alta a profesor" className="!text-2xl" />
+        <div className="w-4/5 p-5 bg-slate-700 rounded-md flex flex-col flex-wrap items-center">
+            <Text text="Dar de alta a profesor" className="!text-2xl !my-0" />
             <Field
                 text="Nombre:"
                 type="text"

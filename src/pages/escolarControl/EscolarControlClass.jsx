@@ -124,7 +124,7 @@ function EscolarControlClass() {
         <div className="min-h-screen w-full bg-slate-900">
             <Header role="escolarControl" />
             <div className="w-full flex justify-center items-center">
-                <div className="min-h-[75vh] w-4/6 flex flex-col">
+                <div className="min-h-[75vh] w-4/6 flex flex-col items-center">
                     <FormAddAlumn
                         referenceName={nameAlumn}
                         referenceLastName={lastNameAlumn}

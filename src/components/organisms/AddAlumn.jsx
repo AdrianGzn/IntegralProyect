@@ -5,29 +5,33 @@ import React from "react";
 
 function AddAlumn(props) {
     return (
-        <div className="w-full p-5 bg-slate-700 rounded-md flex flex-col flex-wrap justify-center">
-            <Text text="Dar de alta a alumno" className="!text-2xl" />
+        <div className="w-4/5 my-5 bg-slate-700 rounded-md flex flex-col flex-wrap items-center">
+            <Text text="Dar de alta a alumno" className="!text-2xl mb-0" />
             <Field
                 text="Nombre:"
                 type="text"
                 placeholder="Nombre"
                 ref={props.nameReference}
+                className="!my-0"
             />
             <Field
                 text="Apellido paterno:"
                 type="text"
                 placeholder="Paterno"
                 ref={props.fathersLastNameReference}
+                className="!my-0"
             />
             <Field
                 text="Apellido materno:"
                 type="text"
                 placeholder="Materno"
                 ref={props.mothersLastNameReference}
+                className="!my-0"
             />
             <Button
                 text="Guardar"
                 onClick={props.onClick}
+                className="!mb-0"
             />
         </div>
     );
