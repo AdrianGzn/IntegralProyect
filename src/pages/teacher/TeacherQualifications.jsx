@@ -6,13 +6,10 @@ import { getId } from '../../data/userActual';
 function TeacherQualifications() {
     const [data, setData] = useState([]);
     const [alumns, setAlumns] = useState([]);
-    const [numberList, setNumberList] = useState([]);
-    const [names, setNames] = useState([]);
-    const [lastNames, setLastNames] = useState([]);
     const headers = ["Num lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias", "Calificación final"];
-    const [iteartions, setIteartions] = useState(0);
+    const [iterations, setIterations] = useState(0);
 
-    useEffect(() => {//Alumnos del maestro
+    useEffect(() => {// Alumnos del maestro
         fetch(`${import.meta.env.VITE_URL}/personal`, {
             method: 'GET',
             headers: {
@@ -28,8 +25,6 @@ function TeacherQualifications() {
             }
         })
         .then(data => {
-            console.log(data);
-            
             for (let i = 0; i < data.length; i++) {
                 if (data[i].personal_id == getId()) {
                     setAlumns(data[i].alumns || []);
@@ -42,7 +37,7 @@ function TeacherQualifications() {
         });
     }, []);
 
-    useEffect(() => { //Calificación final
+    useEffect(() => { // Calificación final
         if (alumns.length > 0) {
             fetch(`${import.meta.env.VITE_URL}/subject/totalAmount`, {
                 method: 'GET',
@@ -58,10 +53,7 @@ function TeacherQualifications() {
                 }
             })
             .then(subjectData => {
-                console.log(subjectData);
-                
                 const alumnIds = new Set(alumns.map(item => item.alumn_id));
-                setNumberList(alumnIds);
                 const filteredData = subjectData.filter(subject => alumnIds.has(subject.alumn_id));
 
                 const newData = filteredData.map(subject => {
@@ -78,7 +70,7 @@ function TeacherQualifications() {
                 });
 
                 setData(newData);
-                setIteartions(iteartions + 1);
+                setIterations(iterations + 1);
             })
             .catch(error => {
                 console.log("Ha ocurrido un error: " + error);
@@ -86,71 +78,89 @@ function TeacherQualifications() {
         }
     }, [alumns]);
 
-    useEffect(() => { //Este es el useEffect que me encontraba trabajando
-        fetch(`${import.meta.env.VITE_URL}/rating`, {
-            method: 'GET',
+    const onBlur = () => {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+                class_id:1,
+                name: nameRef.current.value,
+                lastName: fathersLastNameRef.current.value,
+                lastName: mothersLastNameRef.current.value,
+                created_by: 'escolarControl',
+                updated_by: 'escolarControl',
+                deleted: false
+            })
         })
         .then(response => {
             if (response.ok) {
                 return response.json();
             } else {
-                throw new Error('La respuesta no es ok.');
+                throw new Error('Network response was not ok');
             }
         })
-        .then(ratings => {
-            const newData = data;
-            console.log(ratings);
-            console.log(newData);
-            
-            
-            for (let i = 0; i < newData.length; i++) {
-                for (let j = 0; j < ratings.length; j++) {
-                    if(newData[i].col1 == ratings[j].alumn_id){
-                        if (ratings.pertenence == "Spanish") {
-                            newData[i] = {
-                                col1: newData[i].col1,
-                                col2: newData[i].col2,
-                                col3: newData[i].col3,
-                                col4: ratings[j].amount,
-                                col5: newData[i].col5,
-                                col6: newData[i].col6,
-                                col7: newData[i].col7
-                            };
-                        }else if (ratings.pertenence == "Math") {
-                            newData[i] = {
-                                col1: newData[i].col1,
-                                col2: newData[i].col2,
-                                col3: newData[i].col3,
-                                col4: newData[i].col4,
-                                col5: ratings[j].amount,
-                                col6: newData[i].col6,
-                                col7: newData[i].col7
-                            };
-                        }else if (ratings.pertenence == "Science") {
-                            newData[i] = {
-                                col1: newData[i].col1,
-                                col2: newData[i].col2,
-                                col3: newData[i].col3,
-                                col4: newData[i].col4,
-                                col5: newData[i].col5,
-                                col6: ratings[j].amount,
-                                col7: newData[i].col7
-                            };
+        .then(data => {
+            console.log('Success:', data);
+            Swal.fire({
+                title: "Agregado",
+                text: "Se agregó el alumno",
+                icon: "success"
+            });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: "No se logró agregar",
+                text: "No se pudo agregar el alumno",
+                icon: "error"
+            });
+        });
+    }
+
+    useEffect(() => { // Este es el useEffect que me encontraba trabajando
+        if (iterations > 0) {
+            fetch(`${import.meta.env.VITE_URL}/rating`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('La respuesta no es ok.');
+                }
+            })
+            .then(ratings => {
+                const updatedData = data.map(item => {
+                    const matchedRatings = ratings.filter(rating => rating.alumn_id === item.col1);
+                    
+                    let updatedItem = { ...item };
+
+                    for (let i = 0; i < matchedRatings.length; i++) {
+                        const rating = matchedRatings[i];
+                        if (rating.pertenence === "Spanish") {
+                            updatedItem.col4 = rating.amount;
+                        } else if (rating.pertenence === "Math") {
+                            updatedItem.col5 = rating.amount;
+                        } else if (rating.pertenence === "Science") {
+                            updatedItem.col6 = rating.amount;
                         }
                     }
-                }
-            }
-            console.log(newData);
-            
-            setData(newData);
-        })
-        .catch(error => {
-            console.log("Ha ocurrido un error: " + error);
-        });
-    }, [iteartions])
+
+                    return updatedItem;
+                });
+
+                setData(updatedData);
+            })
+            .catch(error => {
+                console.log("Ha ocurrido un error: " + error);
+            });
+        }
+    }, [iterations]);
 
     return (
         <div className="min-h-screen w-full bg-slate-900">

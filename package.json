@@ -15,6 +15,7 @@
     "@react-pdf/renderer": "^3.4.4",
     "@sweetalert2/theme-bulma": "^5.0.16",
     "@tanstack/react-query": "^5.50.1",
+    "@types/lodash.debounce": "^4.0.9",
     "aws-amplify": "^6.4.1",
     "aws-sdk": "^2.1659.0",
     "base64topdf": "^1.1.8",
