@@ -18,8 +18,7 @@ import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
 import EscolarControlAlumns from './pages/escolarControl/EscolarControlAlumns.jsx'
 import EscolarControlTeachers from './pages/escolarControl/EscolarControlTeachers.jsx'
 import EscolarControlClass from "./pages/escolarControl/EscolarControlClass.jsx"
-import EscolarControlSubject from './pages/escolarControl/EscolarControlSubject.jsx'
-
+import EscolarControlSubject from './pages/escolarControl/EscolarControlSubject.jsx';
 
 function App() {
   const [user, setUser] = useState({});

@@ -1,11 +1,10 @@
 import Header from "../../components/organisms/Header";
 import "@sweetalert2/theme-bulma";
-import { useRef } from "react";
 import Swal from "sweetalert2";
 import React from "react";
 import CreateSubject from "../../components/organisms/CreateSubject";
 
-function EscolarControlAlumns() {
+function EscolarControlSubject() {
     const name = useRef("");
 
     const save = () => {
@@ -61,4 +60,4 @@ function EscolarControlAlumns() {
     );
 }
 
-export default EscolarControlAlumns;
+export default EscolarControlSubject;
