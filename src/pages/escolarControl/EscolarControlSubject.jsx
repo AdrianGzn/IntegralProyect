@@ -6,7 +6,7 @@ import React from "react";
 import { useRef } from "react";
 import CreateSubject from "../../components/organisms/CreateSubject";
 
-function EscolarControlAlumns() {
+function EscolarControlSubject() {
     const name = useRef("");
 
     const save = () => {
@@ -28,4 +28,4 @@ function EscolarControlAlumns() {
     );
 }
 
-export default EscolarControlAlumns;
+export default EscolarControlSubject;
