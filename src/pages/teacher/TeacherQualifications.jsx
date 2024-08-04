@@ -10,9 +10,9 @@ function TeacherQualifications() {
     const [names, setNames] = useState([]);
     const [lastNames, setLastNames] = useState([]);
     const headers = ["Num lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias", "Calificación final"];
+    const [iteartions, setIteartions] = useState(0);
 
-    useEffect(() => {
-        // Obtener los alumnos del personal
+    useEffect(() => {//Alumnos del maestro
         fetch(`${import.meta.env.VITE_URL}/personal`, {
             method: 'GET',
             headers: {
@@ -42,7 +42,7 @@ function TeacherQualifications() {
         });
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { //Calificación final
         if (alumns.length > 0) {
             fetch(`${import.meta.env.VITE_URL}/subject/totalAmount`, {
                 method: 'GET',
@@ -61,6 +61,7 @@ function TeacherQualifications() {
                 console.log(subjectData);
                 
                 const alumnIds = new Set(alumns.map(item => item.alumn_id));
+                setNumberList(alumnIds);
                 const filteredData = subjectData.filter(subject => alumnIds.has(subject.alumn_id));
 
                 const newData = filteredData.map(subject => {
@@ -77,12 +78,79 @@ function TeacherQualifications() {
                 });
 
                 setData(newData);
+                setIteartions(iteartions + 1);
             })
             .catch(error => {
                 console.log("Ha ocurrido un error: " + error);
             });
         }
     }, [alumns]);
+
+    useEffect(() => { //Este es el useEffect que me encontraba trabajando
+        fetch(`${import.meta.env.VITE_URL}/rating`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('La respuesta no es ok.');
+            }
+        })
+        .then(ratings => {
+            const newData = data;
+            console.log(ratings);
+            console.log(newData);
+            
+            
+            for (let i = 0; i < newData.length; i++) {
+                for (let j = 0; j < ratings.length; j++) {
+                    if(newData[i].col1 == ratings[j].alumn_id){
+                        if (ratings.pertenence == "Spanish") {
+                            newData[i] = {
+                                col1: newData[i].col1,
+                                col2: newData[i].col2,
+                                col3: newData[i].col3,
+                                col4: ratings[j].amount,
+                                col5: newData[i].col5,
+                                col6: newData[i].col6,
+                                col7: newData[i].col7
+                            };
+                        }else if (ratings.pertenence == "Math") {
+                            newData[i] = {
+                                col1: newData[i].col1,
+                                col2: newData[i].col2,
+                                col3: newData[i].col3,
+                                col4: newData[i].col4,
+                                col5: ratings[j].amount,
+                                col6: newData[i].col6,
+                                col7: newData[i].col7
+                            };
+                        }else if (ratings.pertenence == "Science") {
+                            newData[i] = {
+                                col1: newData[i].col1,
+                                col2: newData[i].col2,
+                                col3: newData[i].col3,
+                                col4: newData[i].col4,
+                                col5: newData[i].col5,
+                                col6: ratings[j].amount,
+                                col7: newData[i].col7
+                            };
+                        }
+                    }
+                }
+            }
+            console.log(newData);
+            
+            setData(newData);
+        })
+        .catch(error => {
+            console.log("Ha ocurrido un error: " + error);
+        });
+    }, [iteartions])
 
     return (
         <div className="min-h-screen w-full bg-slate-900">
