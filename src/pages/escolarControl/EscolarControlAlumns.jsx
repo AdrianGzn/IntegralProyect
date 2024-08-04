@@ -78,9 +78,9 @@ function EscolarControlAlumns() {
     return (
         <div className="h-full w-full bg-slate-900">
             <Header role="escolarControl" />
-            <div className="w-full min-h-[80vh] flex justify-center">
-                <div className="w-4/6">
-                    <AddAlumn
+            <div className="w-full flex justify-center items-center">
+                <div className="min-h-[80vh] w-4/6 flex flex-col items-center">
+                <AddAlumn
                         nameReference={nameRef}
                         mothersLastNameReference={mothersLastNameRef}
                         fathersLastNameReference={fathersLastNameRef}

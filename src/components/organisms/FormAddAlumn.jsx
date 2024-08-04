@@ -5,7 +5,7 @@ import React from "react";
 
 function FormAddAlumn(props) {
     return (
-        <div className="w-full my-5 bg-slate-700 rounded-md flex flex-col flex-wrap justify-center">
+        <div className="w-4/5 my-5 bg-slate-700 rounded-md flex flex-col flex-wrap items-center">
             <div className="w-full flex justify-center"><Text text="Cargar alumno" className="!mb-0"></Text></div>
             <Field
                 text="Nombre"

@@ -94,8 +94,8 @@ function EscolarControlTeachers() {
     return (
         <div className="h-full w-full bg-slate-900">
             <Header role="escolarControl" />
-            <div className="w-full min-h-[80vh] flex justify-center">
-                <div className="w-4/6">
+            <div className="w-full flex justify-center items-center">
+                <div className="min-h-[80vh] w-4/6 flex flex-col items-center">
                     <AddTeacher 
                         nameReference={nameRef}
                         lastNameReference={lastNameRef}
