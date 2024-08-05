@@ -19,7 +19,7 @@ function EscolarControlAlumns() {
                 icon: "error"
             });
             return false;
-        } else if (!usernamePattern.test(lastNameRef.current.value)) {
+        } else if (!usernamePattern.test(fathersLastNameRef.current.value)) {
             Swal.fire({
                 title: "Error",
                 text: "El apellido debe contener entre 1 y 30 letras sin números.",
@@ -44,7 +44,6 @@ function EscolarControlAlumns() {
                 class_id:1,
                 name: nameRef.current.value,
                 lastName: fathersLastNameRef.current.value,
-                lastName: mothersLastNameRef.current.value,
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false

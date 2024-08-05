@@ -3,9 +3,9 @@ import Header from '../../components/organisms/Header';
 import Table from '../../components/organisms/Table';
 import Swal from 'sweetalert2';
 import { getId } from '../../data/userActual';
-import { update } from 'lodash';
 
 function TeacherQualifications() {
+    const [allRatings, setAllRatings] = useState([]);
     const [auxData, setAuxData] = useState([]);
     const [data, setData] = useState([]);
     const [alumns, setAlumns] = useState([]);
@@ -28,11 +28,11 @@ function TeacherQualifications() {
                 }
             })
             .then(data => {
-                for (let i = 0; i < data.length; i++) {
-                    if (data[i].personal_id == getId()) {
-                        setAlumns(data[i].alumns || []);
-                        break;
-                    }
+                const teacher = data.find(d => d.personal_id == getId());
+                if (teacher) {
+                    setAlumns(teacher.alumns || []);
+                } else {
+                    console.log('No se encontró el maestro con el ID dado.');
                 }
             })
             .catch(error => {
@@ -83,57 +83,61 @@ function TeacherQualifications() {
     }, [alumns]);
 
     const onBlur = (rowIndex, colIndex, newValue) => {
-        console.log(rowIndex);
-        console.log(colIndex + 1);
-        console.log(newValue);
+        setIterations(iterations + 1);
 
-        if(colIndex == 4){
+        let subject = "";
+        if(colIndex == 3){
             subject = "Spanish";
-        }else if(colIndex == 5){
+        }else if(colIndex == 4){
             subject = "Math";
-        }else if(colIndex == 6){
+        }else if(colIndex == 5){
             subject = "Science";
         }
 
-        const newAlumnId = alumns[rowIndex].alumn_id;
+        const newAlumnId = data[rowIndex].col1;
+        let idRatingToPut = 0;
+
+        for (let i = 0; i < allRatings.length; i++) {
+            if (allRatings[i].alumn_id == newAlumnId && allRatings[i].pertenence == subject){
+                idRatingToPut = allRatings[i].rating_id;
+            }
+        }
         
-        fetch(`${import.meta.env.VITE_URL}/ratings`, {
-            method: 'POST',
+        fetch(`${import.meta.env.VITE_URL}/rating/${idRatingToPut}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                alumn_id: newAlumnId,
                 amount: newValue,
-                pertenence: subject,
-                gradePertenence: 1,
-                created_by: "Teacher",
                 updated_by: "Teacher"
             })
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .then(data => {
-                console.log('Success:', data);
-                Swal.fire({
-                    title: "Agregado",
-                    text: "Se agregó la calificación",
-                    icon: "success"
-                });
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: "No se logró agregar",
-                    text: "No se pudo agregar la calificación",
-                    icon: "error"
-                });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .then(data => {
+            console.log('Success:', data);
+            Swal.fire({
+                title: "Agregado",
+                text: "Se agregó la calificación",
+                icon: "success"
             });
+            // Incrementa iterations aquí para activar el useEffect que depende de iterations
+            setIterations(iterations + 1);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: "No se logró agregar",
+                text: "No se pudo agregar la calificación",
+                icon: "error"
+            });
+        });
     }
 
     useEffect(() => {
@@ -144,38 +148,39 @@ function TeacherQualifications() {
                     'Content-Type': 'application/json',
                 },
             })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('La respuesta no es ok.');
-                    }
-                })
-                .then(ratings => {
-                    const updatedData = data.map(item => {
-                        const matchedRatings = ratings.filter(rating => rating.alumn_id === item.col1);
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('La respuesta no es ok.');
+                }
+            })
+            .then(ratings => {
+                setAllRatings(ratings);
+                const updatedData = data.map(item => {
+                    const matchedRatings = ratings.filter(rating => rating.alumn_id === item.col1);
 
-                        let updatedItem = { ...item };
+                    let updatedItem = { ...item };
 
-                        for (let i = 0; i < matchedRatings.length; i++) {
-                            const rating = matchedRatings[i];
-                            if (rating.pertenence === "Spanish") {
-                                updatedItem.col4 = rating.amount;
-                            } else if (rating.pertenence === "Math") {
-                                updatedItem.col5 = rating.amount;
-                            } else if (rating.pertenence === "Science") {
-                                updatedItem.col6 = rating.amount;
-                            }
+                    for (let i = 0; i < matchedRatings.length; i++) {
+                        const rating = matchedRatings[i];
+                        if (rating.pertenence === "Spanish") {
+                            updatedItem.col4 = rating.amount;
+                        } else if (rating.pertenence === "Math") {
+                            updatedItem.col5 = rating.amount;
+                        } else if (rating.pertenence === "Science") {
+                            updatedItem.col6 = rating.amount;
                         }
+                    }
 
-                        return updatedItem;
-                    });
-
-                    setData(updatedData);
-                })
-                .catch(error => {
-                    console.log("Ha ocurrido un error: " + error);
+                    return updatedItem;
                 });
+
+                setData(updatedData);
+            })
+            .catch(error => {
+                console.log("Ha ocurrido un error: " + error);
+            });
         }
     }, [iterations]);
 
