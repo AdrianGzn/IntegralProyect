@@ -8,8 +8,8 @@ import React from "react";
 function EscolarControlAlumns() {
     const [iterations, setIterations] = useState(0);
     const [alumns, setAlumns] = useState([]);
-    const nameRef = useRef('');
-    const mothersLastNameRef = useRef('');
+    const [name, setName] = useState('');
+    const [mothersLast, setMothersLast] = useState('');
     const fathersLastNameRef = useRef('');
 
     const validateNames = () => {
@@ -44,8 +44,8 @@ function EscolarControlAlumns() {
             },
             body: JSON.stringify({
                 class_id: 1,
-                name: nameRef.current.value,
-                lastName: fathersLastNameRef.current.value,
+                name: name.current.value,
+                lastName: setMothersLast.current.value,
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false
@@ -59,10 +59,8 @@ function EscolarControlAlumns() {
                 text: "Se agregó el alumno",
                 icon: "success"
             });
-            setIterations(prev => {
-                console.log('Iterations Updated:', prev + 1); // Añade esta línea para depuración
-                return prev + 1;
-            });
+            // Actualizar el estado de `alumns` y agregar calificaciones en `useEffect` después de que el nuevo alumno sea creado.
+            setIterations(prev => prev + 1); // Trigger useEffect to add ratings
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -94,42 +92,92 @@ function EscolarControlAlumns() {
 
     useEffect(() => {
         if (iterations > 0) {
-            console.log('Searching for:', nameRef.current.value, fathersLastNameRef.current.value); // Añade esta línea para depuración
-            const newAlumn = alumns.find(alumn => alumn.name == nameRef.current.value && alumn.lastName == fathersLastNameRef.current.value);
+            const newAlumn = alumns.find(alumn => alumn.name == {name} && alumn.lastName =="Guzman");
             if (newAlumn) {
-                console.log('New Alumn:', newAlumn); // Añade esta línea para depuración
-                const ratings = [
-                    { subject: "Spanish", amount: 6 },
-                    { subject: "Math", amount: 6 },
-                    { subject: "Science", amount: 6 },
-                ];
-                ratings.forEach(rating => {
-                    fetch(`${import.meta.env.VITE_URL}/rating`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            alumn_id: newAlumn.alumn_id,
-                            amount: rating.amount,
-                            pertenence: rating.subject,
-                            gradePertenence: 1,
-                            created_by: "escolarControl",
-                            updated_by: "escolarControl",
-                            deleted: false
-                        })
+                // Post Spanish rating
+                fetch(`${import.meta.env.VITE_URL}/rating`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        alumn_id: newAlumn.alumn_id,
+                        amount: 6,
+                        pertenence: "Spanish",
+                        gradePertenence: 1,
+                        created_by: "escolarControl",
+                        updated_by: "escolarControl",
+                        deleted: false
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Rating Success:', data);
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Spanish Rating Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Spanish Rating Error:', error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo agregar la calificación en Español",
+                        icon: "error"
+                    });
+                });
+
+                // Post Math rating
+                fetch(`${import.meta.env.VITE_URL}/rating`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        alumn_id: newAlumn.alumn_id,
+                        amount: 6,
+                        pertenence: "Math",
+                        gradePertenence: 1,
+                        created_by: "escolarControl",
+                        updated_by: "escolarControl",
+                        deleted: false
                     })
-                    .catch((error) => {
-                        console.error('Rating Error:', error);
-                        Swal.fire({
-                            title: "Error",
-                            text: "No se pudo agregar la calificación",
-                            icon: "error"
-                        });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Math Rating Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Math Rating Error:', error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo agregar la calificación en Matemáticas",
+                        icon: "error"
+                    });
+                });
+
+                // Post Science rating
+                fetch(`${import.meta.env.VITE_URL}/rating`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        alumn_id: newAlumn.alumn_id,
+                        amount: 6,
+                        pertenence: "Science",
+                        gradePertenence: 1,
+                        created_by: "escolarControl",
+                        updated_by: "escolarControl",
+                        deleted: false
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Science Rating Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Science Rating Error:', error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo agregar la calificación en Ciencias",
+                        icon: "error"
                     });
                 });
             } else {
@@ -144,8 +192,8 @@ function EscolarControlAlumns() {
             <div className="w-full flex justify-center items-center">
                 <div className="min-h-[80vh] w-4/6 flex flex-col items-center">
                     <AddAlumn
-                        nameReference={nameRef}
-                        mothersLastNameReference={mothersLastNameRef}
+                        nameReference={name}
+                        mothersLastNameReference={mothersLast}
                         fathersLastNameReference={fathersLastNameRef}
                         onClick={addAlumn}
                     />

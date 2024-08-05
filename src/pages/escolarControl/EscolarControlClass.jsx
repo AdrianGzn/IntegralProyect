@@ -129,7 +129,6 @@ function EscolarControlClass() {
                         role_id: 1,
                         name: teacher.name,
                         lastName: teacher.lastName,
-                        password: "home",
                         created_by: "admin",
                         updated_by: "admin",
                         deleted: false
