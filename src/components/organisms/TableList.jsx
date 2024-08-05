@@ -1,115 +1,101 @@
 import React, { useState, useEffect } from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import Th from '../atoms/Th';
+import { getId } from '../../data/userActual';
+import Swal from 'sweetalert2';
+import '@sweetalert2/theme-bulma';
 
-function TableList({ data, size, headers, onClick, checkedCells, setCheckedCells }) {
+function TableList({ data, headers }) {
   const [rows, setRows] = useState(data);
   const [editing, setEditing] = useState({ rowIndex: null, colIndex: null });
   const [pdfFileName, setPdfFileName] = useState(`pase_de_lista_${format(new Date(), 'ddMMyyyy')}.pdf`);
-  const [pdfUrl, setPdfUrl] = useState(''); // Asegúrate de que pdfUrl está definido e inicializado
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [checkedCells, setCheckedCells] = useState(new Map());
+  const [updateStatus, setUpdateStatus] = useState(null);
 
   useEffect(() => {
     setRows(data);
   }, [data]);
 
+  useEffect(() => {
+    if (updateStatus === 'success') {
+      Swal.fire({
+        title: "Generar lista de asistencia",
+        text: "Se logró generar pase de lista",
+        icon: "success"
+      });
+      setUpdateStatus(null);
+    } else if (updateStatus === 'error') {
+      Swal.fire({
+        title: "Error",
+        text: "Ocurrió un error al actualizar la asistencia",
+        icon: "error"
+      });
+      setUpdateStatus(null);
+    }
+  }, [updateStatus]);
+
   const handleCellClick = (rowIndex, colIndex) => {
     setEditing({ rowIndex, colIndex });
-    if (colIndex === size - 1) { // Suponiendo que la columna de asistencia es la última
+
+    if (colIndex === headers.length - 1) {
       const cellKey = `${rowIndex}-${colIndex}`;
-      setCheckedCells((prevChecked) => {
-        const newChecked = new Set(prevChecked);
-        if (newChecked.has(cellKey)) {
-          newChecked.delete(cellKey);
-        } else {
-          newChecked.add(cellKey);
-        }
+      setCheckedCells(prevChecked => {
+        const newChecked = new Map(prevChecked);
+        const isChecked = newChecked.get(cellKey) || false;
+        newChecked.set(cellKey, !isChecked);
         return newChecked;
       });
     }
   };
 
-  const handleCellChange = (e, rowIndex, colIndex) => {
-    const newRows = [...rows];
-    if (newRows[rowIndex][`col${colIndex + 1}`] === '') {
-      newRows[rowIndex][`col${colIndex + 1}`] = e.target.value;
-    }
-    setRows(newRows);
-  };
-
-  const handleCellBlur = () => {
-    setEditing({ rowIndex: null, colIndex: null });
-  };
-
-  const generatePDF = async () => {
-    const input = document.getElementById('table-container');
-    const currentDate = new Date();
-    const formattedDate = format(currentDate, 'dd/MM/yyyy HH:mm:ss');
-
+  const updateAttendance = async () => {
     try {
-      const canvas = await html2canvas(input);
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      const imgWidth = 210;
-      const pageHeight = 500;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+      const alumnosData = rows.map(row => ({
+        alumn_id: row.col1,
+        name: row.col2,
+        lastName: row.col3
+      }));
 
-      pdf.text(`Fecha: ${formattedDate}`, 10, 10);
-      position = 20; // Deja un poco de espacio para la fecha
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      const attendanceData = rows.map((row, rowIndex) => {
+        const cellKey = `${rowIndex}-${headers.length - 1}`;
+        const isChecked = checkedCells.get(cellKey) || false;
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      // Convertir el PDF a una cadena Base64
-      const pdfOutput = pdf.output('arraybuffer');
-      const base64String = btoa(
-        new Uint8Array(pdfOutput).reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-
-      const jsonData = {
-        personalData: {
-          updated_by: "teacher",
-          url: base64String,
-        }
-      };
-
-      // Enviar la solicitud PUT con el JSON
-      const updateResponse = await fetch(`${import.meta.env.VITE_URL}/personal/${10}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jsonData),
+        return {
+          alumn_id: row.col1,
+          attended: isChecked
+        };
       });
 
-      if (!updateResponse.ok) {
-        throw new Error('Error updating personal data');
+      const response = await fetch(`${import.meta.env.VITE_URL}/personal/${getId()}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          personalData: {
+            created_by: "teacher",
+            updated_by: "teacher",
+          },
+          alumnos: alumnosData,
+          asistencia: attendanceData
+        })
+      });
+
+      if (response.ok) {
+        setUpdateStatus('success');
+      } else {
+        throw new Error('Error updating attendance.');
       }
-
-      const updateData = await updateResponse.json();
-      setPdfUrl(updateData.fileUrl); 
-      const link = document.createElement('a');
-      link.href = updateData.fileUrl; // Suponiendo que esta es la URL del archivo
-      link.download = pdfFileName;
-      link.click();
-
     } catch (error) {
-      console.error('Error generando el PDF:', error);
+      console.error('Error updating attendance:', error);
+      setUpdateStatus('error');
     }
   };
 
   return (
-    <div>
-      <div id="table-container">
+    <div className="flex flex-col">
+      <div id="table-container" className="flex-grow">
         <table className="min-w-full divide-y divide-gray-300 bg-white shadow-md rounded-md border border-gray-300">
           <thead className="bg-gray-600 text-white">
             <tr>
@@ -121,16 +107,20 @@ function TableList({ data, size, headers, onClick, checkedCells, setCheckedCells
           <tbody className="bg-white divide-y divide-gray-300">
             {rows.map((row, rowIndex) => (
               <tr key={rowIndex} className="hover:bg-gray-100 transition-colors">
-                {[...Array(size).keys()].map((_, colIndex) => (
+                {headers.map((_, colIndex) => (
                   <td
                     key={colIndex}
                     className={`px-4 py-4 whitespace-nowrap border-r border-gray-300 ${editing.rowIndex === rowIndex && editing.colIndex === colIndex ? 'bg-gray-100' : ''}`}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                   >
-                    {colIndex === size - 1 && checkedCells.has(`${rowIndex}-${colIndex}`) ? (
-                      <span className="text-green-500">✔</span>
+                    {colIndex === headers.length - 1 ? (
+                      checkedCells.get(`${rowIndex}-${colIndex}`) ? (
+                        <span className="text-green-500">✔</span>
+                      ) : (
+                        ''
+                      )
                     ) : (
-                      row[`col${colIndex + 1}`]
+                      row[`col${colIndex + 1}`] || ''
                     )}
                   </td>
                 ))}
@@ -140,27 +130,13 @@ function TableList({ data, size, headers, onClick, checkedCells, setCheckedCells
         </table>
       </div>
       <button
-        onClick={onClick}
-        className="bg-blue-600 text-white p-3 rounded mb-4 hover:bg-blue-700 transition-colors font-bold shadow-lg"
+        onClick={updateAttendance}
+        className="bg-green-600 text-white p-3 rounded mt-4 hover:bg-green-700 transition-colors font-bold shadow-lg"
       >
-        Generar pase de lista
+        Actualizar Asistencia
       </button>
-      {pdfUrl && (
-        <div>
-          <h2>Visualizar PDF:</h2>
-          <iframe
-            src={pdfUrl}
-            style={{ width: '100%', height: '600px' }}
-            frameBorder="0"
-          />
-          <a href={pdfUrl} download={pdfFileName} className="mt-4 block text-blue-600 hover:underline">
-            Descargar PDF
-          </a>
-        </div>
-      )}
     </div>
   );
 }
 
 export default TableList;
-

@@ -19,7 +19,6 @@ function TeacherList() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
       },
     })
     .then(response => response.ok ? response.json() : Promise.reject('La respuesta no es ok.'))
@@ -61,43 +60,6 @@ function TeacherList() {
     return url.substring(url.lastIndexOf('/') + 1);
   };
 
-  const updateAttendance = async () => {
-    try {
-      const attendanceData = alumns.map(alumno => ({
-        alumn_id: alumno.alumn_id,
-        attended: checkedCells.has(`${alumno.alumn_id}-0`) // Aquí debes asegurarte de que la lógica de `checkedCells` coincida con el formato de los datos
-      }));
-
-      const response = await fetch(`${import.meta.env.VITE_URL}/personal/${getId()}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          personalData: { 
-            created_by: "teacher",
-            updated_by: "teacher", 
-          },
-          alumnos: alumns,
-          asistencia: attendanceData
-        })
-      });
-
-      if (response.ok) {
-        console.log('Datos actualizados exitosamente.');
-        Swal.fire({
-          title: "Generar pase de lista",
-          text: "Se ha generado el pase de lista",
-          icon: "success"
-        });
-      } else {
-        throw new Error('Error en la actualización.');
-      }
-    } catch (error) {
-      console.error('Ha ocurrido un error: ', error);
-    }
-  };
-
   return (
     <div className="min-h-screen w-full bg-slate-900 overflow-x-hidden">
       <Header role="teacher" />
@@ -108,7 +70,6 @@ function TeacherList() {
             data={data}
             headers={headers}
             size={4}
-            onClick={updateAttendance}
             checkedCells={checkedCells}
             setCheckedCells={setCheckedCells}
           />
@@ -138,3 +99,4 @@ function TeacherList() {
 }
 
 export default TeacherList;
+
