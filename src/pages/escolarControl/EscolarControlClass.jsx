@@ -143,7 +143,7 @@ function EscolarControlClass() {
                     "personalData": {
                         "updated_by": "escolarControl"
                     },
-                    "alumnos": alumnsToPut
+                    "alumnos": [alumnsToPut]
                 })
             });
     
