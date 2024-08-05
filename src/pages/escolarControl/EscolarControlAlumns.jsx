@@ -51,13 +51,7 @@ function EscolarControlAlumns() {
                 deleted: false
             })
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Network response was not ok');
-            }
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
             Swal.fire({
@@ -65,7 +59,10 @@ function EscolarControlAlumns() {
                 text: "Se agregó el alumno",
                 icon: "success"
             });
-            setIterations(prev => prev + 1);
+            setIterations(prev => {
+                console.log('Iterations Updated:', prev + 1); // Añade esta línea para depuración
+                return prev + 1;
+            });
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -78,9 +75,29 @@ function EscolarControlAlumns() {
     };
 
     useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            setAlumns(data);
+            console.log('Fetched Alumns:', data); // Añade esta línea para depuración
+        })
+        .catch(error => {
+            console.log("Ha ocurrido un error: " + error);
+        });
+    }, [iterations]);
+
+    useEffect(() => {
         if (iterations > 0) {
-            const newAlumn = alumns.find(alumn => alumn.name === nameRef.current.value && alumn.lastName === fathersLastNameRef.current.value);
+            console.log('Searching for:', nameRef.current.value, fathersLastNameRef.current.value); // Añade esta línea para depuración
+            const newAlumn = alumns.find(alumn => alumn.name == nameRef.current.value && alumn.lastName == fathersLastNameRef.current.value);
             if (newAlumn) {
+                console.log('New Alumn:', newAlumn); // Añade esta línea para depuración
                 const ratings = [
                     { subject: "Spanish", amount: 6 },
                     { subject: "Math", amount: 6 },
@@ -95,16 +112,14 @@ function EscolarControlAlumns() {
                         body: JSON.stringify({
                             alumn_id: newAlumn.alumn_id,
                             amount: rating.amount,
-                            subject: rating.subject,
+                            pertenence: rating.subject,
+                            gradePertenence: 1,
+                            created_by: "escolarControl",
+                            updated_by: "escolarControl",
+                            deleted: false
                         })
                     })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Network response was not ok');
-                        }
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         console.log('Rating Success:', data);
                     })
@@ -117,31 +132,10 @@ function EscolarControlAlumns() {
                         });
                     });
                 });
+            } else {
+                console.log('New Alumn not found'); // Añade esta línea para depuración
             }
         }
-    }, [iterations]);
-
-    useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('La respuesta no es ok.');
-            }
-        })
-        .then(data => {
-            setAlumns(data);
-        })
-        .catch(error => {
-            console.log("Ha ocurrido un error: " + error);
-        });
     }, [iterations]);
 
     return (
