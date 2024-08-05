@@ -11,21 +11,21 @@ function AddAlumn(props) {
                 text="Nombre:"
                 type="text"
                 placeholder="Nombre"
-                ref={props.nameReference}
+                ref={props.name}
                 className="!my-0"
             />
             <Field
                 text="Apellido paterno:"
                 type="text"
                 placeholder="Paterno"
-                ref={props.fathersLastNameReference}
+                value={props.fathersLastNameReference}
                 className="!my-0"
             />
             <Field
                 text="Apellido materno:"
                 type="text"
                 placeholder="Materno"
-                ref={props.mothersLastNameReference}
+                value={props.mothersLastNameReference}
                 className="!my-0"
             />
             <Button
