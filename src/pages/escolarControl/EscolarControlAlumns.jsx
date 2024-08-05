@@ -1,11 +1,13 @@
 import Header from "../../components/organisms/Header";
 import "@sweetalert2/theme-bulma";
 import AddAlumn from "../../components/organisms/AddAlumn";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import React from "react";
 
 function EscolarControlAlumns() {
+    const [iterations, setIterations] = useState(0);
+    const [alumns, setAlumns] = useState([]);
     const nameRef = useRef('');
     const mothersLastNameRef = useRef('');
     const fathersLastNameRef = useRef('');
@@ -41,7 +43,7 @@ function EscolarControlAlumns() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                class_id:1,
+                class_id: 1,
                 name: nameRef.current.value,
                 lastName: fathersLastNameRef.current.value,
                 created_by: 'escolarControl',
@@ -63,6 +65,7 @@ function EscolarControlAlumns() {
                 text: "Se agregó el alumno",
                 icon: "success"
             });
+            setIterations(prev => prev + 1);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -73,6 +76,73 @@ function EscolarControlAlumns() {
             });
         });
     };
+
+    useEffect(() => {
+        if (iterations > 0) {
+            const newAlumn = alumns.find(alumn => alumn.name === nameRef.current.value && alumn.lastName === fathersLastNameRef.current.value);
+            if (newAlumn) {
+                const ratings = [
+                    { subject: "Spanish", amount: 6 },
+                    { subject: "Math", amount: 6 },
+                    { subject: "Science", amount: 6 },
+                ];
+                ratings.forEach(rating => {
+                    fetch(`${import.meta.env.VITE_URL}/rating`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            alumn_id: newAlumn.alumn_id,
+                            amount: rating.amount,
+                            subject: rating.subject,
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Network response was not ok');
+                        }
+                    })
+                    .then(data => {
+                        console.log('Rating Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Rating Error:', error);
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se pudo agregar la calificación",
+                            icon: "error"
+                        });
+                    });
+                });
+            }
+        }
+    }, [iterations]);
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('La respuesta no es ok.');
+            }
+        })
+        .then(data => {
+            setAlumns(data);
+        })
+        .catch(error => {
+            console.log("Ha ocurrido un error: " + error);
+        });
+    }, [iterations]);
 
     return (
         <div className="h-full w-full bg-slate-900">
