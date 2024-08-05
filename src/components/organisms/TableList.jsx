@@ -4,12 +4,11 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import Th from '../atoms/Th';
 
-function TableList({ data, size, headers }) {
+function TableList({ data, size, headers, onClick, checkedCells, setCheckedCells }) {
   const [rows, setRows] = useState(data);
   const [editing, setEditing] = useState({ rowIndex: null, colIndex: null });
-  const [checkedCells, setCheckedCells] = useState(new Set());
   const [pdfFileName, setPdfFileName] = useState(`pase_de_lista_${format(new Date(), 'ddMMyyyy')}.pdf`);
-  const [pdfUrl, setPdfUrl] = useState('');
+  const [pdfUrl, setPdfUrl] = useState(''); // Asegúrate de que pdfUrl está definido e inicializado
 
   useEffect(() => {
     setRows(data);
@@ -17,7 +16,7 @@ function TableList({ data, size, headers }) {
 
   const handleCellClick = (rowIndex, colIndex) => {
     setEditing({ rowIndex, colIndex });
-    if (colIndex === size - 1) {
+    if (colIndex === size - 1) { // Suponiendo que la columna de asistencia es la última
       const cellKey = `${rowIndex}-${colIndex}`;
       setCheckedCells((prevChecked) => {
         const newChecked = new Set(prevChecked);
@@ -108,14 +107,6 @@ function TableList({ data, size, headers }) {
     }
   };
 
-  const readFileAsBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(btoa(reader.result));
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   return (
     <div>
       <div id="table-container">
@@ -149,10 +140,10 @@ function TableList({ data, size, headers }) {
         </table>
       </div>
       <button
-        onClick={generatePDF}
+        onClick={onClick}
         className="bg-blue-600 text-white p-3 rounded mb-4 hover:bg-blue-700 transition-colors font-bold shadow-lg"
       >
-        Generar PDF y Actualizar Datos
+        Generar pase de lista
       </button>
       {pdfUrl && (
         <div>
@@ -172,3 +163,4 @@ function TableList({ data, size, headers }) {
 }
 
 export default TableList;
+
