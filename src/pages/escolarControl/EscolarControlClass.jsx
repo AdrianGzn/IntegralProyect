@@ -1,11 +1,13 @@
 import Header from "../../components/organisms/Header";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Swal from "sweetalert2";
 import '@sweetalert2/theme-bulma';
 import FormAddAlumn from "../../components/organisms/FormAddAlumn";
 import FormAssignClass from "../../components/organisms/FormAssignClass";
 import React from "react";
+
 function EscolarControlClass() {
+    const [teachers, setTeachers] = useState([]);
     const [alumns, setAlumns] = useState([]);
     const [alumnsToPut, setAlumnsToPut] = useState([]);
     const nameAlumn = useRef("");
@@ -13,6 +15,31 @@ function EscolarControlClass() {
     const nameTeacher = useRef("");
     const lastNameTeacher = useRef("");
     const id = useRef("");
+
+    useEffect(() => {// Alumnos del maestro
+        fetch(`${import.meta.env.VITE_URL}/personal`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('La respuesta no es ok.');
+                }
+            })
+            .then(data => {
+                setTeachers(data);
+                console.log(data);
+                
+            })
+            .catch(error => {
+                console.log("Ha ocurrido un error: " + error);
+            });
+    }, []);
 
     useEffect(() => {
         const fetchAlumns = async () => {
@@ -29,7 +56,7 @@ function EscolarControlClass() {
 
                 const data = await response.json();
                 const filteredAlumns = data.map(alumn => ({
-                    alumn_id: alumn.alumn_id, 
+                    alumn_id: alumn.alumn_id,
                     name: alumn.name,
                     lastName: alumn.lastName
                 }));
@@ -48,7 +75,7 @@ function EscolarControlClass() {
         fetchAlumns();
     }, []);
 
-    const addAlumn = () => {
+    const addAlumn = useCallback(() => {
         const foundIndex = alumns.findIndex(alumn =>
             alumn.name === nameAlumn.current.value && alumn.lastName === lastNameAlumn.current.value
         );
@@ -69,9 +96,9 @@ function EscolarControlClass() {
                 icon: "success"
             });
         }
-    }
+    }, [alumns]);
 
-    const checkIfEmpty = () => {
+    const checkIfEmpty = useCallback(() => {
         if (alumnsToPut.length === 0) {
             Swal.fire({
                 title: 'Error!',
@@ -82,13 +109,32 @@ function EscolarControlClass() {
             return true;
         }
         return false;
-    }
+    }, [alumnsToPut]);
 
-    const assignAlumn = async () => {
+    const assignAlumn = useCallback(async () => {
         if (checkIfEmpty()) return;
-
+    
+        let id = 0;
+    
+        for (let i = 0; i < teachers.length; i++) {
+            if (teachers[i].name === nameTeacher.current.value) {
+                id = teachers[i].personal_id;
+                break;
+            }
+        }
+    
+        if (id === 0) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Maestro no encontrado',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+            return;
+        }
+    
         try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/personal/${10}`, { 
+            const response = await fetch(`${import.meta.env.VITE_URL}/personal/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -97,12 +143,12 @@ function EscolarControlClass() {
                     "personalData": {
                         "updated_by": "escolarControl"
                     },
-                    "alumnos": alumnsToPut
+                    "alumnos": [alumnsToPut]
                 })
             });
-
+    
             if (!response.ok) throw new Error('Network response was not ok.');
-
+    
             Swal.fire({
                 title: 'Agregado',
                 text: 'El alumno ha sido agregado correctamente',
@@ -118,7 +164,8 @@ function EscolarControlClass() {
                 confirmButtonText: 'Okay'
             });
         }
-    }
+    }, [alumnsToPut, checkIfEmpty, teachers]);
+    
 
     return (
         <div className="min-h-screen w-full bg-slate-900">

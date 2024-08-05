@@ -3,6 +3,7 @@ import "@sweetalert2/theme-bulma";
 import Swal from "sweetalert2";
 import React from "react";
 import CreateSubject from "../../components/organisms/CreateSubject";
+import { useRef } from "react";
 
 function EscolarControlSubject() {
     const name = useRef("");
