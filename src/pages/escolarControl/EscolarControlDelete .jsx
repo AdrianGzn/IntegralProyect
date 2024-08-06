@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 function EscolarControlDelete() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [alumns, setAlumns] = useState([]);
-    const [alumnName, setAlumnName] = useState(""); // State to hold the name of the alumnus to delete
+    const [alumnName, setAlumnName] = useState(""); 
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
@@ -65,17 +65,13 @@ function EscolarControlDelete() {
             if (!response.ok) {
                 throw new Error('Failed to delete alumnus');
             }
-
-            // Optionally, check if the response contains the details of the deleted alumn
-            const deletedAlumn = await response.json(); // Ensure your API returns deleted details
+            const deletedAlumn = await response.json(); 
 
             Swal.fire({
                 icon: 'success',
                 title: 'Deleted!',
                 text: `The alumnus ${deletedAlumn.name} has been deleted successfully.`,
             });
-
-            // Optionally, remove the deleted alumn from the local state
             setAlumns(alumns.filter(al => al.id !== alumnId));
         } catch (error) {
             Swal.fire({
@@ -95,7 +91,7 @@ function EscolarControlDelete() {
                 <div className="min-h-[80vh] w-4/6 flex flex-col items-center">
                     <DeleteAlumn
                         onDelete={deleteAlumn}
-                        onIdChange={setAlumnName} // Pass name to parent
+                        onIdChange={setAlumnName}
                         isDeleting={isDeleting}
                     />
                 </div>
