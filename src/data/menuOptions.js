@@ -22,10 +22,6 @@ const options = {
             text: "Alumnnos",
             link: "/escolarControl/alumns"
         },
-        {
-            text: "Asignaturas",
-            link: "/escolarControl/subject" 
-        },
     ]
 }
 

@@ -1,19 +1,19 @@
-import Header from "../../components/organisms/Header";
-import { useRef, useState, useEffect, useCallback } from "react";
-import Swal from "sweetalert2";
-import '@sweetalert2/theme-bulma';
-import FormAddAlumn from "../../components/organisms/FormAddAlumn";
-import FormAssignClass from "../../components/organisms/FormAssignClass";
-import React from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import Header from '../../components/organisms/Header';
+import Table from '../../components/organisms/Table';
+import Swal from 'sweetalert2';
+import SelectTeacher from '../../components/organisms/SelectTeacher';
 
 function EscolarControlClass() {
+    const header = ["Nombre", "Apellidos", "Seleccionado"];
     const [teachers, setTeachers] = useState([]);
     const [alumns, setAlumns] = useState([]);
     const [alumnsToPut, setAlumnsToPut] = useState([]);
-    const nameAlumn = useRef(null);
-    const lastNameAlumn = useRef(null);
-    const nameTeacher = useRef(null);
-    const lastNameTeacher = useRef(null);
+    const [alumnsShow, setAlumnsShow] = useState([]);
+    const [teachersName, setTeachersName] = useState([]);
+    const [checkedAlumns, setCheckedAlumns] = useState({});
+    const teacherRef = useRef(null);
+    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/personal`, {
@@ -23,138 +23,99 @@ function EscolarControlClass() {
                 'Access-Control-Allow-Origin': '*',
             },
         })
-            .then(response => response.json())
-            .then(data => {
-                setTeachers(data);
-                console.log(data);
-            })
-            .catch(error => {
-                console.log("Ha ocurrido un error: " + error);
-            });
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            // Filtra los profesores que tengan role_id igual a 1
+            const filteredTeachers = data.filter(teacher => teacher.role_id == 1);
+            setTeachers(filteredTeachers);
+            const teacherNames = filteredTeachers.map(teacher => teacher.name);
+            setTeachersName(teacherNames);
+        })
+        .catch(error => {
+            console.log("Ha ocurrido un error: " + error);
+        });
     }, []);
 
     useEffect(() => {
-        const fetchAlumns = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_URL}/alumn`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                    },
-                });
-
-                if (!response.ok) throw new Error('Network response was not ok.');
-
-                const data = await response.json();
-                const filteredAlumns = data.map(alumn => ({
-                    alumn_id: alumn.alumn_id,
-                    name: alumn.name,
-                    lastName: alumn.lastName
-                }));
-                setAlumns(filteredAlumns);
-            } catch (error) {
-                console.error('Error fetching options:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'There was an issue fetching options.',
-                    icon: 'error',
-                    confirmButtonText: 'Okay'
-                });
-            }
-        };
-
-        fetchAlumns();
+        fetch(`${import.meta.env.VITE_URL}/role`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            setRoles(data);
+            console.log(data);
+            
+        })
+        .catch(error => {
+            console.log("Ha ocurrido un error: " + error);
+        });
     }, []);
 
-    const addAlumn = useCallback(() => {
-        const foundIndex = alumns.findIndex(alumn =>
-            alumn.name == nameAlumn.current.value && alumn.lastName == lastNameAlumn.current.value
-        );
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/alumn`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            setAlumns(data);
+            const alumnsProcessed = data.map(alumn => ({
+                name: alumn.name,
+                lastName: alumn.lastName,
+                alumn_id: alumn.alumn_id
+            }));
 
-        if (foundIndex === -1) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Alumno no existente',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
+            const updatedData = alumnsProcessed.map((alumn, index) => ({
+                col1: alumn.name,
+                col2: alumn.lastName,
+                col3: (
+                    <input
+                        type="text"
+                        value={checkedAlumns[alumn.alumn_id] || ""}
+                        onChange={(e) => handleInputChange(alumn.alumn_id, e.target.value)}
+                    />
+                )
+            }));
+
+            setAlumnsShow(updatedData);
+        })
+        .catch(error => {
+            console.log("Ha ocurrido un error: " + error);
+        });
+    }, []);
+
+    const handleInputChange = (alumn_id, value) => {
+        setCheckedAlumns(prevState => ({
+            ...prevState,
+            [alumn_id]: value
+        }));
+    };
+
+    const save = () => {
+        const selectedTeacher = teacherRef.current.value;
+        const teacher = teachers.find(teacher => teacher.name === selectedTeacher);
+        if (teacher) {
+            const selectedAlumnIds = Object.keys(checkedAlumns).filter(key => checkedAlumns[key] !== "").map(key => {
+                const alumn = alumns.find(a => a.alumn_id === parseInt(key));
+                return alumn ? alumn.alumn_id : null;
+            }).filter(id => id !== null);
+
+            setAlumnsToPut(selectedAlumnIds);
+            console.log("Teacher ID:", teacher.personal_id);
+            console.log("Selected Alumn IDs:", selectedAlumnIds);
+            Swal.fire("Guardado", "La selección se ha guardado correctamente", "success");
         } else {
-            const alumnToAdd = alumns[foundIndex];
-            setAlumnsToPut(prevAlumnsToPut => [...prevAlumnsToPut, alumnToAdd]);
-            Swal.fire({
-                title: "Encontrado",
-                text: "Se agregó a la lista",
-                icon: "success"
-            });
+            Swal.fire("Error", "No se ha encontrado el profesor seleccionado", "error");
         }
-    }, [alumns]);
-
-    const checkIfEmpty = useCallback(() => {
-        if (alumnsToPut.length === 0) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'No hay alumnos en la lista para asignar.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-            return true;
-        }
-        return false;
-    }, [alumnsToPut]);
-
-    const assignAlumn = useCallback(async () => {
-        if (checkIfEmpty()) return;
-
-        const teacher = teachers.find(t => t.name == nameTeacher.current.value);
-        if (!teacher) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Maestro no encontrado',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-            return;
-        }
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_URL}/personal/${teacher.personal_id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    personalData: {
-                        class_id: 1,
-                        role_id: 1,
-                        name: teacher.name,
-                        lastName: teacher.lastName,
-                        created_by: "admin",
-                        updated_by: "admin",
-                        deleted: false
-                    },
-                    alumnos: alumnsToPut
-                })
-            });
-
-            if (!response.ok) throw new Error('Network response was not ok.');
-
-            Swal.fire({
-                title: 'Agregado',
-                text: 'El alumno ha sido agregado correctamente',
-                icon: 'success',
-                confirmButtonText: 'Okay'
-            });
-        } catch (error) {
-            console.error('Error updating data:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an issue updating data.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-        }
-    }, [alumnsToPut, checkIfEmpty, teachers]);
+    };
 
     return (
         <div className="min-h-screen w-full bg-slate-900">
@@ -162,15 +123,16 @@ function EscolarControlClass() {
         
             <div className="w-full flex justify-center items-center">
                 <div className="min-h-[75vh] w-4/6 flex flex-col items-center">
-                    <FormAddAlumn
-                        referenceName={nameAlumn}
-                        referenceLastName={lastNameAlumn}
-                        onClick={addAlumn}
+                    <SelectTeacher
+                        onClick={save}
+                        options={teachersName}
+                        reference={teacherRef}
                     />
-                    <FormAssignClass
-                        referenceName={nameTeacher}
-                        referenceLastName={lastNameTeacher}
-                        onClick={assignAlumn}
+                    <Table
+                        title="Alumnos a elegir"
+                        headers={header}
+                        data={alumnsShow}
+                        size={3}
                     />
                 </div>
             </div>
