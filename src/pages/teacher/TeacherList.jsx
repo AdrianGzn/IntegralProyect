@@ -42,9 +42,6 @@ function TeacherList() {
         col1: item.alumn_id,
         col2: item.name,
         col3: item.lastName,
-        col4: '',
-        col5: '',
-        col6: '',
         col7: ''
       }));
       setData(newData);

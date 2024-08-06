@@ -2,6 +2,7 @@ import Text from "../atoms/Text";
 import Field from "../molecules/Field";
 import Button from "../atoms/Button";
 import React from "react";
+import FieldAdd from "../molecules/FieldAdd";
 
 function AddAlumn(props) {
     const handleNameChange = (event) => {
@@ -19,29 +20,32 @@ function AddAlumn(props) {
     return (
         <div className="w-4/5 my-5 bg-slate-700 rounded-md flex flex-col flex-wrap items-center">
             <Text text="Dar de alta a alumno" className="!text-2xl mb-0" />
-            <Field
+            <FieldAdd
                 text="Nombre:"
                 type="text"
                 placeholder="Nombre"
                 value={props.name}
-                fnval={handleNameChange}  
+                onChange={handleNameChange}
                 className="!my-0"
+                classNameInput="bg-gray-800"
             />
-            <Field
+            <FieldAdd
                 text="Apellido paterno:"
                 type="text"
                 placeholder="Paterno"
                 value={props.fathers}
-                fnval={handleFathersChange}  // Utiliza handleFathersChange para actualizar el estado
+                onChange={handleFathersChange}
                 className="!my-0"
+                classNameInput="bg-gray-800"
             />
-            <Field
+            <FieldAdd
                 text="Apellido materno:"
                 type="text"
                 placeholder="Materno"
                 value={props.mothers}
-                fnval={handleMothersChange}  // Utiliza handleMothersChange para actualizar el estado
+                onChange={handleMothersChange}
                 className="!my-0"
+                classNameInput="bg-gray-800"
             />
             <Button
                 text="Guardar"

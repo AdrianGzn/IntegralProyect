@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import Th from '../atoms/Th';
 
-function Table({ data, size, headers, onBlur }) {
+function Table({ data, size, headers, onBlur, className }) {
     const [rows, setRows] = useState(data);
     const [editing, setEditing] = useState({ rowIndex: null, colIndex: null });
 
@@ -77,6 +77,7 @@ function Table({ data, size, headers, onBlur }) {
                 Generar PDF
             </button>
             <div id="table-container">
+                <div><p>{className}</p></div>
                 <table className="min-w-full divide-y divide-gray-300 bg-white shadow-md rounded-md border border-gray-300">
                     <thead className="bg-gray-600 text-white">
                         <tr>
@@ -91,20 +92,25 @@ function Table({ data, size, headers, onBlur }) {
                                 {[...Array(size).keys()].map((_, colIndex) => (
                                     <td
                                         key={colIndex}
-                                        className={`px-4 py-4 whitespace-nowrap border-r border-gray-300 ${editing.rowIndex === rowIndex && editing.colIndex === colIndex ? 'bg-gray-100' : ''}`}
+                                        className={`px-4 py-4 whitespace-nowrap border-r border-gray-300 ${editing.rowIndex == rowIndex && editing.colIndex == colIndex ? 'bg-gray-100' : ''}`}
                                         onClick={() => handleCellClick(rowIndex, colIndex)}
                                     >
-                                        {editing.rowIndex === rowIndex && editing.colIndex === colIndex ? (
-                                            <input
-                                                type="text"
-                                                value={row[`col${colIndex + 1}`] || ''}
-                                                onChange={(e) => handleCellChange(e, rowIndex, colIndex)}
-                                                onBlur={() => handleCellBlur(rowIndex, colIndex)}
-                                                autoFocus
-                                                className="w-[60%] border border-gray-300 rounded px-2 py-1"
-                                            />
+                                        {colIndex === 0 ? (
+                                            // Muestra el valor del id en la primera columna
+                                            row.col1
                                         ) : (
-                                            row[`col${colIndex + 1}`] || ''
+                                            editing.rowIndex === rowIndex && editing.colIndex === colIndex ? (
+                                                <input
+                                                    type="text"
+                                                    value={row[`col${colIndex + 1}`] || ''}
+                                                    onChange={(e) => handleCellChange(e, rowIndex, colIndex)}
+                                                    onBlur={() => handleCellBlur(rowIndex, colIndex)}
+                                                    autoFocus
+                                                    className="w-[60%] border border-gray-300 rounded px-2 py-1"
+                                                />
+                                            ) : (
+                                                row[`col${colIndex + 1}`] || ''
+                                            )
                                         )}
                                     </td>
                                 ))}

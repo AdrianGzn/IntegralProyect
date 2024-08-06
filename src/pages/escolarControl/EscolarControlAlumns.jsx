@@ -4,15 +4,47 @@ import AddAlumn from "../../components/organisms/AddAlumn";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import React from "react";
-
 function EscolarControlAlumns() {
     const [alumns, setAlumns] = useState([]);
     const [name, setName] = useState('');
     const [mothersLast, setMothersLast] = useState('');
     const [fathers, setFathers] = useState('');
 
+    // Function to post ratings
+    const postRating = (alumn_id, subject) => {
+        fetch(`${import.meta.env.VITE_URL}/rating`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                alumn_id: alumn_id,
+                amount: 6,
+                pertenence: subject,
+                gradePertenence: 1,
+                created_by: "escolarControl",
+                updated_by: "escolarControl",
+                deleted: false
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(`${subject} Rating Success:`, data);
+        })
+        .catch((error) => {
+            console.error(`${subject} Rating Error:`, error);
+            Swal.fire({
+                title: "Error",
+                text: `No se pudo agregar la calificación en ${subject}`,
+                icon: "error"
+            });
+        });
+    };
 
     const addAlumn = () => {
+        console.log("Name:", name);
+        console.log("Mother's Last Name:", mothersLast);
+        console.log("Father's Last Name:", fathers);
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'POST',
             headers: {
@@ -36,6 +68,11 @@ function EscolarControlAlumns() {
                 icon: "success"
             });
             setAlumns(prevAlumns => [...prevAlumns, data]);
+
+            // Post ratings for the new student
+            postRating(data.alumn_id, "Spanish");
+            postRating(data.alumn_id, "Math");
+            postRating(data.alumn_id, "Science");
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -65,49 +102,6 @@ function EscolarControlAlumns() {
         });
     }, []);
 
-    useEffect(() => {
-        const postRating = (alumn_id, subject) => {
-            fetch(`${import.meta.env.VITE_URL}/rating`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    alumn_id: alumn_id,
-                    amount: 6,
-                    pertenence: subject,
-                    gradePertenence: 1,
-                    created_by: "escolarControl",
-                    updated_by: "escolarControl",
-                    deleted: false
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(`${subject} Rating Success:`, data);
-            })
-            .catch((error) => {
-                console.error(`${subject} Rating Error:`, error);
-                Swal.fire({
-                    title: "Error",
-                    text: `No se pudo agregar la calificación en ${subject}`,
-                    icon: "error"
-                });
-            });
-        };
-
-        if (alumns.length > 0) {
-            const newAlumn = alumns.find(alumn => alumn.name == name && alumn.lastName == fathers);
-            if (newAlumn) {
-                postRating(newAlumn.alumn_id, "Spanish");
-                postRating(newAlumn.alumn_id, "Math");
-                postRating(newAlumn.alumn_id, "Science");
-            } else {
-                console.log('New Alumn not found'); // For debugging
-            }
-        }
-    }, [alumns, name, fathers]);
-
     return (
         <div className="h-full w-full bg-slate-900">
             <Header role="escolarControl" />
@@ -129,4 +123,3 @@ function EscolarControlAlumns() {
 }
 
 export default EscolarControlAlumns;
-
