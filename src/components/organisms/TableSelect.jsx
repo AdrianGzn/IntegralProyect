@@ -14,8 +14,7 @@ function TableSelect({ data, size, headers, onBlur, className }) {
     }, [data]);
 
     const handleCellClick = (rowIndex, colIndex) => {
-        if ([2].includes(colIndex)) { // Cambiar a 2 para la tercera columna (índice basado en 0)
-            setEditing({ rowIndex, colIndex });
+        if (colIndex === 2) { // Solo para la tercera columna (índice basado en 0)
             const key = `${rowIndex}-${colIndex}`;
             setSelectedCells(prevState => ({
                 ...prevState,
@@ -48,7 +47,7 @@ function TableSelect({ data, size, headers, onBlur, className }) {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF();
                 const imgWidth = 210;
-                const pageHeight = 500;
+                const pageHeight = 295; // Altura de la página en mm
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 let heightLeft = imgHeight;
                 let position = 0;
@@ -64,12 +63,7 @@ function TableSelect({ data, size, headers, onBlur, className }) {
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
                 }
-                const pdfOutput = pdf.output('blob');
-                const url = URL.createObjectURL(pdfOutput);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'table.pdf';
-                link.click();
+                pdf.save('table.pdf'); // Guarda el PDF
             })
             .catch((error) => {
                 console.error('Error generando el PDF:', error);
@@ -79,7 +73,7 @@ function TableSelect({ data, size, headers, onBlur, className }) {
     return (
         <div>
             <div id="table-container">
-                <div><p>{className}</p></div>
+                <div className="mb-4 text-lg font-semibold">{className}</div>
                 <table className="min-w-full divide-y divide-gray-300 bg-white shadow-md rounded-md border border-gray-300">
                     <thead className="bg-gray-600 text-white">
                         <tr>
@@ -94,15 +88,15 @@ function TableSelect({ data, size, headers, onBlur, className }) {
                                 {[...Array(size).keys()].map((_, colIndex) => (
                                     <td
                                         key={colIndex}
-                                        className={`px-4 py-4 whitespace-nowrap border-r border-gray-300 ${editing.rowIndex === rowIndex && editing.colIndex === colIndex ? 'bg-gray-100' : ''}`}
+                                        className={`px-4 py-4 whitespace-nowrap border-r border-gray-300 ${
+                                            editing.rowIndex === rowIndex && editing.colIndex === colIndex ? 'bg-gray-100' : ''
+                                        }`}
                                         onClick={() => handleCellClick(rowIndex, colIndex)}
                                     >
                                         {colIndex === 0 ? (
-                                            // Muestra el valor del id en la primera columna
                                             row.col1
                                         ) : (
                                             colIndex === 2 ? (
-                                                // Muestra una "X" si la celda está seleccionada en la tercera columna
                                                 selectedCells[`${rowIndex}-${colIndex}`] ? 'X' : row[`col${colIndex + 1}`] || ''
                                             ) : (
                                                 editing.rowIndex === rowIndex && editing.colIndex === colIndex ? (
@@ -112,7 +106,7 @@ function TableSelect({ data, size, headers, onBlur, className }) {
                                                         onChange={(e) => handleCellChange(e, rowIndex, colIndex)}
                                                         onBlur={() => handleCellBlur(rowIndex, colIndex)}
                                                         autoFocus
-                                                        className="w-[60%] border border-gray-300 rounded px-2 py-1"
+                                                        className="w-full border border-gray-300 rounded px-2 py-1"
                                                     />
                                                 ) : (
                                                     row[`col${colIndex + 1}`] || ''
@@ -126,6 +120,12 @@ function TableSelect({ data, size, headers, onBlur, className }) {
                     </tbody>
                 </table>
             </div>
+            <button
+                onClick={generatePDF}
+                className="mt-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition-colors font-bold shadow-lg"
+            >
+                Descargar alumnos generales
+            </button>
         </div>
     );
 }

@@ -1,13 +1,9 @@
 import React from 'react';
-import Button from '../atoms/Button';
 
-const SelectTeacher = ({ onClick, options, reference }) => {
+const SelectTeacher = ({ options, reference, onClick }) => {
     return (
-        <div className="w-full flex flex-col items-center">
-            <select
-                ref={reference}
-                className="w-full h-10 text-white bg-gray-700 border border-gray-500 rounded-md px-2 py-1"
-            >
+        <div className="flex items-center mb-4">
+            <select ref={reference} className="p-2 border border-gray-300 rounded-md">
                 <option value="">Seleccione un profesor</option>
                 {options.map((option, index) => (
                     <option key={index} value={option}>
@@ -15,14 +11,14 @@ const SelectTeacher = ({ onClick, options, reference }) => {
                     </option>
                 ))}
             </select>
-            <Button
-                text="Guardar"
+            <button
                 onClick={onClick}
-                className="mt-4"
-            />
+                className="ml-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition-colors font-bold shadow-lg"
+            >
+                Guardar Selección
+            </button>
         </div>
     );
 };
 
 export default SelectTeacher;
-

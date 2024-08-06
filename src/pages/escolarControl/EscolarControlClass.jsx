@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../components/organisms/Header';
-import Table from '../../components/organisms/Table';
 import Swal from 'sweetalert2';
 import SelectTeacher from '../../components/organisms/SelectTeacher';
 import TableSelect from '../../components/organisms/TableSelect';
@@ -11,10 +10,9 @@ function EscolarControlClass() {
     const [alumns, setAlumns] = useState([]);
     const [alumnsToPut, setAlumnsToPut] = useState([]);
     const [alumnsShow, setAlumnsShow] = useState([]);
-    const [teachersName, setTeachersName] = useState([]);
+    const [teachersOptions, setTeachersOptions] = useState([]);
     const [checkedAlumns, setCheckedAlumns] = useState({});
     const teacherRef = useRef(null);
-    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_URL}/personal`, {
@@ -28,24 +26,8 @@ function EscolarControlClass() {
         .then(data => {
             const filteredTeachers = data.filter(teacher => teacher.role_id === 1);
             setTeachers(filteredTeachers);
-            setTeachersName(filteredTeachers.map(teacher => teacher.name));
-        })
-        .catch(error => {
-            console.error("Ha ocurrido un error: " + error);
-        });
-    }, []);
-
-    useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/role`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setRoles(data);
+            const options = filteredTeachers.map(teacher => `${teacher.name} ${teacher.lastName}`);
+            setTeachersOptions(options);
         })
         .catch(error => {
             console.error("Ha ocurrido un error: " + error);
@@ -66,7 +48,8 @@ function EscolarControlClass() {
             const alumnsProcessed = data.map(alumn => ({
                 name: alumn.name,
                 lastName: alumn.lastName,
-                alumn_id: alumn.alumn_id
+                alumn_id: alumn.alumn_id,
+                selected: false  
             }));
 
             const updatedData = alumnsProcessed.map((alumn) => ({
@@ -74,9 +57,9 @@ function EscolarControlClass() {
                 col2: alumn.lastName,
                 col3: (
                     <input
-                        type="text"
-                        value={checkedAlumns[alumn.alumn_id] || ""}
-                        onChange={(e) => handleInputChange(alumn.alumn_id, e.target.value)}
+                        type="checkbox"
+                        checked={alumn.selected}
+                        onChange={() => handleCheckboxChange(alumn.alumn_id)}
                     />
                 )
             }));
@@ -86,28 +69,74 @@ function EscolarControlClass() {
         .catch(error => {
             console.error("Ha ocurrido un error: " + error);
         });
-    }, [checkedAlumns]);
+    }, []);
 
-    const handleInputChange = (alumn_id, value) => {
+    const handleCheckboxChange = (alumn_id) => {
+        // Actualiza la selección del alumno
         setCheckedAlumns(prevState => ({
             ...prevState,
-            [alumn_id]: value
+            [alumn_id]: !prevState[alumn_id]
         }));
+        setAlumnsShow(prevData =>
+            prevData.map(row => {
+                if (row.col1 === alumns.find(a => a.alumn_id == alumn_id)?.name) {
+                    return {
+                        ...row,
+                        col3: (
+                            <input
+                                type="checkbox"
+                                checked={checkedAlumns[alumn_id] || false}
+                                onChange={() => handleCheckboxChange(alumn_id)}
+                            />
+                        )
+                    };
+                }
+                return row;
+            })
+        );
     };
 
     const save = () => {
-        const selectedTeacher = teacherRef.current.value;
-        const teacher = teachers.find(teacher => teacher.name === selectedTeacher);
-        if (teacher) {
-            const selectedAlumnIds = Object.keys(checkedAlumns).filter(key => checkedAlumns[key] !== "").map(key => {
-                const alumn = alumns.find(a => a.alumn_id === parseInt(key));
-                return alumn ? alumn.alumn_id : null;
-            }).filter(id => id !== null);
+        const selectedTeacherFullName = teacherRef.current.value;
+        const [selectedTeacherName, selectedTeacherLastName] = selectedTeacherFullName.split(' ');
 
-            setAlumnsToPut(selectedAlumnIds);
-            console.log("Teacher ID:", teacher.personal_id);
-            console.log("Selected Alumn IDs:", selectedAlumnIds);
-            Swal.fire("Guardado", "La selección se ha guardado correctamente", "success");
+        const teacher = teachers.find(teacher => teacher.name == selectedTeacherName && teacher.lastName == selectedTeacherLastName);
+        if (teacher) {
+            const selectedAlumnsDetails = Object.keys(checkedAlumns)
+                .filter(key => checkedAlumns[key])
+                .map(key => {
+                    const alumn = alumns.find(a => a.alumn_id == parseInt(key));
+                    return {
+                        alumn_id: alumn.alumn_id,
+                        name: alumn.name,
+                        lastName: alumn.lastName
+                    };
+                });
+                console.log(selectedAlumnsDetails);
+                
+            
+            fetch(`${import.meta.env.VITE_URL}/personal/${teacher.personal_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    personalData: {
+                        updated_by: 'escolarControl',
+                    },
+                    alumns: [
+                        selectedAlumnsDetails
+                    ] // Lista de alumnos seleccionados
+                }),
+            })
+            .then(response => response.json())
+            .then(() => {
+                Swal.fire("Guardado", "La selección se ha guardado correctamente", "success");
+            })
+            .catch(error => {
+                console.error("Error guardando la selección:", error);
+                Swal.fire("Error", "Ocurrió un error al guardar", "error");
+            });
         } else {
             Swal.fire("Error", "No se ha encontrado el profesor seleccionado", "error");
         }
@@ -120,7 +149,7 @@ function EscolarControlClass() {
                 <div className="min-h-[75vh] w-4/6 flex flex-col items-center">
                     <SelectTeacher
                         onClick={save}
-                        options={teachersName}
+                        options={teachersOptions}
                         reference={teacherRef}
                     />
                     <TableSelect
