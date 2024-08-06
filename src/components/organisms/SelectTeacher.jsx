@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SelectTeacher = ({ options, reference, onClick }) => {
+const SelectTeacher = ({ options, reference, onClick, grades, onGradeChange }) => {
     return (
         <div className="flex items-center mb-4">
             <select ref={reference} className="p-2 border border-gray-300 rounded-md">
@@ -8,6 +8,14 @@ const SelectTeacher = ({ options, reference, onClick }) => {
                 {options.map((option, index) => (
                     <option key={index} value={option}>
                         {option}
+                    </option>
+                ))}
+            </select>
+            <select className="ml-4 p-2 border border-gray-300 rounded-md" onChange={(e) => onGradeChange(e.target.value)}>
+                <option value="">Seleccione el grado</option>
+                {grades.map((grade, index) => (
+                    <option key={index} value={grade}>
+                        {grade}
                     </option>
                 ))}
             </select>
