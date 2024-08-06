@@ -11,14 +11,6 @@ const SelectTeacher = ({ options, reference, onClick, grades, onGradeChange }) =
                     </option>
                 ))}
             </select>
-            <select className="ml-4 p-2 border border-gray-300 rounded-md" onChange={(e) => onGradeChange(e.target.value)}>
-                <option value="">Seleccione el grado</option>
-                {grades.map((grade, index) => (
-                    <option key={index} value={grade}>
-                        {grade}
-                    </option>
-                ))}
-            </select>
             <button
                 onClick={onClick}
                 className="ml-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition-colors font-bold shadow-lg"
