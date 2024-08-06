@@ -3,6 +3,7 @@ import Header from '../../components/organisms/Header';
 import Table from '../../components/organisms/Table';
 import Swal from 'sweetalert2';
 import SelectTeacher from '../../components/organisms/SelectTeacher';
+import TableSelect from '../../components/organisms/TableSelect';
 
 function EscolarControlClass() {
     const header = ["Nombre", "Apellidos", "Seleccionado"];
@@ -25,15 +26,12 @@ function EscolarControlClass() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            // Filtra los profesores que tengan role_id igual a 1
-            const filteredTeachers = data.filter(teacher => teacher.role_id == 1);
+            const filteredTeachers = data.filter(teacher => teacher.role_id === 1);
             setTeachers(filteredTeachers);
-            const teacherNames = filteredTeachers.map(teacher => teacher.name);
-            setTeachersName(teacherNames);
+            setTeachersName(filteredTeachers.map(teacher => teacher.name));
         })
         .catch(error => {
-            console.log("Ha ocurrido un error: " + error);
+            console.error("Ha ocurrido un error: " + error);
         });
     }, []);
 
@@ -48,11 +46,9 @@ function EscolarControlClass() {
         .then(response => response.json())
         .then(data => {
             setRoles(data);
-            console.log(data);
-            
         })
         .catch(error => {
-            console.log("Ha ocurrido un error: " + error);
+            console.error("Ha ocurrido un error: " + error);
         });
     }, []);
 
@@ -73,7 +69,7 @@ function EscolarControlClass() {
                 alumn_id: alumn.alumn_id
             }));
 
-            const updatedData = alumnsProcessed.map((alumn, index) => ({
+            const updatedData = alumnsProcessed.map((alumn) => ({
                 col1: alumn.name,
                 col2: alumn.lastName,
                 col3: (
@@ -88,9 +84,9 @@ function EscolarControlClass() {
             setAlumnsShow(updatedData);
         })
         .catch(error => {
-            console.log("Ha ocurrido un error: " + error);
+            console.error("Ha ocurrido un error: " + error);
         });
-    }, []);
+    }, [checkedAlumns]);
 
     const handleInputChange = (alumn_id, value) => {
         setCheckedAlumns(prevState => ({
@@ -120,7 +116,6 @@ function EscolarControlClass() {
     return (
         <div className="min-h-screen w-full bg-slate-900">
             <Header role="escolarControl" />
-        
             <div className="w-full flex justify-center items-center">
                 <div className="min-h-[75vh] w-4/6 flex flex-col items-center">
                     <SelectTeacher
@@ -128,7 +123,7 @@ function EscolarControlClass() {
                         options={teachersName}
                         reference={teacherRef}
                     />
-                    <Table
+                    <TableSelect
                         title="Alumnos a elegir"
                         headers={header}
                         data={alumnsShow}
