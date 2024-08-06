@@ -8,114 +8,102 @@ function EscolarControlClass() {
     const header = ["Nombre", "Apellidos", "Seleccionado"];
     const [teachers, setTeachers] = useState([]);
     const [alumns, setAlumns] = useState([]);
-    const [alumnsToPut, setAlumnsToPut] = useState([]);
     const [alumnsShow, setAlumnsShow] = useState([]);
     const [teachersOptions, setTeachersOptions] = useState([]);
     const [checkedAlumns, setCheckedAlumns] = useState({});
     const teacherRef = useRef(null);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/personal`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            const filteredTeachers = data.filter(teacher => teacher.role_id === 1);
-            setTeachers(filteredTeachers);
-            const options = filteredTeachers.map(teacher => `${teacher.name} ${teacher.lastName}`);
-            setTeachersOptions(options);
-        })
-        .catch(error => {
-            console.error("Ha ocurrido un error: " + error);
-        });
+        const fetchTeachers = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_URL}/personal`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                });
+                const data = await response.json();
+                const filteredTeachers = data.filter(teacher => teacher.role_id === 1);
+                setTeachers(filteredTeachers);
+                setTeachersOptions(filteredTeachers.map(teacher => `${teacher.name} ${teacher.lastName}`));
+            } catch (error) {
+                console.error("Ha ocurrido un error: " + error);
+            }
+        };
+
+        fetchTeachers();
     }, []);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_URL}/alumn`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setAlumns(data);
-            const alumnsProcessed = data.map(alumn => ({
-                name: alumn.name,
-                lastName: alumn.lastName,
-                alumn_id: alumn.alumn_id,
-                selected: false  
-            }));
+        const fetchAlumns = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_URL}/alumn`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                });
+                const data = await response.json();
+                setAlumns(data);
+                setAlumnsShow(data.map(alumn => ({
+                    col1: alumn.name,
+                    col2: alumn.lastName,
+                    col3: (
+                        <input
+                            type="checkbox"
+                            checked={!!checkedAlumns[alumn.alumn_id]}
+                            onChange={() => handleCheckboxChange(alumn.alumn_id)}
+                        />
+                    )
+                })));
+            } catch (error) {
+                console.error("Ha ocurrido un error: " + error);
+            }
+        };
 
-            const updatedData = alumnsProcessed.map((alumn) => ({
-                col1: alumn.name,
-                col2: alumn.lastName,
-                col3: (
-                    <input
-                        type="checkbox"
-                        checked={alumn.selected}
-                        onChange={() => handleCheckboxChange(alumn.alumn_id)}
-                    />
-                )
-            }));
-
-            setAlumnsShow(updatedData);
-        })
-        .catch(error => {
-            console.error("Ha ocurrido un error: " + error);
-        });
-    }, []);
+        fetchAlumns();
+    }, [checkedAlumns]); // Dependencia en checkedAlumns para actualizar cuando cambia
 
     const handleCheckboxChange = (alumn_id) => {
-        // Actualiza la selección del alumno
-        setCheckedAlumns(prevState => ({
-            ...prevState,
-            [alumn_id]: !prevState[alumn_id]
-        }));
-        setAlumnsShow(prevData =>
-            prevData.map(row => {
-                if (row.col1 === alumns.find(a => a.alumn_id == alumn_id)?.name) {
-                    return {
-                        ...row,
-                        col3: (
-                            <input
-                                type="checkbox"
-                                checked={checkedAlumns[alumn_id] || false}
-                                onChange={() => handleCheckboxChange(alumn_id)}
-                            />
-                        )
-                    };
-                }
-                return row;
-            })
-        );
+        setCheckedAlumns(prevState => {
+            const newState = {
+                ...prevState,
+                [alumn_id]: !prevState[alumn_id]
+            };
+            console.log("Updated Checked Alumns:", newState); // Depurar aquí
+            return newState;
+        });
     };
 
-    const save = () => {
+    const save = async () => {
         const selectedTeacherFullName = teacherRef.current.value;
         const [selectedTeacherName, selectedTeacherLastName] = selectedTeacherFullName.split(' ');
 
-        const teacher = teachers.find(teacher => teacher.name == selectedTeacherName && teacher.lastName == selectedTeacherLastName);
-        if (teacher) {
-            const selectedAlumnsDetails = Object.keys(checkedAlumns)
-                .filter(key => checkedAlumns[key])
-                .map(key => {
-                    const alumn = alumns.find(a => a.alumn_id == parseInt(key));
-                    return {
-                        alumn_id: alumn.alumn_id,
-                        name: alumn.name,
-                        lastName: alumn.lastName
-                    };
-                });
-                console.log(selectedAlumnsDetails);
-                
-            
-            fetch(`${import.meta.env.VITE_URL}/personal/${teacher.personal_id}`, {
+        const teacher = teachers.find(t => t.name === selectedTeacherName && t.lastName === selectedTeacherLastName);
+        if (!teacher) {
+            Swal.fire("Error", "No se ha encontrado el profesor seleccionado", "error");
+            return;
+        }
+
+        const selectedAlumnsDetails = Object.keys(checkedAlumns)
+            .filter(key => checkedAlumns[key])
+            .map(key => {
+                const alumn = alumns.find(a => a.alumn_id === parseInt(key));
+                return alumn ? {
+                    alumn_id: alumn.alumn_id,
+                    name: alumn.name,
+                    lastName: alumn.lastName
+                } : null;
+            })
+            .filter(alumn => alumn !== null);
+
+        console.log("Selected Teacher:", teacher);
+        console.log("Selected Alumns Details:", selectedAlumnsDetails);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_URL}/personal/${teacher.personal_id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -124,21 +112,18 @@ function EscolarControlClass() {
                     personalData: {
                         updated_by: 'escolarControl',
                     },
-                    alumns: [
-                        selectedAlumnsDetails
-                    ] // Lista de alumnos seleccionados
+                    alumnos: selectedAlumnsDetails
                 }),
-            })
-            .then(response => response.json())
-            .then(() => {
-                Swal.fire("Guardado", "La selección se ha guardado correctamente", "success");
-            })
-            .catch(error => {
-                console.error("Error guardando la selección:", error);
-                Swal.fire("Error", "Ocurrió un error al guardar", "error");
             });
-        } else {
-            Swal.fire("Error", "No se ha encontrado el profesor seleccionado", "error");
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            Swal.fire("Guardado", "La selección se ha guardado correctamente", "success");
+        } catch (error) {
+            console.error("Error guardando la selección:", error);
+            Swal.fire("Error", "Ocurrió un error al guardar", "error");
         }
     };
 

@@ -22,6 +22,10 @@ const options = {
             text: "Alumnnos",
             link: "/escolarControl/alumns"
         },
+        {
+            text: "Baja de Alumno",
+            link: "/escolarControl/delete"
+        },
     ]
 }
 

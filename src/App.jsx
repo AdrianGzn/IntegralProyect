@@ -18,6 +18,7 @@ import EscolarControlHome from './pages/escolarControl/EscolarControlHome.jsx'
 import EscolarControlAlumns from './pages/escolarControl/EscolarControlAlumns.jsx'
 import EscolarControlTeachers from './pages/escolarControl/EscolarControlTeachers.jsx'
 import EscolarControlClass from "./pages/escolarControl/EscolarControlClass.jsx"
+import EscolarControlDelete from './pages/escolarControl/EscolarControlDelete .jsx';
 
 function App() {
   const [user, setUser] = useState({});
@@ -70,6 +71,10 @@ function App() {
           <Route
             path="/escolarControl/teachers"
             element={<ProtectedEscolarControl><EscolarControlTeachers /></ProtectedEscolarControl>}
+          />
+          <Route
+            path="/escolarControl/delete"
+            element={<ProtectedEscolarControl><EscolarControlDelete /></ProtectedEscolarControl>}
           />
         </Routes>
       </UserContext.Provider>
