@@ -8,6 +8,7 @@ function TeacherQualifications() {
     const [allRatings, setAllRatings] = useState([]);
     const [data, setData] = useState([]);
     const [alumns, setAlumns] = useState([]);
+    const [average, setAverage] = useState([]);
     const headers = ["Num lista", "Nombre", "Apellidos", "Español", "Matemáticas", "Ciencias", "Calificación final"];
 
     // Fetch alumnos del maestro
@@ -22,10 +23,33 @@ function TeacherQualifications() {
         .then(response => response.ok ? response.json() : Promise.reject('La respuesta no es ok.'))
         .then(data => {
             const teacher = data.find(d => d.personal_id == getId());
+            console.log(teacher.alumns);
+            
             if (teacher) {
                 setAlumns(teacher.alumns || []);
             } else {
                 console.log('No se encontró el maestro con el ID dado.');
+            }
+        })
+        .catch(error => console.log("Ha ocurrido un error: " + error));
+    }, []);
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_URL}/subject/totalAmount`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.ok ? response.json() : Promise.reject('La respuesta no es ok.'))
+        .then(data => {
+            if (data) {
+                setAverage(data);
+                console.log(data);
+                
+                console.log("Promedio obtenido");
+            } else {
+                console.log('No se encontró el promedio.');
             }
         })
         .catch(error => console.log("Ha ocurrido un error: " + error));
@@ -51,6 +75,8 @@ function TeacherQualifications() {
 
             const updatedData = alumns.map(alumn => {
                 const matchedRatings = filteredRatings.filter(rating => rating.alumn_id === alumn.alumn_id);
+                let ava = 0
+                const get =  average.filter(avarege =>  avarege.alumn_id === alumn.alumn_id ? ava = avarege.averageAmount : 0)
 
                 let spanish = 0, math = 0, science = 0;
                 matchedRatings.forEach(rating => {
@@ -66,14 +92,14 @@ function TeacherQualifications() {
                     col4: spanish,
                     col5: math,
                     col6: science,
-                    col7: matchedRatings.reduce((sum, r) => sum + r.amount, 0) // Example for final rating
+                    col7: ava
                 };
             });
 
             setData(updatedData);
         })
         .catch(error => console.log("Ha ocurrido un error: " + error));
-    }, [alumns]);
+    }, [alumns, average]);
 
     const onBlur = (rowIndex, colIndex, newValue) => {
         const columnMapping = ["Spanish", "Math", "Science"];
@@ -108,9 +134,14 @@ function TeacherQualifications() {
             });
 
             // Update local state without re-fetching all data
-            const updatedData = [...data];
-            updatedData[rowIndex][`col${colIndex + 1}`] = parseFloat(newValue);
-            setData(updatedData);
+            setData(prevData => {
+                const updatedData = [...prevData];
+                updatedData[rowIndex] = {
+                    ...updatedData[rowIndex],
+                    [`col${colIndex + 1}`]: parseFloat(newValue)
+                };
+                return updatedData;
+            });
         })
         .catch(error => {
             console.error('Error:', error);

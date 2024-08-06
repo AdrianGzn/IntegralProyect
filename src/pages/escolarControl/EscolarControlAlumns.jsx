@@ -1,42 +1,18 @@
 import Header from "../../components/organisms/Header";
 import "@sweetalert2/theme-bulma";
 import AddAlumn from "../../components/organisms/AddAlumn";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import React from "react";
 
 function EscolarControlAlumns() {
-    const [iterations, setIterations] = useState(0);
     const [alumns, setAlumns] = useState([]);
     const [name, setName] = useState('');
     const [mothersLast, setMothersLast] = useState('');
-    const fathersLastNameRef = useRef('');
+    const [fathers, setFathers] = useState('');
 
-    const validateNames = () => {
-        const usernamePattern = /^[a-zA-Z\s]{1,30}$/;
-        if (!usernamePattern.test(nameRef.current.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "El nombre debe contener entre 1 y 30 letras sin números.",
-                icon: "error"
-            });
-            return false;
-        } else if (!usernamePattern.test(fathersLastNameRef.current.value)) {
-            Swal.fire({
-                title: "Error",
-                text: "El apellido debe contener entre 1 y 30 letras sin números.",
-                icon: "error"
-            });
-            return false;
-        }
-        return true;
-    };
 
     const addAlumn = () => {
-        if (!validateNames()) {
-            return;
-        }
-
         fetch(`${import.meta.env.VITE_URL}/alumn`, {
             method: 'POST',
             headers: {
@@ -44,8 +20,8 @@ function EscolarControlAlumns() {
             },
             body: JSON.stringify({
                 class_id: 1,
-                name: name.current.value,
-                lastName: setMothersLast.current.value,
+                name: name,
+                lastName: mothersLast,
                 created_by: 'escolarControl',
                 updated_by: 'escolarControl',
                 deleted: false
@@ -59,8 +35,7 @@ function EscolarControlAlumns() {
                 text: "Se agregó el alumno",
                 icon: "success"
             });
-            // Actualizar el estado de `alumns` y agregar calificaciones en `useEffect` después de que el nuevo alumno sea creado.
-            setIterations(prev => prev + 1); // Trigger useEffect to add ratings
+            setAlumns(prevAlumns => [...prevAlumns, data]);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -83,108 +58,55 @@ function EscolarControlAlumns() {
         .then(response => response.json())
         .then(data => {
             setAlumns(data);
-            console.log('Fetched Alumns:', data); // Añade esta línea para depuración
+            console.log('Fetched Alumns:', data); // For debugging
         })
         .catch(error => {
             console.log("Ha ocurrido un error: " + error);
         });
-    }, [iterations]);
+    }, []);
 
     useEffect(() => {
-        if (iterations > 0) {
-            const newAlumn = alumns.find(alumn => alumn.name == {name} && alumn.lastName =="Guzman");
+        const postRating = (alumn_id, subject) => {
+            fetch(`${import.meta.env.VITE_URL}/rating`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    alumn_id: alumn_id,
+                    amount: 6,
+                    pertenence: subject,
+                    gradePertenence: 1,
+                    created_by: "escolarControl",
+                    updated_by: "escolarControl",
+                    deleted: false
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`${subject} Rating Success:`, data);
+            })
+            .catch((error) => {
+                console.error(`${subject} Rating Error:`, error);
+                Swal.fire({
+                    title: "Error",
+                    text: `No se pudo agregar la calificación en ${subject}`,
+                    icon: "error"
+                });
+            });
+        };
+
+        if (alumns.length > 0) {
+            const newAlumn = alumns.find(alumn => alumn.name == name && alumn.lastName == fathers);
             if (newAlumn) {
-                // Post Spanish rating
-                fetch(`${import.meta.env.VITE_URL}/rating`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        alumn_id: newAlumn.alumn_id,
-                        amount: 6,
-                        pertenence: "Spanish",
-                        gradePertenence: 1,
-                        created_by: "escolarControl",
-                        updated_by: "escolarControl",
-                        deleted: false
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Spanish Rating Success:', data);
-                })
-                .catch((error) => {
-                    console.error('Spanish Rating Error:', error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "No se pudo agregar la calificación en Español",
-                        icon: "error"
-                    });
-                });
-
-                // Post Math rating
-                fetch(`${import.meta.env.VITE_URL}/rating`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        alumn_id: newAlumn.alumn_id,
-                        amount: 6,
-                        pertenence: "Math",
-                        gradePertenence: 1,
-                        created_by: "escolarControl",
-                        updated_by: "escolarControl",
-                        deleted: false
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Math Rating Success:', data);
-                })
-                .catch((error) => {
-                    console.error('Math Rating Error:', error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "No se pudo agregar la calificación en Matemáticas",
-                        icon: "error"
-                    });
-                });
-
-                // Post Science rating
-                fetch(`${import.meta.env.VITE_URL}/rating`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        alumn_id: newAlumn.alumn_id,
-                        amount: 6,
-                        pertenence: "Science",
-                        gradePertenence: 1,
-                        created_by: "escolarControl",
-                        updated_by: "escolarControl",
-                        deleted: false
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Science Rating Success:', data);
-                })
-                .catch((error) => {
-                    console.error('Science Rating Error:', error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "No se pudo agregar la calificación en Ciencias",
-                        icon: "error"
-                    });
-                });
+                postRating(newAlumn.alumn_id, "Spanish");
+                postRating(newAlumn.alumn_id, "Math");
+                postRating(newAlumn.alumn_id, "Science");
             } else {
-                console.log('New Alumn not found'); // Añade esta línea para depuración
+                console.log('New Alumn not found'); // For debugging
             }
         }
-    }, [iterations]);
+    }, [alumns, name, fathers]);
 
     return (
         <div className="h-full w-full bg-slate-900">
@@ -192,9 +114,12 @@ function EscolarControlAlumns() {
             <div className="w-full flex justify-center items-center">
                 <div className="min-h-[80vh] w-4/6 flex flex-col items-center">
                     <AddAlumn
-                        nameReference={name}
-                        mothersLastNameReference={mothersLast}
-                        fathersLastNameReference={fathersLastNameRef}
+                        name={name}
+                        fnvalName={setName}
+                        mothers={mothersLast}
+                        fnvalMothers={setMothersLast}
+                        fathers={fathers}
+                        fnvalFathers={setFathers}
                         onClick={addAlumn}
                     />
                 </div>
@@ -204,3 +129,4 @@ function EscolarControlAlumns() {
 }
 
 export default EscolarControlAlumns;
+
